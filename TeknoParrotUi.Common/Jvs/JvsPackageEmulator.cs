@@ -71,6 +71,7 @@ namespace TeknoParrotUi.Common.Jvs
             BattleGearKeyBreakChar = 'T';
 
             _gameProfile = gameProfile;
+            KanColleControls.Initialize(gameProfile);
 
             // Reset Super Monkey Ball specific variables
             _isSuperMonkeyBall = gameProfile?.ProfileName == "Mballblitz";
@@ -907,7 +908,13 @@ namespace TeknoParrotUi.Common.Jvs
 
             for (int i = 0; i < channelCount; i++)
             {
-                if (node == 1)
+                if (node == 1 && i == 0 && KanColleControls.Enabled)
+                {
+                    var telegraph = KanColleControls.Telegraph();
+                    byteLst.Add((byte)(telegraph >> 8));
+                    byteLst.Add((byte)telegraph);
+                }
+                else if (node == 1)
                 {
                     byteLst.Add(InputCode.AnalogBytes[(i * 2)]);
                     byteLst.Add(InputCode.AnalogBytes[(i * 2) + 1]);
@@ -1155,11 +1162,16 @@ namespace TeknoParrotUi.Common.Jvs
                 if (players == 2)
                 {
                     bytesToRead = bytesLeft[2];
-                    byteLst.Add(GetPlayerControls(baseAddr + 1));
+                    var player2 = GetPlayerControls(baseAddr + 1);
+                    var player2Ext = GetPlayerControlsExt(baseAddr + 1);
+                    // KanColle's helm encoder is on the second player's switches
+                    if (node == 1 && KanColleControls.Enabled)
+                        KanColleControls.AddHelm(ref player2, ref player2Ext);
+                    byteLst.Add(player2);
                     bytesToRead--;
                     if (bytesToRead != 0)
                     {
-                        byteLst.Add(GetPlayerControlsExt(baseAddr + 1));
+                        byteLst.Add(player2Ext);
                         bytesToRead--;
                     }
                     if (bytesToRead != 0)

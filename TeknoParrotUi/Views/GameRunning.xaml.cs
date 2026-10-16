@@ -129,6 +129,14 @@ namespace TeknoParrotUi.Views
             _secondExeArguments = gameProfile.SecondExecutableArguments;
             _launchMinimized = gameProfile.LaunchMinimized;
             _launchSecondExecutableMinimized = gameProfile.LaunchSecondExecutableMinimized;
+            // Soul Reverse with "Emulated Daemon" off: SEGA's daemon from the game's own folder, started first
+            var segaDaemon = SegaDaemon.DaemonToStart(gameProfile);
+            if (segaDaemon != null)
+            {
+                _gameLocation2 = segaDaemon;
+                _twoExes = true;
+                _secondExeFirst = true;
+            }
             InputCode.ButtonMode = gameProfile.EmulationProfile;
             InputCode.GameProfile = gameProfile;
             _isTest = isTest;
@@ -706,6 +714,8 @@ namespace TeknoParrotUi.Views
                 case EmulationProfile.BorderBreak:
                 case EmulationProfile.ALLSSCHRONO:
                 case EmulationProfile.ALLSIDTA:
+                case EmulationProfile.NuKanColle:
+                case EmulationProfile.ALLSFGO:
                     _controlSender = new AimeButton();
                     break;
                 case EmulationProfile.DenshaDeGo:

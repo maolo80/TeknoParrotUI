@@ -170,6 +170,7 @@
     <Compile Include="GameSetup.cs" />
     <Compile Include="InputListening\InputListenerRawInputTrackball.cs" />
     <Compile Include="Metadata.cs" />
+    <Compile Include="SegaDaemon.cs" />
     <Compile Include="EmulationProfile.cs" />
     <Compile Include="EmulatorType.cs" />
     <Compile Include="Github.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="Jvs\ChatButtonBlock.cs" />
     <Compile Include="Jvs\JvsHelper.cs" />
     <Compile Include="Jvs\JvsPackageEmulator.cs" />
+    <Compile Include="Jvs\KanColleControls.cs" />
     <Compile Include="Pipes\RawThrills.cs" />
     <Compile Include="Pipes\SegaRallyPipe.cs" />
     <Compile Include="Pipes\ALLSUsbIoPipe.cs" />

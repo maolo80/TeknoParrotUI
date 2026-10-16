@@ -873,6 +873,14 @@ namespace TeknoParrotUi.Views
                 }
             }
 
+            // Soul Reverse with "Emulated Daemon" off needs SEGA's daemon in the game's own folder
+            var segaDaemon = SegaDaemon.DaemonToStart(gameProfile);
+            if (segaDaemon != null && !File.Exists(segaDaemon))
+            {
+                MessageBoxHelper.ErrorOK($"\"{SegaDaemon.FieldName}\" is off, so the game needs SEGA's amdaemon.exe, which is not at {segaDaemon}. Turn \"{SegaDaemon.FieldName}\" on in the game's settings to play without it.");
+                return false;
+            }
+
             // Check second exe
             if (gameProfile.HasTwoExecutables)
             {

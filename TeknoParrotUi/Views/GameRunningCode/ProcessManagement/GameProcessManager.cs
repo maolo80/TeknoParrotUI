@@ -79,6 +79,7 @@ namespace TeknoParrotUi.Views.GameRunningCode.ProcessManagement
             _gameProfile.EmulationProfile == EmulationProfile.ALLSHOTDSD ||
             _gameProfile.EmulationProfile == EmulationProfile.ALLSFGO ||
             _gameProfile.EmulationProfile == EmulationProfile.ALLSSoulReverse ||
+            _gameProfile.EmulationProfile == EmulationProfile.NuKanColle ||
             _gameProfile.EmulationProfile == EmulationProfile.TimeCrisis5 ||
             _gameProfile.EmulationProfile == EmulationProfile.JojoLastSurvivor ||
             _gameProfile.EmulationProfile == EmulationProfile.ALLSIDTA ||
@@ -993,7 +994,8 @@ namespace TeknoParrotUi.Views.GameRunningCode.ProcessManagement
                 _gameProfile.EmulationProfile == EmulationProfile.DenshaDeGo ||
                 _gameProfile.EmulationProfile == EmulationProfile.ALLSIDTA ||
                 _gameProfile.EmulationProfile == EmulationProfile.SegaOlympic2020 ||
-                _gameProfile.EmulationProfile == EmulationProfile.ALLSSoulReverse
+                _gameProfile.EmulationProfile == EmulationProfile.ALLSSoulReverse ||
+                _gameProfile.EmulationProfile == EmulationProfile.NuKanColle
                 )
                 {
                     try

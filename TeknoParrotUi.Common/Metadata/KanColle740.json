@@ -1,0 +1,17 @@
+{
+  "game_name": "KanColle Arcade",
+  "game_genre": "Action",
+  "icon_name": "KanColle740.png",
+  "platform": "SEGA Nu",
+  "release_year": "2016",
+  "nvidia": "OK",
+  "nvidia_issues": null,
+  "amd": "NO_INFO",
+  "amd_issues": null,
+  "intel": "NO_INFO",
+  "intel_issues": null,
+  "general_issues": "The screen is a touch screen: use the mouse. Printed cards are saved in TeknoParrot\\cards beside fc.exe.",
+  "supported_versions": [
+    "7.40"
+  ]
+}

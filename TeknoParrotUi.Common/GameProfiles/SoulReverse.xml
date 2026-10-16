@@ -2,20 +2,20 @@
 <GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<GamePath></GamePath>
 	<ExecutableName>fbb.exe</ExecutableName>
-	<ExecutableName2>amdaemon.exe</ExecutableName2>
-	<HasTwoExecutables>true</HasTwoExecutables>
-	<LaunchSecondExecutableFirst>true</LaunchSecondExecutableFirst>
+	<ExecutableName2></ExecutableName2>
+	<HasTwoExecutables>false</HasTwoExecutables>
+	<LaunchSecondExecutableFirst>false</LaunchSecondExecutableFirst>
 	<TestMenuParameter></TestMenuParameter>
 	<TestMenuIsExecutable>false</TestMenuIsExecutable>
 	<ExtraParameters></ExtraParameters>
 	<TestMenuExtraParameters></TestMenuExtraParameters>
 	<EmulationProfile>ALLSSoulReverse</EmulationProfile>
-	<GameProfileRevision>4</GameProfileRevision>
+	<GameProfileRevision>5</GameProfileRevision>
 	<Is64Bit>true</Is64Bit>
 	<HasSeparateTestMode>false</HasSeparateTestMode>
 	<EmulatorType>TeknoParrot</EmulatorType>
 	<Patreon>false</Patreon>
-	<DevOnly>true</DevOnly>
+	<DevOnly>false</DevOnly>
 	<OnlineIdFieldName>OnlineId</OnlineIdFieldName>
 	<OnlineIdType>SegaId</OnlineIdType>
 	<ConfigValues>
@@ -53,6 +53,13 @@
 			<FieldValue>0</FieldValue>
 			<FieldType>Bool</FieldType>
 			<Hint>Let the game read the first XInput controller itself, with the layout the developers gave it, instead of the bindings made here.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Emulated Daemon</FieldName>
+			<FieldValue>1</FieldValue>
+			<FieldType>Bool</FieldType>
+			<Hint>Enable to have TP emulate amdaemon, in that case only the game .exe is needed</Hint>
 		</FieldInformation>
 		<FieldInformation>
 			<CategoryName>General</CategoryName>

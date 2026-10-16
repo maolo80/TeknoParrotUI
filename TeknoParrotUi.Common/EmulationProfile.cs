@@ -177,6 +177,7 @@
         TeknoSS32,
         // Taito Type Zero
         TeknoTZero,
-        ALLSSoulReverse
+        ALLSSoulReverse,
+        NuKanColle
     }
 }

@@ -9,12 +9,12 @@
 	<ExtraParameters></ExtraParameters>
 	<TestMenuExtraParameters></TestMenuExtraParameters>
 	<EmulationProfile>ALLSFGO</EmulationProfile>
-	<GameProfileRevision>9</GameProfileRevision>
+	<GameProfileRevision>15</GameProfileRevision>
 	<Is64Bit>true</Is64Bit>
 	<HasSeparateTestMode>false</HasSeparateTestMode>
 	<EmulatorType>TeknoParrot</EmulatorType>
 	<Patreon>true</Patreon>
-	<DevOnly>true</DevOnly>
+	<DevOnly>false</DevOnly>
 	<ConfigValues>
 		<FieldInformation>
 			<CategoryName>General</CategoryName>
@@ -28,15 +28,63 @@
 		</FieldInformation>
 		<FieldInformation>
 			<CategoryName>General</CategoryName>
+			<FieldName>Card Menu Key</FieldName>
+			<FieldValue>0x71</FieldValue>
+			<FieldType>KeyCapture</FieldType>
+			<Hint>Opens the card picker over the game (default F2): every card you have printed, with its picture. Click a card to put it in the card reader or take it out; the cabinet's deck holds only so many. Cards are kept in TeknoParrot\cards beside the game, each picture carries its card, so a picture alone can be copied to another PC.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
 			<FieldName>FreePlay</FieldName>
 			<FieldValue>1</FieldValue>
 			<FieldType>Bool</FieldType>
 		</FieldInformation>
 		<FieldInformation>
 			<CategoryName>General</CategoryName>
-			<FieldName>Windowed</FieldName>
+			<FieldName>DisplayMode</FieldName>
+			<FieldValue>Fullscreen Windowed</FieldValue>
+			<FieldType>Dropdown</FieldType>
+			<FieldOptions>
+				<string>Windowed</string>
+				<string>Fullscreen</string>
+				<string>Fullscreen Windowed</string>
+			</FieldOptions>
+			<Hint>Windowed: a window of the Resolution's size (smaller if it does not fit the screen). Fullscreen: the monitor switches to the Resolution while the game runs (exclusive). Fullscreen Windowed: a borderless window over the whole monitor, the picture scaled to fill it.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Hide Cursor</FieldName>
+			<FieldValue>0</FieldValue>
+			<FieldType>Bool</FieldType>
+			<Hint>Hides the mouse cursor over the game, as on the cabinet's touch screen. Leave it off to play with a mouse: the cursor then stays visible, also in full screen.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Resolution</FieldName>
+			<FieldValue>1920x1080</FieldValue>
+			<FieldType>Dropdown</FieldType>
+			<FieldOptions>
+				<string>1920x1080</string>
+				<string>2560x1440</string>
+				<string>3200x1800</string>
+				<string>3840x2160</string>
+				<string>Custom</string>
+			</FieldOptions>
+			<Hint>The size the game draws its picture at: 1920x1080 is the cabinet's. Larger sizes draw the 3D and the menus sharper, in the same layout; the picture is then scaled to the window or screen, so a size larger than your monitor works as supersampling. Custom: the size in Custom Resolution.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Custom Resolution</FieldName>
+			<FieldValue>2880x1620</FieldValue>
+			<FieldType>Text</FieldType>
+			<Hint>Width x height, used when Resolution is Custom, for example 2880x1620. The game's picture is 16:9: another shape is narrowed to the largest 16:9 size inside it. From 1920x1080 up to 7680x4320.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Emulated Daemon</FieldName>
 			<FieldValue>1</FieldValue>
 			<FieldType>Bool</FieldType>
+			<Hint>Enable to have TP emulate amdaemon, in that case only the game .exe is needed.</Hint>
 		</FieldInformation>
 		<FieldInformation>
 			<CategoryName>General</CategoryName>
@@ -66,6 +114,10 @@
 		<JoystickButtons>
 			<ButtonName>Coin</ButtonName>
 			<InputMapping>Coin1</InputMapping>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Insert AIME Card</ButtonName>
+			<InputMapping>ExtensionOne13</InputMapping>
 		</JoystickButtons>
 		<JoystickButtons>
 			<ButtonName>Attack</ButtonName>

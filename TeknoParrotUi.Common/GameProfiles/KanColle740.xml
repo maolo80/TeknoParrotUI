@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<GamePath></GamePath>
+	<ExecutableName>fc.exe</ExecutableName>
+	<ExecutableName2></ExecutableName2>
+	<HasTwoExecutables>false</HasTwoExecutables>
+	<TestMenuParameter></TestMenuParameter>
+	<TestMenuIsExecutable>false</TestMenuIsExecutable>
+	<ExtraParameters></ExtraParameters>
+	<TestMenuExtraParameters></TestMenuExtraParameters>
+	<EmulationProfile>NuKanColle</EmulationProfile>
+	<GameProfileRevision>6</GameProfileRevision>
+	<Is64Bit>true</Is64Bit>
+	<HasSeparateTestMode>false</HasSeparateTestMode>
+	<EmulatorType>TeknoParrot</EmulatorType>
+	<Patreon>false</Patreon>
+	<DevOnly>false</DevOnly>
+	<OnlineIdFieldName>OnlineID</OnlineIdFieldName>
+	<OnlineIdType>SegaId</OnlineIdType>
+	<ConfigValues>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Input API</FieldName>
+			<FieldValue>DirectInput</FieldValue>
+			<FieldType>Dropdown</FieldType>
+			<FieldOptions>
+				<string>DirectInput</string>
+				<string>XInput</string>
+			</FieldOptions>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Card Menu Key</FieldName>
+			<FieldValue>0x71</FieldValue>
+			<FieldType>KeyCapture</FieldType>
+			<Hint>Opens the card picker over the game (default F2): every card you have printed, with its picture. Click a card to put it in the card reader or take it out; the cabinet's deck holds only so many. Cards are kept in TeknoParrot\cards beside the game, each picture carries its card, so a picture alone can be copied to another PC.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>DisplayMode</FieldName>
+			<FieldValue>Fullscreen Windowed</FieldValue>
+			<FieldType>Dropdown</FieldType>
+			<FieldOptions>
+				<string>Windowed</string>
+				<string>Fullscreen</string>
+				<string>Fullscreen Windowed</string>
+			</FieldOptions>
+			<Hint>Windowed: a window of the Resolution's size (smaller if it does not fit the screen) that you can resize, the picture scaled to fill it. Fullscreen: the monitor switches to the Resolution while the game runs (exclusive). Fullscreen Windowed: a borderless window over the whole monitor, the picture scaled to fill it.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Resolution</FieldName>
+			<FieldValue>1280x720</FieldValue>
+			<FieldType>Dropdown</FieldType>
+			<FieldOptions>
+				<string>1280x720</string>
+				<string>1600x900</string>
+				<string>1920x1080</string>
+				<string>2560x1440</string>
+				<string>3200x1800</string>
+				<string>3840x2160</string>
+				<string>Custom</string>
+			</FieldOptions>
+			<Hint>The size the game draws its picture at: 1280x720 is the cabinet's. Larger sizes draw the 3D and the menus sharper, in the same layout; the picture is then scaled to the window as before, so a size larger than your monitor works as supersampling. Custom: the size in Custom Resolution.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Custom Resolution</FieldName>
+			<FieldValue>2880x1620</FieldValue>
+			<FieldType>Text</FieldType>
+			<Hint>Width x height, used when Resolution is Custom, for example 2880x1620. The game's picture is 16:9: another shape is narrowed to the largest 16:9 size inside it. From 1280x720 up to 7680x4320.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Sharp Frame Blending</FieldName>
+			<FieldValue>1</FieldValue>
+			<FieldType>Bool</FieldType>
+			<Hint>Above 1280x720 only. While the camera rests, the game smooths edges by shifting the 3D picture a quarter of a 1280x720 pixel every other frame and blending the frames; at a larger Resolution that shift grows past a whole pixel and softens the picture. On: the shift stays a quarter pixel at any Resolution. Off: as the game does it.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Hide Cursor</FieldName>
+			<FieldValue>0</FieldValue>
+			<FieldType>Bool</FieldType>
+			<Hint>Hides the mouse cursor over the game, as on the cabinet's touch screen. Leave it off to play with a mouse: the cursor then stays visible, also in Fullscreen.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>OnlineID</FieldName>
+			<FieldValue></FieldValue>
+			<FieldType>Text</FieldType>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Input</CategoryName>
+			<FieldName>Helm Axis</FieldName>
+			<FieldValue>Turning speed</FieldValue>
+			<FieldType>Dropdown</FieldType>
+			<FieldOptions>
+				<string>Turning speed</string>
+				<string>Wheel position</string>
+			</FieldOptions>
+			<Hint>The cabinet's helm spins freely, and the ship turns as far as the helm is turned. Turning speed: the further the stick or wheel is from the centre, the faster the helm turns (for sticks and keys). Wheel position: the helm follows your wheel, so turning the wheel back turns the ship back (for wheels that do not centre themselves).</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Input</CategoryName>
+			<FieldName>Helm Speed</FieldName>
+			<FieldValue>6</FieldValue>
+			<FieldType>Slider</FieldType>
+			<FieldMin>1</FieldMin>
+			<FieldMax>20</FieldMax>
+			<Hint>How fast Helm Left / Helm Right, and the helm axis at full turn in Turning speed mode, turn the helm.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Input</CategoryName>
+			<FieldName>Invert Helm</FieldName>
+			<FieldValue>0</FieldValue>
+			<FieldType>Bool</FieldType>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Input</CategoryName>
+			<FieldName>Invert Telegraph</FieldName>
+			<FieldValue>0</FieldValue>
+			<FieldType>Bool</FieldType>
+			<Hint>Swap the ends of the telegraph axis. Without it the axis' low end is 原速 and its high end 一杯 (full speed).</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Network</CategoryName>
+			<FieldName>OnlineChat</FieldName>
+			<FieldValue>1</FieldValue>
+			<FieldType>Bool</FieldType>
+			<Hint>Text chat with everyone playing KanColle on the server, and the player list with TeknoParrot's supporter ranks: the chat key (default T) opens the line (Enter sends, Esc cancels), F6-F9 send the quick phrases, Tab shows the players.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Network</CategoryName>
+			<FieldName>ChatKey</FieldName>
+			<FieldValue>0x54</FieldValue>
+			<FieldType>KeyCapture</FieldType>
+			<Hint>The key that opens the chat line (default T).</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Network</CategoryName>
+			<FieldName>QuickChat1</FieldName>
+			<FieldValue></FieldValue>
+			<FieldType>Text</FieldType>
+			<Hint>F6 quick phrase</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Network</CategoryName>
+			<FieldName>QuickChat2</FieldName>
+			<FieldValue></FieldValue>
+			<FieldType>Text</FieldType>
+			<Hint>F7 quick phrase</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Network</CategoryName>
+			<FieldName>QuickChat3</FieldName>
+			<FieldValue></FieldValue>
+			<FieldType>Text</FieldType>
+			<Hint>F8 quick phrase</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Network</CategoryName>
+			<FieldName>QuickChat4</FieldName>
+			<FieldValue></FieldValue>
+			<FieldType>Text</FieldType>
+			<Hint>F9 quick phrase</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Network</CategoryName>
+			<FieldName>PlayerName</FieldName>
+			<FieldValue></FieldValue>
+			<FieldType>Text</FieldType>
+			<Hint>Your name in the chat until the server knows your admiral's name.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Voice</CategoryName>
+			<FieldName>VoiceChat</FieldName>
+			<FieldValue>push-to-talk</FieldValue>
+			<FieldType>Dropdown</FieldType>
+			<FieldOptions>
+				<string>push-to-talk</string>
+				<string>open mic</string>
+				<string>listen</string>
+				<string>off</string>
+			</FieldOptions>
+			<Hint>Voice chat with everyone playing KanColle on the server: it goes through the server, and nothing is recorded. push-to-talk = talk while the key is held, open mic = talk whenever you speak, listen = speakers only. F3 turns it on/off in the game.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Voice</CategoryName>
+			<FieldName>VoicePttKey</FieldName>
+			<FieldValue>0x56</FieldValue>
+			<FieldType>KeyCapture</FieldType>
+			<Hint>The push-to-talk key (default V).</Hint>
+		</FieldInformation>
+	</ConfigValues>
+	<JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Test</ButtonName>
+			<InputMapping>Test</InputMapping>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Service</ButtonName>
+			<InputMapping>Service1</InputMapping>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Coin</ButtonName>
+			<InputMapping>Coin1</InputMapping>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Insert AIME Card</ButtonName>
+			<InputMapping>ExtensionOne13</InputMapping>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Order Button (発令)</ButtonName>
+			<InputMapping>P1Button1</InputMapping>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Helm (Steering Axis)</ButtonName>
+			<InputMapping>Analog2</InputMapping>
+			<AnalogType>Wheel</AnalogType>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Helm Left</ButtonName>
+			<InputMapping>ExtensionOne11</InputMapping>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Helm Right</ButtonName>
+			<InputMapping>ExtensionOne12</InputMapping>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Telegraph (Speed Lever Axis)</ButtonName>
+			<InputMapping>Analog0</InputMapping>
+			<AnalogType>AnalogJoystick</AnalogType>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Telegraph Speed Up</ButtonName>
+			<InputMapping>ExtensionOne15</InputMapping>
+		</JoystickButtons>
+		<JoystickButtons>
+			<ButtonName>Telegraph Speed Down</ButtonName>
+			<InputMapping>ExtensionOne16</InputMapping>
+		</JoystickButtons>
+	</JoystickButtons>
+</GameProfile>
