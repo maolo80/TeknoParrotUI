@@ -10,7 +10,7 @@
 	<ExtraParameters></ExtraParameters>
 	<TestMenuExtraParameters></TestMenuExtraParameters>
 	<EmulationProfile>ALLSSoulReverse</EmulationProfile>
-	<GameProfileRevision>5</GameProfileRevision>
+	<GameProfileRevision>9</GameProfileRevision>
 	<Is64Bit>true</Is64Bit>
 	<HasSeparateTestMode>false</HasSeparateTestMode>
 	<EmulatorType>TeknoParrot</EmulatorType>
@@ -49,13 +49,6 @@
 		</FieldInformation>
 		<FieldInformation>
 			<CategoryName>General</CategoryName>
-			<FieldName>Native XInput Controller</FieldName>
-			<FieldValue>0</FieldValue>
-			<FieldType>Bool</FieldType>
-			<Hint>Let the game read the first XInput controller itself, with the layout the developers gave it, instead of the bindings made here.</Hint>
-		</FieldInformation>
-		<FieldInformation>
-			<CategoryName>General</CategoryName>
 			<FieldName>Emulated Daemon</FieldName>
 			<FieldValue>1</FieldValue>
 			<FieldType>Bool</FieldType>
@@ -84,15 +77,62 @@
 			<Hint>Start the game as the shop's terminal instead of a player's cabinet: a menu for watching recorded battles and battles that are going on, and for the rankings, with a card or as a guest. Nothing can be played there. Left stick (or the direction keys) to move, A to choose, B to go back.</Hint>
 		</FieldInformation>
 		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>English Translation</FieldName>
+			<FieldValue>0</FieldValue>
+			<FieldType>Bool</FieldType>
+			<Hint>Enables english translation. TP includes a few small translations by default, but can load custom string translations from a translations.tsv next to the exe. </Hint>
+		</FieldInformation>
+		<FieldInformation>
 			<CategoryName>Graphics</CategoryName>
 			<FieldName>Resolution</FieldName>
 			<FieldValue>1920x1080</FieldValue>
 			<FieldType>Dropdown</FieldType>
 			<FieldOptions>
 				<string>1280x720</string>
+				<string>1600x900</string>
 				<string>1920x1080</string>
+				<string>2560x1440</string>
+				<string>3200x1800</string>
 				<string>3840x2160</string>
 			</FieldOptions>
+			<Hint>The size the game renders at. Menus and text are laid out for 1920x1080 and scaled to it, so every size here keeps them as they are. In fullscreen the monitor must offer that mode (or the GPU's scaling, such as DSR or VSR, must): the game switches the display to it. In a window any size works.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Graphics</CategoryName>
+			<FieldName>Render Scale</FieldName>
+			<FieldValue>100</FieldValue>
+			<FieldType>Slider</FieldType>
+			<FieldMin>25</FieldMin>
+			<FieldMax>100</FieldMax>
+			<Hint>Renders the 3D picture at this percentage of the resolution's width and height and magnifies it to full size; menus and text stay at the full resolution. 100 renders everything at full size. Lower it if the game runs slowly: at 1920x1080, 67 renders the 3D picture at about 1280x720 and 50 at 960x540. On an integrated GPU 67 almost doubles the frame rate and 50 more than doubles it.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Graphics</CategoryName>
+			<FieldName>Upscaler</FieldName>
+			<FieldValue>FSR</FieldValue>
+			<FieldType>Dropdown</FieldType>
+			<FieldOptions>
+				<string>FSR</string>
+				<string>Bilinear</string>
+			</FieldOptions>
+			<Hint>How the 3D picture is magnified when Render Scale is below 100. FSR: AMD FidelityFX Super Resolution 1.0, close to the full resolution's sharpness, at a small cost (about 1.5 ms per frame on an integrated GPU). Bilinear: the game's own magnification, slightly faster but blurry.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>Graphics</CategoryName>
+			<FieldName>FSR Sharpness</FieldName>
+			<VisibleWhen>Upscaler</VisibleWhen>
+			<VisibleWhenValue>FSR</VisibleWhenValue>
+			<FieldValue>0.2</FieldValue>
+			<FieldType>Dropdown</FieldType>
+			<FieldOptions>
+				<string>0</string>
+				<string>0.2</string>
+				<string>0.5</string>
+				<string>1</string>
+				<string>2</string>
+			</FieldOptions>
+			<Hint>How much FSR sharpens the magnified picture: 0 sharpens the most, and each step of 1 halves the sharpening. 0.2 is AMD's default; raise it if edges look grainy or jagged.</Hint>
 		</FieldInformation>
 		<FieldInformation>
 			<CategoryName>Online</CategoryName>

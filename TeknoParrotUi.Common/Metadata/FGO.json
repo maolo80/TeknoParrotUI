@@ -6,11 +6,11 @@
   "release_year": "2018",
   "nvidia": "OK",
   "nvidia_issues": null,
-  "amd": "NO",
-  "amd_issues": null,
+  "amd": "WITH_FIX",
+  "amd_issues": "AMD Fix is applied automatically if an AMD GPU is detected as the currently used GPU",
   "intel": "NO",
   "intel_issues": null,
-  "general_issues": null,
+  "general_issues": "Menus are touch screen only: use the mouse.",
   "supported_versions": [
     "11.51"
   ]
