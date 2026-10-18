@@ -2881,6 +2881,30 @@ namespace TeknoParrotUi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This game exe is encrypted!
+        ///Copy original &quot;gs2.exe&quot; file from &quot;Operation G.H.O.S.T&quot; RingWide game to main folder
+        ///and select it in TPui as Teratoma game exe...
+        ///
+        ///Now closing....
+        /// </summary>
+        public static string GameErrorB0B0060 {
+            get {
+                return ResourceManager.GetString("GameErrorB0B0060", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teratoma resources are missing beside gs2.exe.
+        ///
+        ///Now closing....
+        /// </summary>
+        public static string GameErrorB0B0061 {
+            get {
+                return ResourceManager.GetString("GameErrorB0B0061", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This game requires the game data to be in a &quot;pinball&quot; subfolder.
         /// Please move the following folders into a new pinball subdirectory.
         ///attract, attractreplays, configuration, enterinitials, lasvegas, newyorkshop, op_adjust, playfield, savedgames, scripts, select, show and sound.

@@ -2747,6 +2747,18 @@ Please visit TeknoParrot Discord #fixes channel to get TP plugin...
 
 Now closing...</value>
   </data>
+  <data name="GameErrorB0B0060" xml:space="preserve">
+    <value>This game exe is encrypted!
+Copy original "gs2.exe" file from "Operation G.H.O.S.T" RingWide game to main folder
+and select it in TPui as Teratoma game exe...
+
+Now closing...</value>
+  </data>
+  <data name="GameErrorB0B0061" xml:space="preserve">
+    <value>Teratoma resources are missing beside gs2.exe.
+
+Now closing...</value>
+  </data>
   <data name="LibraryGenreSystem246" xml:space="preserve">
     <value>System 246/256</value>
   </data>

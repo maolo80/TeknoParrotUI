@@ -414,6 +414,12 @@ namespace TeknoParrotUi.Helpers
                 case 0xB0B0046:
                     MessageBox.Show(Properties.Resources.GameErrorB0B0046);
                     break;
+                case 0xB0B0060:
+                    MessageBox.Show(Properties.Resources.GameErrorB0B0060);
+                    break;
+                case 0xB0B0061:
+                    MessageBox.Show(Properties.Resources.GameErrorB0B0061);
+                    break;
                 case 0xAAA0000:
                     MessageBox.Show(Properties.Resources.GameErrorAAA0000);
                     break;

@@ -142,3 +142,4 @@ TeknoParrot - Fantasy Soccer
 TeknoParrot - Mighty Moto
 TeknoParrot - Tux Racer Arcade v4.1
 TeknoParrot - Space Invaders Frenzy
+TeknoParrot - Teratoma
