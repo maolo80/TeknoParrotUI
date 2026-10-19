@@ -810,6 +810,9 @@ namespace TeknoParrotUi.Views
                 case EmulatorType.TeknoTZero:
                     loaderExe = ".\\TeknoTZero\\TeknoTZero.exe";
                     break;
+                case EmulatorType.TeknoNaomi:
+                    loaderExe = ".\\TeknoNaomi\\TeknoNaomi.exe";
+                    break;
                 case EmulatorType.TeknoModel3:
                     loaderExe = ".\\TeknoModel3\\TeknoModel3.exe";
                     break;
@@ -882,7 +885,23 @@ namespace TeknoParrotUi.Views
             }
 
             // Check second exe
-            if (gameProfile.HasTwoExecutables)
+            if (gameProfile.EmulatorType == EmulatorType.TeknoNaomi && TeknoNaomiProfileSettings.HasChd(gameProfile))
+            {
+                TeknoNaomiProfileSettings.Normalize(gameProfile);
+                string chdRoot;
+                try { chdRoot = TeknoNaomiProfileSettings.ChdRoot(gameProfile, Directory.GetCurrentDirectory()); }
+                catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is NotSupportedException || error is IOException)
+                {
+                    MessageBoxHelper.ErrorOK(error.Message);
+                    return false;
+                }
+                if (string.IsNullOrWhiteSpace(chdRoot) || !Directory.Exists(chdRoot))
+                {
+                    MessageBoxHelper.ErrorOK("Select the CHD Root folder below the ROM ZIP in Game Settings.");
+                    return false;
+                }
+            }
+            else if (gameProfile.HasTwoExecutables)
             {
                 if (string.IsNullOrEmpty(gameProfile.GamePath2))
                 {

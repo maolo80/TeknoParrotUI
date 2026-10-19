@@ -1,0 +1,238 @@
+<?xml version='1.0' encoding='utf-8'?>
+<GameProfile>
+  <ProfileName>teknonaomi_wwfroyal</ProfileName>
+  <GamePath />
+  <GameNameInternal>WWF Royal Rumble</GameNameInternal>
+  <EmulationProfile>TeknoNaomi</EmulationProfile>
+  <EmulatorType>TeknoNaomi</EmulatorType>
+  <GameProfileRevision>12</GameProfileRevision>
+  <Is64Bit>true</Is64Bit>
+  <ExecutableName>wwfroyal.zip</ExecutableName>
+  <HasTwoExecutables>false</HasTwoExecutables>
+  <HasSeparateTestMode>false</HasSeparateTestMode>
+  <DevOnly>false</DevOnly>
+  <Patreon>true</Patreon>
+  <HasTpoSupport>true</HasTpoSupport>
+  <GameVersion>wwfroyal</GameVersion>
+  <ConfigValues>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Input API</FieldName>
+      <FieldValue>XInput</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>DirectInput</string>
+        <string>XInput</string>
+        <string>RawInput</string>
+        <string>MergedInput</string>
+      </FieldOptions>
+      <Hint>Bind the named cabinet buttons and directions below.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Save Root</FieldName>
+      <FieldValue />
+      <FieldType>Text</FieldType>
+      <Hint>Empty uses TeknoNaomi/state. Saves are kept separately for this exact revision.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>DisplayMode</FieldName>
+      <FieldValue>Windowed</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>Windowed</string>
+        <string>Fullscreen</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Internal Resolution</FieldName>
+      <FieldValue>4</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+        <string>4</string>
+        <string>5</string>
+        <string>6</string>
+        <string>7</string>
+        <string>8</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Widescreen</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+      <Hint>Render additional 3D scenery at 16:9. HUDs and fixed 2D screens stay centered; vertical games retain their original layout.</Hint>
+    </FieldInformation>
+  </ConfigValues>
+  <JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Test</ButtonName>
+      <InputMapping>Test</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Service</ButtonName>
+      <InputMapping>Service1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 1</ButtonName>
+      <InputMapping>Coin1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 2</ButtonName>
+      <InputMapping>Coin2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Start</ButtonName>
+      <InputMapping>P1ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Service</ButtonName>
+      <InputMapping>Service2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Start</ButtonName>
+      <InputMapping>P2ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Service</ButtonName>
+      <InputMapping>JvsTwoService1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Service</ButtonName>
+      <InputMapping>JvsTwoService2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 3</ButtonName>
+      <InputMapping>JvsTwoCoin1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 4</ButtonName>
+      <InputMapping>JvsTwoCoin2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Start</ButtonName>
+      <InputMapping>JvsTwoP1ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Start</ButtonName>
+      <InputMapping>JvsTwoP2ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Up</ButtonName>
+      <InputMapping>P1ButtonUp</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Down</ButtonName>
+      <InputMapping>P1ButtonDown</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Left</ButtonName>
+      <InputMapping>P1ButtonLeft</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Right</ButtonName>
+      <InputMapping>P1ButtonRight</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Attack</ButtonName>
+      <InputMapping>P1Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Grapple</ButtonName>
+      <InputMapping>P1Button2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Support</ButtonName>
+      <InputMapping>P1Button3</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Up</ButtonName>
+      <InputMapping>P2ButtonUp</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Down</ButtonName>
+      <InputMapping>P2ButtonDown</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Left</ButtonName>
+      <InputMapping>P2ButtonLeft</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Right</ButtonName>
+      <InputMapping>P2ButtonRight</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Attack</ButtonName>
+      <InputMapping>P2Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Grapple</ButtonName>
+      <InputMapping>P2Button2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Support</ButtonName>
+      <InputMapping>P2Button3</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Up</ButtonName>
+      <InputMapping>JvsTwoP1ButtonUp</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Down</ButtonName>
+      <InputMapping>JvsTwoP1ButtonDown</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Left</ButtonName>
+      <InputMapping>JvsTwoP1ButtonLeft</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Right</ButtonName>
+      <InputMapping>JvsTwoP1ButtonRight</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Attack</ButtonName>
+      <InputMapping>JvsTwoP1Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Grapple</ButtonName>
+      <InputMapping>JvsTwoP1Button2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Support</ButtonName>
+      <InputMapping>JvsTwoP1Button3</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Up</ButtonName>
+      <InputMapping>JvsTwoP2ButtonUp</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Down</ButtonName>
+      <InputMapping>JvsTwoP2ButtonDown</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Left</ButtonName>
+      <InputMapping>JvsTwoP2ButtonLeft</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Right</ButtonName>
+      <InputMapping>JvsTwoP2ButtonRight</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Attack</ButtonName>
+      <InputMapping>JvsTwoP2Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Grapple</ButtonName>
+      <InputMapping>JvsTwoP2Button2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Support</ButtonName>
+      <InputMapping>JvsTwoP2Button3</InputMapping>
+    </JoystickButtons>
+  </JoystickButtons>
+</GameProfile>

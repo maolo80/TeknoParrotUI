@@ -1,0 +1,11 @@
+{
+  "game_name": "Club Kart: European Session (2003, prototype, set 1)",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI 2",
+  "release_year": "2003",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select clubk2kp.zip or the merged parent archive clubk2k3.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi2.zip beside the ROM ZIP."
+}

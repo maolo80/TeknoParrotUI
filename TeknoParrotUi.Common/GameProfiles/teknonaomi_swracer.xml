@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='utf-8'?>
+<GameProfile>
+  <ProfileName>teknonaomi_swracer</ProfileName>
+  <GamePath />
+  <GameNameInternal>Star Wars: Racer Arcade</GameNameInternal>
+  <EmulationProfile>TeknoNaomi</EmulationProfile>
+  <EmulatorType>TeknoNaomi</EmulatorType>
+  <GameProfileRevision>13</GameProfileRevision>
+  <Is64Bit>true</Is64Bit>
+  <ExecutableName>swracer.zip</ExecutableName>
+  <HasTwoExecutables>false</HasTwoExecutables>
+  <HasSeparateTestMode>false</HasSeparateTestMode>
+  <DevOnly>false</DevOnly>
+  <Patreon>true</Patreon>
+  <HasTpoSupport>false</HasTpoSupport>
+  <GameVersion>swracer</GameVersion>
+  <ConfigValues>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Input API</FieldName>
+      <FieldValue>XInput</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>DirectInput</string>
+        <string>XInput</string>
+        <string>RawInput</string>
+        <string>MergedInput</string>
+      </FieldOptions>
+      <Hint>Bind the named cabinet controls below. Analog controls accept gamepad or DirectInput axes; the named direction buttons provide digital alternatives.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Save Root</FieldName>
+      <FieldValue />
+      <FieldType>Text</FieldType>
+      <Hint>Empty uses TeknoNaomi/state. Saves are kept separately for this exact revision.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>DisplayMode</FieldName>
+      <FieldValue>Windowed</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>Windowed</string>
+        <string>Fullscreen</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Internal Resolution</FieldName>
+      <FieldValue>4</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+        <string>4</string>
+        <string>5</string>
+        <string>6</string>
+        <string>7</string>
+        <string>8</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Widescreen</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+      <Hint>Render additional 3D scenery at 16:9. HUDs and fixed 2D screens stay centered; vertical games retain their original layout.</Hint>
+    </FieldInformation>
+  </ConfigValues>
+  <JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Test</ButtonName>
+      <InputMapping>Test</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Service</ButtonName>
+      <InputMapping>Service1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 1</ButtonName>
+      <InputMapping>Coin1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Start</ButtonName>
+      <InputMapping>P1ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Left Throttle</ButtonName>
+      <InputMapping>Analog2</InputMapping>
+      <AnalogType>Gas</AnalogType>
+      <TeknoNaomiControl>p1.axis4</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a trigger or pedal for the left engine. More thrust on this side turns right; equal thrust drives straight.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Right Throttle</ButtonName>
+      <InputMapping>Analog6</InputMapping>
+      <AnalogType>Gas</AnalogType>
+      <TeknoNaomiControl>p1.axis5</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a trigger or pedal for the right engine. More thrust on this side turns left; equal thrust drives straight.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Left Throttle Forward (Digital)</ButtonName>
+      <InputMapping>P1ButtonUp</InputMapping>
+      <Hint>Optional digital alternative to P1 Left Throttle. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Left Throttle Back (Digital)</ButtonName>
+      <InputMapping>P1ButtonDown</InputMapping>
+      <Hint>Optional digital alternative to P1 Left Throttle. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Right Throttle Forward (Digital)</ButtonName>
+      <InputMapping>P2Button1</InputMapping>
+      <Hint>Optional digital alternative to P1 Right Throttle. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Right Throttle Back (Digital)</ButtonName>
+      <InputMapping>P2Button2</InputMapping>
+      <Hint>Optional digital alternative to P1 Right Throttle. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Boost</ButtonName>
+      <InputMapping>P1Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Brake</ButtonName>
+      <InputMapping>P1Button2</InputMapping>
+      <Hint>Bind a button. The cabinet brake lever is an on/off switch.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Selection Left</ButtonName>
+      <InputMapping>P1Button3</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Selection Right</ButtonName>
+      <InputMapping>P1Button4</InputMapping>
+    </JoystickButtons>
+  </JoystickButtons>
+</GameProfile>

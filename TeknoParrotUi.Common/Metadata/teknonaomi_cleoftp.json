@@ -1,0 +1,11 @@
+{
+  "game_name": "Cleopatra Fortune Plus (GDL-0012)",
+  "game_genre": "Puzzle",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2002",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select cleoftp.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: gdl-0012.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

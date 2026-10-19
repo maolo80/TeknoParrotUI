@@ -1,0 +1,11 @@
+{
+  "game_name": "Shikigami no Shiro II / The Castle of Shikigami II (GDL-0021)",
+  "game_genre": "Vertical shooter",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2003",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select shikgam2.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: gdl-0021.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

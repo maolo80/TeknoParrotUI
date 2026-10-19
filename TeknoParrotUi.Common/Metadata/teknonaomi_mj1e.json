@@ -1,0 +1,11 @@
+{
+  "game_name": "Sega Yonin Uchi Mahjong MJ Network Taisen Ver. (Update Disc Ver.2.002, Japan) (CDP-10002E)",
+  "game_genre": "Table / Mahjong",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2003",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select mj1e.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: cdp-10002e.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

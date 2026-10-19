@@ -1,0 +1,11 @@
+{
+  "game_name": "Sports Jam (GDS-0003)",
+  "game_genre": "Sports",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2000",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select sprtjam.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: gds-0003.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

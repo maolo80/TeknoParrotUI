@@ -1,0 +1,11 @@
+{
+  "game_name": "Soreike! Anpanman Popcorn Koujou 2 (Rev C)",
+  "game_genre": "Amusement / Vending",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2003",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select anpanman2.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

@@ -1,0 +1,11 @@
+{
+  "game_name": "Mushiking The King Of Beetle (2K3 2ND Ver. 1.002-, World)",
+  "game_genre": "Kids / Card Battle",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2004",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select mushikeo.zip or the merged parent archive mushike.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

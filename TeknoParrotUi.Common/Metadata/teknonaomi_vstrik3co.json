@@ -1,0 +1,11 @@
+{
+  "game_name": "Virtua Striker 3 (World)",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI 2",
+  "release_year": "2001",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select vstrik3co.zip or the merged parent archive vstrik3c.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi2.zip beside the ROM ZIP."
+}

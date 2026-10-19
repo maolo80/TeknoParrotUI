@@ -1,0 +1,11 @@
+{
+  "game_name": "Dragon Treasure 3 (Rev A) (GDS-0041A)",
+  "game_genre": "Medal / RPG",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2005",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select dragntr3.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: gds-0041a.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

@@ -1,0 +1,11 @@
+{
+  "game_name": "Sega Clay Challenge",
+  "game_genre": "Shooter",
+  "icon_name": "",
+  "platform": "Sammy Atomiswave",
+  "release_year": "2008",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select claychal.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep awbios.zip beside the ROM ZIP."
+}

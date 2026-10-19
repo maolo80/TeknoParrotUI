@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,6 +41,7 @@ namespace TeknoParrotUi.UserControls
             ArcadeGameRevisions.Populate(gameProfile);
             _displayedRevision = gameProfile.ConfigValues?.FirstOrDefault(field => field.FieldName == "Game Revision")?.FieldValue;
 
+            TeknoNaomiProfileSettings.Normalize(_gameProfile);
             GamePathBox.Text = _gameProfile.GamePath;
             GamePathBox2.Text = _gameProfile.GamePath2;
 
@@ -94,7 +95,8 @@ namespace TeknoParrotUi.UserControls
                                       _gameProfile.EmulatorType == EmulatorType.TeknoTZero
                     ? "Game CHD"
                     : Properties.Resources.GameSettingsSecondGameExecutableLabel;
-                GameExecutable2Text.Text = $"{secondPathLabel}{exeName}:";
+                GameExecutable2Text.Text = _gameProfile.EmulatorType == EmulatorType.TeknoNaomi
+                    ? "CHD Root:" : $"{secondPathLabel}{exeName}:";
 
                 GameExecutable2Text.Visibility = Visibility.Visible;
                 GamePathBox2.Visibility = Visibility.Visible;
@@ -527,6 +529,18 @@ namespace TeknoParrotUi.UserControls
 
         private void SelectExecutable2ForTextBox(object sender, MouseButtonEventArgs e)
         {
+            if (_gameProfile.EmulatorType == EmulatorType.TeknoNaomi)
+            {
+                using (var picker = new System.Windows.Forms.FolderBrowserDialog
+                {
+                    Description = "Select the CHD root containing the game or parent folders",
+                    SelectedPath = GamePathBox2.Text,
+                    ShowNewFolderButton = false
+                })
+                    if (picker.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        ((TextBox)sender).Text = picker.SelectedPath;
+                return;
+            }
             var openFileDialog = new OpenFileDialog
             {
                 Multiselect = false,

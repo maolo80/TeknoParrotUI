@@ -1,0 +1,11 @@
+{
+  "game_name": "Asian Dynamite / Dynamite Deka EX",
+  "game_genre": "Beat 'em up",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2007",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select asndynmt.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

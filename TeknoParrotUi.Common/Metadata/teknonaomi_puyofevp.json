@@ -1,0 +1,11 @@
+{
+  "game_name": "Puyo Puyo Fever (prototype ver 0.01)",
+  "game_genre": "Puzzle",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2003",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select puyofevp.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision."
+}

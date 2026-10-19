@@ -1,0 +1,11 @@
+{
+  "game_name": "World Club Champion Football Serie A 2002-2003 Ver.2.34 (Japan) (CDV-10008)",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2004",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select wccf234j.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: cdv-10008.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

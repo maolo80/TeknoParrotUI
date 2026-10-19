@@ -1,0 +1,11 @@
+{
+  "game_name": "Slashout",
+  "game_genre": "Action",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2000",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select slasho.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

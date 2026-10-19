@@ -69,6 +69,9 @@ namespace TeknoParrotUi.Common
     public class GameProfile
     {
         public string ProfileName { get; set; }
+        // Migration alias for Naomi saves created before Cabinet ID became numeric.
+        public string TeknoNaomiCabinetStateId { get; set; }
+        public bool ShouldSerializeTeknoNaomiCabinetStateId() => !string.IsNullOrEmpty(TeknoNaomiCabinetStateId);
         public string GameNameInternal { get; set; } = "";
         public string GameGenreInternal { get; set; }
         public string GamePath { get; set; }

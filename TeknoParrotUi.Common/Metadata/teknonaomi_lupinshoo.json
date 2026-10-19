@@ -1,0 +1,11 @@
+{
+  "game_name": "Lupin The Third - The Shooting (GDS-0018)",
+  "game_genre": "Shooter / Light Gun",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2001",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select lupinshoo.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: gds-0018.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

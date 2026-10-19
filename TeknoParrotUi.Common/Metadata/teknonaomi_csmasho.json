@@ -1,0 +1,11 @@
+{
+  "game_name": "Cosmic Smash",
+  "game_genre": "Sports / Puzzle",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2000",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select csmasho.zip or the merged parent archive csmash.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

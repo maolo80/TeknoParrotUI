@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,6 +63,7 @@ namespace TeknoParrotUi.Common
         TeknoCPS,
         TeknoSS32,
         // Taito Type Zero
-        TeknoTZero
+        TeknoTZero,
+        TeknoNaomi
     }
 }

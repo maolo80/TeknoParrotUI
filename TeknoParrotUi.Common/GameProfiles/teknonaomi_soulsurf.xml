@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='utf-8'?>
+<GameProfile>
+  <ProfileName>teknonaomi_soulsurf</ProfileName>
+  <GamePath />
+  <GameNameInternal>Soul Surfer (Rev A)</GameNameInternal>
+  <EmulationProfile>TeknoNaomi</EmulationProfile>
+  <EmulatorType>TeknoNaomi</EmulatorType>
+  <GameProfileRevision>10</GameProfileRevision>
+  <Is64Bit>true</Is64Bit>
+  <ExecutableName>soulsurf.zip</ExecutableName>
+  <HasTwoExecutables>false</HasTwoExecutables>
+  <HasSeparateTestMode>false</HasSeparateTestMode>
+  <DevOnly>false</DevOnly>
+  <Patreon>true</Patreon>
+  <HasTpoSupport>false</HasTpoSupport>
+  <GameVersion>soulsurf</GameVersion>
+  <ConfigValues>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Input API</FieldName>
+      <FieldValue>XInput</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>DirectInput</string>
+        <string>XInput</string>
+        <string>RawInput</string>
+        <string>MergedInput</string>
+      </FieldOptions>
+      <Hint>Bind the named cabinet controls below. Analog controls accept gamepad or DirectInput axes; the named direction buttons provide digital alternatives.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Save Root</FieldName>
+      <FieldValue />
+      <FieldType>Text</FieldType>
+      <Hint>Empty uses TeknoNaomi/state. Saves are kept separately for this exact revision.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>DisplayMode</FieldName>
+      <FieldValue>Windowed</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>Windowed</string>
+        <string>Fullscreen</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Internal Resolution</FieldName>
+      <FieldValue>4</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+        <string>4</string>
+        <string>5</string>
+        <string>6</string>
+        <string>7</string>
+        <string>8</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Widescreen</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+      <Hint>Render additional 3D scenery at 16:9. HUDs and fixed 2D screens stay centered; vertical games retain their original layout.</Hint>
+    </FieldInformation>
+  </ConfigValues>
+  <JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Test</ButtonName>
+      <InputMapping>Test</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Service</ButtonName>
+      <InputMapping>Service1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 1</ButtonName>
+      <InputMapping>Coin1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Start</ButtonName>
+      <InputMapping>P1ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Board Swing</ButtonName>
+      <InputMapping>Analog0</InputMapping>
+      <AnalogType>AnalogJoystick</AnalogType>
+      <TeknoNaomiControl>p1.axis0</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Board Roll</ButtonName>
+      <InputMapping>Analog2</InputMapping>
+      <AnalogType>AnalogJoystick</AnalogType>
+      <TeknoNaomiControl>p1.axis1</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Board Pitch</ButtonName>
+      <InputMapping>Analog4</InputMapping>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+      <TeknoNaomiControl>p1.axis2</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Pitch Forward (Digital)</ButtonName>
+      <InputMapping>P1ButtonUp</InputMapping>
+      <TeknoNaomiControl>p1.axis2-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Board Pitch. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Pitch Back (Digital)</ButtonName>
+      <InputMapping>P1ButtonDown</InputMapping>
+      <TeknoNaomiControl>p1.axis2+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Board Pitch. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Swing Left (Digital)</ButtonName>
+      <InputMapping>P1ButtonLeft</InputMapping>
+      <TeknoNaomiControl>p1.axis0-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Board Swing. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Swing Right (Digital)</ButtonName>
+      <InputMapping>P1ButtonRight</InputMapping>
+      <TeknoNaomiControl>p1.axis0+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Board Swing. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Left Button</ButtonName>
+      <InputMapping>P1Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Right Button</ButtonName>
+      <InputMapping>P1Button2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sensor Mat</ButtonName>
+      <InputMapping>P1Button3</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Roll Left (Digital)</ButtonName>
+      <InputMapping>TPSystem1</InputMapping>
+      <TeknoNaomiControl>p1.axis1-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Board Roll. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Roll Right (Digital)</ButtonName>
+      <InputMapping>TPSystem2</InputMapping>
+      <TeknoNaomiControl>p1.axis1+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Board Roll. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+  </JoystickButtons>
+</GameProfile>

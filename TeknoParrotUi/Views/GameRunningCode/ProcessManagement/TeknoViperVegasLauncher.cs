@@ -42,6 +42,8 @@ namespace TeknoParrotUi.Views.GameRunningCode.ProcessManagement
         {
             switch (profile.EmulatorType)
             {
+                case EmulatorType.TeknoNaomi:
+                    return TeknoNaomiLaunch.Prepare(profile, Directory.GetCurrentDirectory(), gameLocation, log, isTest);
                 case EmulatorType.TeknoAir:
                     return TeknoAirLauncher.Build(profile, gameLocation, log);
                 case EmulatorType.TeknoVegas:

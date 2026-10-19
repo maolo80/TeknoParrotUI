@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='utf-8'?>
+<GameProfile>
+  <ProfileName>teknonaomi_suchie3</ProfileName>
+  <GamePath />
+  <GameNameInternal>Idol Janshi Suchie-Pai 3 (Japan)</GameNameInternal>
+  <EmulationProfile>TeknoNaomi</EmulationProfile>
+  <EmulatorType>TeknoNaomi</EmulatorType>
+  <GameProfileRevision>11</GameProfileRevision>
+  <Is64Bit>true</Is64Bit>
+  <ExecutableName>suchie3.zip</ExecutableName>
+  <HasTwoExecutables>false</HasTwoExecutables>
+  <HasSeparateTestMode>false</HasSeparateTestMode>
+  <DevOnly>false</DevOnly>
+  <Patreon>true</Patreon>
+  <HasTpoSupport>false</HasTpoSupport>
+  <GameVersion>suchie3</GameVersion>
+  <ConfigValues>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Input API</FieldName>
+      <FieldValue>XInput</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>DirectInput</string>
+        <string>XInput</string>
+        <string>RawInput</string>
+        <string>MergedInput</string>
+      </FieldOptions>
+      <Hint>Bind the named cabinet buttons and directions below.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Save Root</FieldName>
+      <FieldValue />
+      <FieldType>Text</FieldType>
+      <Hint>Empty uses TeknoNaomi/state. Saves are kept separately for this exact revision.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>DisplayMode</FieldName>
+      <FieldValue>Windowed</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>Windowed</string>
+        <string>Fullscreen</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Internal Resolution</FieldName>
+      <FieldValue>4</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+        <string>4</string>
+        <string>5</string>
+        <string>6</string>
+        <string>7</string>
+        <string>8</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Widescreen</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+      <Hint>Render additional 3D scenery at 16:9. HUDs and fixed 2D screens stay centered; vertical games retain their original layout.</Hint>
+    </FieldInformation>
+  </ConfigValues>
+  <JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Test</ButtonName>
+      <InputMapping>Test</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Service</ButtonName>
+      <InputMapping>Service1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 1</ButtonName>
+      <InputMapping>Coin1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Start</ButtonName>
+      <InputMapping>P1ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong A</ButtonName>
+      <InputMapping>ExtensionOne1</InputMapping>
+      <TeknoNaomiControl>mahjong.a</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong B</ButtonName>
+      <InputMapping>ExtensionOne2</InputMapping>
+      <TeknoNaomiControl>mahjong.b</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong C</ButtonName>
+      <InputMapping>ExtensionOne3</InputMapping>
+      <TeknoNaomiControl>mahjong.c</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong D</ButtonName>
+      <InputMapping>ExtensionOne4</InputMapping>
+      <TeknoNaomiControl>mahjong.d</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong E</ButtonName>
+      <InputMapping>ExtensionOne11</InputMapping>
+      <TeknoNaomiControl>mahjong.e</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong F</ButtonName>
+      <InputMapping>ExtensionOne12</InputMapping>
+      <TeknoNaomiControl>mahjong.f</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong G</ButtonName>
+      <InputMapping>ExtensionOne13</InputMapping>
+      <TeknoNaomiControl>mahjong.g</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong H</ButtonName>
+      <InputMapping>ExtensionOne14</InputMapping>
+      <TeknoNaomiControl>mahjong.h</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong I</ButtonName>
+      <InputMapping>ExtensionOne15</InputMapping>
+      <TeknoNaomiControl>mahjong.i</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong J</ButtonName>
+      <InputMapping>ExtensionOne16</InputMapping>
+      <TeknoNaomiControl>mahjong.j</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong K</ButtonName>
+      <InputMapping>ExtensionOne17</InputMapping>
+      <TeknoNaomiControl>mahjong.k</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong L</ButtonName>
+      <InputMapping>ExtensionOne18</InputMapping>
+      <TeknoNaomiControl>mahjong.l</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong M</ButtonName>
+      <InputMapping>ExtensionOne21</InputMapping>
+      <TeknoNaomiControl>mahjong.m</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong N</ButtonName>
+      <InputMapping>ExtensionOne22</InputMapping>
+      <TeknoNaomiControl>mahjong.n</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong KAN</ButtonName>
+      <InputMapping>ExtensionOne23</InputMapping>
+      <TeknoNaomiControl>mahjong.kan</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong PON</ButtonName>
+      <InputMapping>ExtensionOne24</InputMapping>
+      <TeknoNaomiControl>mahjong.pon</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong CHI</ButtonName>
+      <InputMapping>ExtensionOne25</InputMapping>
+      <TeknoNaomiControl>mahjong.chi</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong REACH</ButtonName>
+      <InputMapping>ExtensionOne26</InputMapping>
+      <TeknoNaomiControl>mahjong.reach</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong RON</ButtonName>
+      <InputMapping>ExtensionOne27</InputMapping>
+      <TeknoNaomiControl>mahjong.ron</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong BET</ButtonName>
+      <InputMapping>ExtensionOne28</InputMapping>
+      <TeknoNaomiControl>mahjong.bet</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong LASTCHANCE</ButtonName>
+      <InputMapping>ExtensionTwo1</InputMapping>
+      <TeknoNaomiControl>mahjong.lastchance</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Mahjong FLIPFLOP</ButtonName>
+      <InputMapping>ExtensionTwo2</InputMapping>
+      <TeknoNaomiControl>mahjong.flipflop</TeknoNaomiControl>
+    </JoystickButtons>
+  </JoystickButtons>
+</GameProfile>

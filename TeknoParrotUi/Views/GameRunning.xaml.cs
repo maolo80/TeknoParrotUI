@@ -121,6 +121,7 @@ namespace TeknoParrotUi.Views
             // Viper/Vegas use the second path as CHD launch data, not as a
             // second process for TPUI to start.
             _twoExes = gameProfile.HasTwoExecutables &&
+                       gameProfile.EmulatorType != EmulatorType.TeknoNaomi &&
                        gameProfile.EmulatorType != EmulatorType.TeknoVegas &&
                        (((gameProfile.EmulatorType != EmulatorType.TeknoViper && (gameProfile.EmulatorType != EmulatorType.TeknoS11 && (gameProfile.EmulatorType != EmulatorType.TeknoTPJC && (gameProfile.EmulatorType != EmulatorType.TeknoHDrive && gameProfile.EmulatorType != EmulatorType.TeknoMagic)))) && gameProfile.EmulatorType != EmulatorType.TeknoM2) && gameProfile.EmulatorType != EmulatorType.TeknoAGX) &&
                        gameProfile.EmulatorType != EmulatorType.TeknoHNG64 && (gameProfile.EmulatorType != EmulatorType.TeknoHornet && gameProfile.EmulatorType != EmulatorType.TeknoVUnit) && gameProfile.EmulatorType != EmulatorType.TeknoCobra &&
@@ -285,9 +286,10 @@ namespace TeknoParrotUi.Views
                 return;
 
             _controlSender?.Stop();
-            InputListener?.StopListening();
+            if (_gameProfile.EmulatorType != EmulatorType.TeknoNaomi) InputListener?.StopListening();
 
-            if (_inputApi == InputApi.RawInput || _inputApi == InputApi.RawInputTrackball || (_inputApi == InputApi.MergedInput && (_mergedIncludesRawInput || _mergedIncludesRawInputTrackball)))
+            if (_gameProfile.EmulatorType != EmulatorType.TeknoNaomi &&
+                (_inputApi == InputApi.RawInput || _inputApi == InputApi.RawInputTrackball || (_inputApi == InputApi.MergedInput && (_mergedIncludesRawInput || _mergedIncludesRawInputTrackball))))
             {
                 RawInputDevice.UnregisterDevice(HidUsageAndPage.Mouse);
                 RawInputDevice.UnregisterDevice(HidUsageAndPage.Keyboard);
@@ -864,7 +866,7 @@ namespace TeknoParrotUi.Views
                 new Thread(GameRunningCode.ControlHandlers.OlympicControlHandler.Handle2020OlympicControls).Start();
             }
 
-            if (!_runEmuOnly)
+            if (!_runEmuOnly && _gameProfile.EmulatorType != EmulatorType.TeknoNaomi)
             {
                 GameRunningCode.Utilities.ConfigurationWriter config =
                     new ConfigurationWriter(_gameProfile, _gameLocation, _gameLocation2, _twoExes);
@@ -876,6 +878,7 @@ namespace TeknoParrotUi.Views
                 InputCode.ButtonMode != EmulationProfile.Theatrhythm &&
                 InputCode.ButtonMode != EmulationProfile.FastIo &&
                 InputCode.ButtonMode != EmulationProfile.GunslingerStratos3 &&
+                _gameProfile.EmulatorType != EmulatorType.TeknoNaomi &&
                 _gameProfile.EmulatorType != EmulatorType.Dolphin &&
                 _gameProfile.EmulatorType != EmulatorType.Play &&
                 _gameProfile.EmulatorType != EmulatorType.RPCS3 &&
@@ -989,8 +992,11 @@ namespace TeknoParrotUi.Views
                 new Thread(_serialPortHandler.ProcessQueue).Start();
             }
 
-            _diThread?.Abort(0);
-            _diThread = CreateInputListenerThread();
+            if (_gameProfile.EmulatorType != EmulatorType.TeknoNaomi)
+            {
+                _diThread?.Abort(0);
+                _diThread = CreateInputListenerThread();
+            }
 
             if (_gameProfile.AllowSettingSync)
             {
