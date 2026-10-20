@@ -1,0 +1,11 @@
+{
+  "game_name": "Initial D Arcade Stage Ver. 2 (Japan) (GDS-0026)",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI 2",
+  "release_year": "2002",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select initdv2jo.zip or the merged parent archive initdv2j.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi2.zip beside the ROM ZIP. Required CHD: gds-0026.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

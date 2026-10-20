@@ -1,0 +1,11 @@
+{
+  "game_name": "Capcom Vs. SNK 2: Millionaire Fighting 2001 (Japan, Rev A) (GDL-0007A)",
+  "game_genre": "Fighting",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2001",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select cvs2mf.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: gdl-0007a.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

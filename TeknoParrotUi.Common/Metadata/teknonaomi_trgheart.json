@@ -1,0 +1,11 @@
+{
+  "game_name": "Trigger Heart Exelica Ver.A (Japan) (GDL-0036A)",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2006",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select trgheart.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: gdl-0036a.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

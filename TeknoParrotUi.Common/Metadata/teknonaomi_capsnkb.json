@@ -1,0 +1,11 @@
+{
+  "game_name": "Capcom Vs. SNK: Millennium Fight 2000",
+  "game_genre": "Fighting",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2000",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select capsnkb.zip or the merged parent archive capsnk.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

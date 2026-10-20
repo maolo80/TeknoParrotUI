@@ -1,0 +1,11 @@
+{
+  "game_name": "Virtua Golf / Dynamic Golf (prototype)",
+  "game_genre": "Sports / Golf",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2001",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select dygolfp.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision."
+}

@@ -1,0 +1,11 @@
+{
+  "game_name": "The House of the Dead 2 (prototype)",
+  "game_genre": "Shooter / Light Gun",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "1998",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select hotd2p.zip or the merged parent archive hotd2.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep hod2bios.zip beside the ROM ZIP."
+}

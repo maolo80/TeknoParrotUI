@@ -1,0 +1,11 @@
+{
+  "game_name": "Capcom Vs. SNK 2: Mark Of The Millennium 2001 (USA) (GDL-0008)",
+  "game_genre": "Fighting",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2001",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select cvs2.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: gdl-0008.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

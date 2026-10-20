@@ -1,0 +1,11 @@
+{
+  "game_name": "The King of Fighters Neowave",
+  "game_genre": "Fighting",
+  "icon_name": "",
+  "platform": "Sammy Atomiswave",
+  "release_year": "2004",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select kofnw.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep awbios.zip beside the ROM ZIP."
+}

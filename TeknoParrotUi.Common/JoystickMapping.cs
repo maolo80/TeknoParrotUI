@@ -335,6 +335,8 @@ namespace TeknoParrotUi.Common
         public XInputButton XInputButton { get; set; }
         public RawInputButton RawInputButton { get; set; }
         public InputMapping InputMapping { get; set; }
+        public string TeknoNaomiControl { get; set; }
+        public bool ShouldSerializeTeknoNaomiControl() => !string.IsNullOrEmpty(TeknoNaomiControl);
         public AnalogType AnalogType { get; set; }
         public string BindNameDi { get; set; }
         public string BindNameXi { get; set; }

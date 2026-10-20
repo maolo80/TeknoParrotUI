@@ -1,0 +1,11 @@
+{
+  "game_name": "Ferrari F355 Challenge (twin/deluxe)",
+  "game_genre": "Racing / Simulation",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "1999",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select f355twin.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep f355bios.zip beside the ROM ZIP."
+}

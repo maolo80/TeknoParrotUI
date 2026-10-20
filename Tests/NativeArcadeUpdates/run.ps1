@@ -1,13 +1,16 @@
 [CmdletBinding()]
 param(
     [string]$PatcherAssembly = '',
+    [string]$UiAssembly = '',
+    [string]$NaomiArchive = '',
+    [string]$OutputDirectory = '',
     [string]$Compiler = 'C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\Roslyn\csc.exe'
 )
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 if (-not $PatcherAssembly) { $PatcherAssembly = Join-Path $root 'bin\x86\Release\ParrotPatcher.exe' }
 if (-not (Test-Path -LiteralPath $PatcherAssembly)) { throw 'Build ParrotPatcher Release first or supply -PatcherAssembly.' }
-$output = Join-Path $PSScriptRoot 'bin'
+$output = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $PSScriptRoot 'bin' }
 [IO.Directory]::CreateDirectory($output) | Out-Null
 $patcher = Join-Path $output 'ParrotPatcher.exe'
 Copy-Item -LiteralPath $PatcherAssembly -Destination $patcher
@@ -21,5 +24,11 @@ if ($LASTEXITCODE -ne 0) { throw 'Native arcade update test compilation failed.'
 if (Test-Path -LiteralPath "$PatcherAssembly.config") {
     Copy-Item -LiteralPath "$PatcherAssembly.config" -Destination "$exe.config"
 }
-& $exe
+if ($UiAssembly -and $NaomiArchive) {
+    & $exe (Resolve-Path -LiteralPath $UiAssembly).Path (Resolve-Path -LiteralPath $NaomiArchive).Path
+} elseif ($UiAssembly -or $NaomiArchive) {
+    throw 'Supply both -UiAssembly and -NaomiArchive for the real-package check.'
+} else {
+    & $exe
+}
 if ($LASTEXITCODE -ne 0) { throw 'Native arcade install/update checks failed.' }

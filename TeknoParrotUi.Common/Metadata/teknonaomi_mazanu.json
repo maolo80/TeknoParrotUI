@@ -1,0 +1,11 @@
+{
+  "game_name": "Mazan: Flash of the Blade (US, MAZ3 Ver.A)",
+  "game_genre": "Action / Sword Fighting",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2002",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select mazanu.zip or the merged parent archive mazan.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

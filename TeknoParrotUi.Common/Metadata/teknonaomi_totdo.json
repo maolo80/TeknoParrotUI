@@ -1,0 +1,11 @@
+{
+  "game_name": "The Typing of the Dead",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2000",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select totdo.zip or the merged parent archive totd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

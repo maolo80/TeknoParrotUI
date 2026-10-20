@@ -1,0 +1,11 @@
+{
+  "game_name": "Alien Front (Rev A)",
+  "game_genre": "Vehicular combat",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2001",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select alienfnta.zip or the merged parent archive alienfnt.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

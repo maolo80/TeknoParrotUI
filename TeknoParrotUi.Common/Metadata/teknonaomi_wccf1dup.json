@@ -1,0 +1,11 @@
+{
+  "game_name": "World Club Champion Football Serie A 2001-2002 DIMM FIRM Ver.3.03 (CDP-10003)",
+  "game_genre": "Utility",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2002",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select wccf1dup.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: cdp-10003.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

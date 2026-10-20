@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='utf-8'?>
+<GameProfile>
+  <ProfileName>teknonaomi_mazanu</ProfileName>
+  <GamePath />
+  <GameNameInternal>Mazan: Flash of the Blade (US, MAZ3 Ver.A)</GameNameInternal>
+  <EmulationProfile>TeknoNaomi</EmulationProfile>
+  <EmulatorType>TeknoNaomi</EmulatorType>
+  <GameProfileRevision>12</GameProfileRevision>
+  <Is64Bit>true</Is64Bit>
+  <ExecutableName>mazanu.zip</ExecutableName>
+  <HasTwoExecutables>false</HasTwoExecutables>
+  <HasSeparateTestMode>false</HasSeparateTestMode>
+  <DevOnly>false</DevOnly>
+  <Patreon>true</Patreon>
+  <HasTpoSupport>false</HasTpoSupport>
+  <GameVersion>mazanu</GameVersion>
+  <ConfigValues>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Input API</FieldName>
+      <Hint>Hold Sword in sensor area while moving Sword X/Y, the direction buttons or a RawInput Sword Pointer. Tilt X/Y changes the blade angle. Bind Operator Up, Down and Enter separately for the test menu. One player uses both sword sensors.</Hint>
+      <FieldValue>XInput</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>DirectInput</string>
+        <string>XInput</string>
+        <string>RawInput</string>
+        <string>MergedInput</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Save Root</FieldName>
+      <FieldValue />
+      <FieldType>Text</FieldType>
+      <Hint>Empty uses TeknoNaomi/state. Saves are kept separately for this exact revision.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>DisplayMode</FieldName>
+      <FieldValue>Windowed</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>Windowed</string>
+        <string>Fullscreen</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Internal Resolution</FieldName>
+      <FieldValue>4</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+        <string>4</string>
+        <string>5</string>
+        <string>6</string>
+        <string>7</string>
+        <string>8</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Widescreen</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+      <Hint>Render additional 3D scenery at 16:9. HUDs and fixed 2D screens stay centered; vertical games retain their original layout.</Hint>
+    </FieldInformation>
+  </ConfigValues>
+  <JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Test</ButtonName>
+      <InputMapping>Test</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Service</ButtonName>
+      <InputMapping>Service1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 1</ButtonName>
+      <InputMapping>Coin1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 2</ButtonName>
+      <InputMapping>Coin2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Start</ButtonName>
+      <InputMapping>P1ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword X</ButtonName>
+      <InputMapping>Analog0</InputMapping>
+      <AnalogType>AnalogJoystick</AnalogType>
+      <TeknoNaomiControl>p1.axis0</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword Y</ButtonName>
+      <InputMapping>Analog2</InputMapping>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+      <TeknoNaomiControl>p1.axis1</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword Tilt X</ButtonName>
+      <InputMapping>Analog4</InputMapping>
+      <AnalogType>AnalogJoystick</AnalogType>
+      <TeknoNaomiControl>p1.axis2</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword Tilt Y</ButtonName>
+      <InputMapping>Analog6</InputMapping>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+      <TeknoNaomiControl>p1.axis3</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword Up (Digital)</ButtonName>
+      <InputMapping>P1ButtonUp</InputMapping>
+      <TeknoNaomiControl>p1.axis1-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Sword Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword Down (Digital)</ButtonName>
+      <InputMapping>P1ButtonDown</InputMapping>
+      <TeknoNaomiControl>p1.axis1+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Sword Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword Left (Digital)</ButtonName>
+      <InputMapping>P1ButtonLeft</InputMapping>
+      <TeknoNaomiControl>p1.axis0-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Sword X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword Right (Digital)</ButtonName>
+      <InputMapping>P1ButtonRight</InputMapping>
+      <TeknoNaomiControl>p1.axis0+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Sword X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Operator Enter</ButtonName>
+      <InputMapping>P1Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword in sensor area (hold)</ButtonName>
+      <InputMapping>P1Button2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Tilt Left (Digital)</ButtonName>
+      <InputMapping>TPSystem1</InputMapping>
+      <TeknoNaomiControl>p1.axis2-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Sword Tilt X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Tilt Right (Digital)</ButtonName>
+      <InputMapping>TPSystem2</InputMapping>
+      <TeknoNaomiControl>p1.axis2+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Sword Tilt X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Tilt Up (Digital)</ButtonName>
+      <InputMapping>TPSystem3</InputMapping>
+      <TeknoNaomiControl>p1.axis3-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Sword Tilt Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Tilt Down (Digital)</ButtonName>
+      <InputMapping>TPSystem4</InputMapping>
+      <TeknoNaomiControl>p1.axis3+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Sword Tilt Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Sword Pointer</ButtonName>
+      <InputMapping>P1LightGun</InputMapping>
+      <HideWithDirectInput>true</HideWithDirectInput>
+      <HideWithXInput>true</HideWithXInput>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Operator Up</ButtonName>
+      <InputMapping>TPSystem5</InputMapping>
+      <TeknoNaomiControl>p1.up</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Operator Down</ButtonName>
+      <InputMapping>TPSystem6</InputMapping>
+      <TeknoNaomiControl>p1.down</TeknoNaomiControl>
+    </JoystickButtons>
+  </JoystickButtons>
+</GameProfile>

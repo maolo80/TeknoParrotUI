@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -515,6 +515,7 @@ namespace TeknoParrotUi.Views.GameRunningCode.ProcessManagement
                          _gameProfile.EmulatorType == EmulatorType.TeknoSS32 ||
                          _gameProfile.EmulatorType == EmulatorType.TeknoCPS ||
                          _gameProfile.EmulatorType == EmulatorType.TeknoTZero ||
+                         _gameProfile.EmulatorType == EmulatorType.TeknoNaomi ||
                          _gameProfile.EmulatorType == EmulatorType.TeknoModel3 ||
                          (_gameProfile.EmulatorType == EmulatorType.TeknoZeus || ((_gameProfile.EmulatorType == EmulatorType.TeknoS22 || _gameProfile.EmulatorType == EmulatorType.TeknoS21) || (_gameProfile.EmulatorType == EmulatorType.TeknoS23 || _gameProfile.EmulatorType == EmulatorType.TeknoGClub))))
                 {
@@ -1066,6 +1067,7 @@ namespace TeknoParrotUi.Views.GameRunningCode.ProcessManagement
                          _gameProfile.EmulatorType == EmulatorType.TeknoSS32 ||
                          _gameProfile.EmulatorType == EmulatorType.TeknoCPS ||
                          _gameProfile.EmulatorType == EmulatorType.TeknoTZero ||
+                         _gameProfile.EmulatorType == EmulatorType.TeknoNaomi ||
                          _gameProfile.EmulatorType == EmulatorType.TeknoModel3 ||
                          (_gameProfile.EmulatorType == EmulatorType.TeknoZeus || ((_gameProfile.EmulatorType == EmulatorType.TeknoS22 || _gameProfile.EmulatorType == EmulatorType.TeknoS21) || (_gameProfile.EmulatorType == EmulatorType.TeknoS23 || _gameProfile.EmulatorType == EmulatorType.TeknoGClub))))
                     {
@@ -1113,7 +1115,7 @@ namespace TeknoParrotUi.Views.GameRunningCode.ProcessManagement
                 {
                     if (_forceQuit)
                     {
-                        if (_gameProfile.EmulatorType == EmulatorType.TeknoHornet) // Hornet commits cabinet settings and gun calibration during shutdown. Give its window a chance to close.
+                        if (_gameProfile.EmulatorType == EmulatorType.TeknoHornet || _gameProfile.EmulatorType == EmulatorType.TeknoNaomi) // Let the owned emulator window commit cabinet state before forced termination.
                         {
                             cmdProcess.CloseMainWindow();
                             if (!cmdProcess.WaitForExit(5000))

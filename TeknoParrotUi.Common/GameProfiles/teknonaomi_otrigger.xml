@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='utf-8'?>
+<GameProfile>
+  <ProfileName>teknonaomi_otrigger</ProfileName>
+  <GamePath />
+  <GameNameInternal>OutTrigger</GameNameInternal>
+  <EmulationProfile>TeknoNaomi</EmulationProfile>
+  <EmulatorType>TeknoNaomi</EmulatorType>
+  <GameProfileRevision>11</GameProfileRevision>
+  <Is64Bit>true</Is64Bit>
+  <ExecutableName>otrigger.zip</ExecutableName>
+  <HasTwoExecutables>false</HasTwoExecutables>
+  <HasSeparateTestMode>false</HasSeparateTestMode>
+  <DevOnly>false</DevOnly>
+  <Patreon>true</Patreon>
+  <HasTpoSupport>true</HasTpoSupport>
+  <GameVersion>otrigger</GameVersion>
+  <ConfigValues>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Input API</FieldName>
+      <Hint>Bind movement separately from aiming. Use a gamepad stick for the Aim Speed axes, or bind the four Aim direction buttons.</Hint>
+      <FieldValue>XInput</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>DirectInput</string>
+        <string>XInput</string>
+        <string>RawInput</string>
+        <string>MergedInput</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Save Root</FieldName>
+      <FieldValue />
+      <FieldType>Text</FieldType>
+      <Hint>Empty uses TeknoNaomi/state. Saves are kept separately for this exact revision and Cabinet ID.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Cabinet ID</FieldName>
+      <FieldValue>1</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+        <string>4</string>
+      </FieldOptions>
+      <Hint>Select this cabinet's saved settings. TPOnline assigns the link position automatically.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>DisplayMode</FieldName>
+      <FieldValue>Windowed</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>Windowed</string>
+        <string>Fullscreen</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Internal Resolution</FieldName>
+      <FieldValue>4</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+        <string>4</string>
+        <string>5</string>
+        <string>6</string>
+        <string>7</string>
+        <string>8</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Widescreen</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+      <Hint>Render additional 3D scenery at 16:9. HUDs and fixed 2D screens stay centered; vertical games retain their original layout.</Hint>
+    </FieldInformation>
+  </ConfigValues>
+  <JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Test</ButtonName>
+      <InputMapping>Test</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Service</ButtonName>
+      <InputMapping>Service1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 1</ButtonName>
+      <InputMapping>Coin1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Start</ButtonName>
+      <InputMapping>P1ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Aim Horizontal Speed</ButtonName>
+      <InputMapping>Analog0</InputMapping>
+      <AnalogType>AnalogJoystick</AnalogType>
+      <TeknoNaomiControl>p1.axis0</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Aim Vertical Speed</ButtonName>
+      <InputMapping>Analog2</InputMapping>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+      <TeknoNaomiControl>p1.axis1</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Move Up</ButtonName>
+      <InputMapping>P1ButtonUp</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Move Down</ButtonName>
+      <InputMapping>P1ButtonDown</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Move Left</ButtonName>
+      <InputMapping>P1ButtonLeft</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Move Right</ButtonName>
+      <InputMapping>P1ButtonRight</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Trigger</ButtonName>
+      <InputMapping>P1Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Change Weapon</ButtonName>
+      <InputMapping>P1Button2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Jump</ButtonName>
+      <InputMapping>P1Button3</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Aim Left (Digital)</ButtonName>
+      <InputMapping>TPSystem1</InputMapping>
+      <TeknoNaomiControl>p1.axis0-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Aim Horizontal Speed. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Aim Right (Digital)</ButtonName>
+      <InputMapping>TPSystem2</InputMapping>
+      <TeknoNaomiControl>p1.axis0+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Aim Horizontal Speed. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Aim Up (Digital)</ButtonName>
+      <InputMapping>TPSystem3</InputMapping>
+      <TeknoNaomiControl>p1.axis1-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Aim Vertical Speed. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Aim Down (Digital)</ButtonName>
+      <InputMapping>TPSystem4</InputMapping>
+      <TeknoNaomiControl>p1.axis1+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Aim Vertical Speed. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+  </JoystickButtons>
+</GameProfile>

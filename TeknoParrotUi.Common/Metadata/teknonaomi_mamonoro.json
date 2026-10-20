@@ -1,0 +1,11 @@
+{
+  "game_name": "Mamoru-kun wa Norowarete Shimatta! (Japan)",
+  "game_genre": "Shooter / Vertical",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2008",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select mamonoro.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

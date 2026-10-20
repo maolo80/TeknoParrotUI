@@ -1,0 +1,11 @@
+{
+  "game_name": "Rhythm Tengoku (Japan)",
+  "game_genre": "Rhythm",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2007",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select rhytngk.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

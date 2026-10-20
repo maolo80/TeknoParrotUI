@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='utf-8'?>
+<GameProfile>
+  <ProfileName>teknonaomi_f355</ProfileName>
+  <GamePath />
+  <GameNameInternal>Ferrari F355 Challenge (deluxe, no link)</GameNameInternal>
+  <EmulationProfile>TeknoNaomi</EmulationProfile>
+  <EmulatorType>TeknoNaomi</EmulatorType>
+  <GameProfileRevision>13</GameProfileRevision>
+  <Is64Bit>true</Is64Bit>
+  <ExecutableName>f355.zip</ExecutableName>
+  <HasTwoExecutables>false</HasTwoExecutables>
+  <HasSeparateTestMode>false</HasSeparateTestMode>
+  <DevOnly>false</DevOnly>
+  <Patreon>true</Patreon>
+  <HasTpoSupport>false</HasTpoSupport>
+  <GameVersion>f355</GameVersion>
+  <ConfigValues>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Input API</FieldName>
+      <FieldValue>XInput</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>DirectInput</string>
+        <string>XInput</string>
+        <string>RawInput</string>
+        <string>MergedInput</string>
+      </FieldOptions>
+      <Hint>Bind the named cabinet controls below. Analog controls accept gamepad or DirectInput axes; the named direction buttons provide digital alternatives.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Save Root</FieldName>
+      <FieldValue />
+      <FieldType>Text</FieldType>
+      <Hint>Empty uses TeknoNaomi/state. Saves are kept separately for this exact revision.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>DisplayMode</FieldName>
+      <FieldValue>Windowed</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>Windowed</string>
+        <string>Fullscreen</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Internal Resolution</FieldName>
+      <FieldValue>4</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+        <string>4</string>
+        <string>5</string>
+        <string>6</string>
+        <string>7</string>
+        <string>8</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Widescreen</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+      <Hint>Render additional 3D scenery at 16:9. HUDs and fixed 2D screens stay centered; vertical games retain their original layout.</Hint>
+    </FieldInformation>
+  </ConfigValues>
+  <JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Test</ButtonName>
+      <InputMapping>Test</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Service</ButtonName>
+      <InputMapping>Service1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 1</ButtonName>
+      <InputMapping>Coin1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 2</ButtonName>
+      <InputMapping>Coin2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Start</ButtonName>
+      <InputMapping>P1ButtonStart</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Steering</ButtonName>
+      <InputMapping>Analog0</InputMapping>
+      <AnalogType>Wheel</AnalogType>
+      <TeknoNaomiControl>p1.axis0</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Accelerator</ButtonName>
+      <InputMapping>Analog10</InputMapping>
+      <AnalogType>Gas</AnalogType>
+      <TeknoNaomiControl>p1.axis5</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Brake</ButtonName>
+      <InputMapping>Analog8</InputMapping>
+      <AnalogType>Brake</AnalogType>
+      <TeknoNaomiControl>p1.axis4</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Clutch</ButtonName>
+      <InputMapping>Analog20</InputMapping>
+      <AnalogType>Brake</AnalogType>
+      <TeknoNaomiControl>p2.axis4</TeknoNaomiControl>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Steer Left (Digital)</ButtonName>
+      <InputMapping>P1ButtonLeft</InputMapping>
+      <Hint>Optional digital alternative to P1 Steering. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Steer Right (Digital)</ButtonName>
+      <InputMapping>P1ButtonRight</InputMapping>
+      <Hint>Optional digital alternative to P1 Steering. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Accelerator (Digital)</ButtonName>
+      <InputMapping>P1ButtonUp</InputMapping>
+      <Hint>Optional digital alternative to P1 Accelerator. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Brake (Digital)</ButtonName>
+      <InputMapping>P1ButtonDown</InputMapping>
+      <Hint>Optional digital alternative to P1 Brake. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Paddle Left</ButtonName>
+      <InputMapping>P1Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Paddle Right</ButtonName>
+      <InputMapping>P1Button2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Stability Control</ButtonName>
+      <InputMapping>P1Button3</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Traction Control</ButtonName>
+      <InputMapping>P1Button4</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 ABS</ButtonName>
+      <InputMapping>P1Button5</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Intelligent Brake</ButtonName>
+      <InputMapping>P1Button6</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Clutch (Digital)</ButtonName>
+      <InputMapping>TPSystem1</InputMapping>
+      <TeknoNaomiControl>p2.axis4+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Clutch. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Gear 1</ButtonName>
+      <InputMapping>ExtensionOne11</InputMapping>
+      <TeknoNaomiControl>p2.button1</TeknoNaomiControl>
+      <Hint>Hold the selected gear contact. Releasing all gear contacts selects neutral.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Gear 2</ButtonName>
+      <InputMapping>ExtensionOne12</InputMapping>
+      <TeknoNaomiControl>p2.button2</TeknoNaomiControl>
+      <Hint>Hold the selected gear contact. Releasing all gear contacts selects neutral.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Gear 3</ButtonName>
+      <InputMapping>ExtensionOne13</InputMapping>
+      <TeknoNaomiControl>p2.button3</TeknoNaomiControl>
+      <Hint>Hold the selected gear contact. Releasing all gear contacts selects neutral.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Gear 4</ButtonName>
+      <InputMapping>ExtensionOne14</InputMapping>
+      <TeknoNaomiControl>p2.button4</TeknoNaomiControl>
+      <Hint>Hold the selected gear contact. Releasing all gear contacts selects neutral.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Gear 5</ButtonName>
+      <InputMapping>ExtensionOne15</InputMapping>
+      <TeknoNaomiControl>p2.button5</TeknoNaomiControl>
+      <Hint>Hold the selected gear contact. Releasing all gear contacts selects neutral.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Gear 6</ButtonName>
+      <InputMapping>ExtensionOne16</InputMapping>
+      <TeknoNaomiControl>p2.button6</TeknoNaomiControl>
+      <Hint>Hold the selected gear contact. Releasing all gear contacts selects neutral.</Hint>
+    </JoystickButtons>
+  </JoystickButtons>
+</GameProfile>
