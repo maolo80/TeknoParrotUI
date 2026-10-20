@@ -280,11 +280,16 @@
     <Compile Include="ArcadeGameRevisions.Mvs.cs" />
     <Compile Include="ArcadeGameRevisions.Cps.cs" />
     <Compile Include="ArcadeGameRevisions.Ss32.cs" />
+    <Compile Include="ArcadeGameRevisions.TeknoNaomi.cs" />
     <Compile Include="OnlineGameRevisionProfiles.cs" />
     <Compile Include="TypeZeroControls.cs" />
     <Compile Include="CabinetOutputSettings.cs" />
     <Compile Include="InputCode.cs" />
     <Compile Include="JoystickMapping.cs" />
+    <Compile Include="TeknoNaomiInputBindings.cs" />
+    <Compile Include="TeknoNaomiCatalog.cs" />
+    <Compile Include="TeknoNaomiLaunch.cs" />
+    <Compile Include="TeknoNaomiProfileSettings.cs" />
     <Compile Include="Jvs\ChatButtonBlock.cs" />
     <Compile Include="Jvs\JvsHelper.cs" />
     <Compile Include="Jvs\JvsPackageEmulator.cs" />

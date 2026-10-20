@@ -1,0 +1,11 @@
+{
+  "game_name": "Marvel Vs. Capcom 2: New Age of Heroes (Export, Korea, Rev A)",
+  "game_genre": "Fighting",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2000",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select mvsc2.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

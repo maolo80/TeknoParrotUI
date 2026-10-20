@@ -1,0 +1,11 @@
+{
+  "game_name": "Virtua Fighter 4: Final Tuned (Ver. B) (GDS-0036F)",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI 2",
+  "release_year": "2004",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select vf4tuned.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi2.zip beside the ROM ZIP. Required CHD: gds-0036f.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

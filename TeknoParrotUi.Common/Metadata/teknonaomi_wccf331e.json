@@ -1,0 +1,11 @@
+{
+  "game_name": "World Club Champion Football European Clubs 2004-2005 Ver.1.1 (Export) (CDV-10015)",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2005",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select wccf331e.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: cdv-10015.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

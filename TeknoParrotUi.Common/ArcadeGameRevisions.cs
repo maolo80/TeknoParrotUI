@@ -27,7 +27,8 @@ namespace TeknoParrotUi.Common
         private static readonly Lazy<Dictionary<string, ArcadeGameRevision>> Catalog =
             new Lazy<Dictionary<string, ArcadeGameRevision>>(() =>
             {
-                var entries = Mvs.Concat(Cps).Concat(Ss32).ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var entries = Mvs.Concat(Cps).Concat(Ss32).Concat(TeknoNaomiGames)
+                    .ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
                 foreach (var entry in entries.Values)
                     if (!entries.TryGetValue(entry.FamilyId, out var root) || root.Id != root.FamilyId ||
                         Emulator(entry.Id) != Emulator(root.Id))
@@ -90,7 +91,8 @@ namespace TeknoParrotUi.Common
 
         private static EmulatorType Emulator(string id) => id.StartsWith("mvs_", StringComparison.Ordinal)
             ? EmulatorType.TeknoMVS : id.StartsWith("cps_", StringComparison.Ordinal)
-                ? EmulatorType.TeknoCPS : EmulatorType.TeknoSS32;
+                ? EmulatorType.TeknoCPS : id.StartsWith("teknonaomi_", StringComparison.Ordinal)
+                    ? EmulatorType.TeknoNaomi : EmulatorType.TeknoSS32;
 
         private static ArcadeGameRevision Entry(string id)
         {
@@ -323,7 +325,9 @@ namespace TeknoParrotUi.Common
             foreach (var field in target.ConfigValues ?? Enumerable.Empty<FieldInformation>())
             {
                 if (field == null || field.FieldName == SettingName ||
-                    (!sameRevision && field.CategoryName != "General" && field.CategoryName != "Video")) continue;
+                    (!sameRevision && field.CategoryName != "General" && field.CategoryName != "Video" &&
+                     !(target.EmulatorType == EmulatorType.TeknoNaomi &&
+                       (field.CategoryName == "Media" || field.CategoryName == "Audio")))) continue;
                 var old = copy.ConfigValues?.FirstOrDefault(x => x != null &&
                     x.CategoryName == field.CategoryName && x.FieldName == field.FieldName);
                 if (old != null) field.FieldValue = old.FieldValue;
@@ -331,14 +335,33 @@ namespace TeknoParrotUi.Common
             foreach (var button in target.JoystickButtons ?? Enumerable.Empty<JoystickButtons>())
             {
                 if (button == null) continue;
-                var old = copy.JoystickButtons?.FirstOrDefault(x => x != null && x.ButtonName == button.ButtonName);
+                var old = copy.JoystickButtons?.FirstOrDefault(x => x != null && x.ButtonName == button.ButtonName &&
+                    (target.EmulatorType != EmulatorType.TeknoNaomi || x.InputMapping == button.InputMapping));
+                if (old == null && copy.EmulatorType == EmulatorType.TeknoNaomi)
+                {
+                    var previousName = PreviousTeknoNaomiControlName(target, button.ButtonName);
+                    if (previousName != null)
+                        old = copy.JoystickButtons?.FirstOrDefault(x => x != null &&
+                            x.ButtonName == previousName && x.InputMapping == button.InputMapping);
+                    if (old == null && target.EmulatorType == EmulatorType.TeknoNaomi)
+                        old = copy.JoystickButtons?.FirstOrDefault(x => x != null && x.InputMapping == button.InputMapping);
+                }
                 if (old == null) continue;
                 button.DirectInputButton = old.DirectInputButton; button.XInputButton = old.XInputButton;
                 button.RawInputButton = old.RawInputButton; button.BindName = old.BindName;
                 button.BindNameDi = old.BindNameDi; button.BindNameXi = old.BindNameXi; button.BindNameRi = old.BindNameRi;
             }
             if (sameRevision || !string.IsNullOrWhiteSpace(copy.GamePath)) target.GamePath = copy.GamePath;
-            if (sameRevision || !string.IsNullOrWhiteSpace(copy.GamePath2)) target.GamePath2 = copy.GamePath2;
+            // Naomi clones can require a different GD-ROM. Share the CHD root,
+            // but retain the selected template/saved revision's exact disk path.
+            if (sameRevision || (target.EmulatorType != EmulatorType.TeknoNaomi &&
+                                 !string.IsNullOrWhiteSpace(copy.GamePath2))) target.GamePath2 = copy.GamePath2;
+            if (target.EmulatorType == EmulatorType.TeknoNaomi)
+            {
+                if (!sameRevision && TeknoNaomiProfileSettings.HasChd(target))
+                    target.GamePath2 = TeknoNaomiProfileSettings.ChdRoot(copy, Directory.GetCurrentDirectory());
+                TeknoNaomiProfileSettings.Normalize(target, copy);
+            }
             target.CustomArguments = copy.CustomArguments;
             target.Rotary1Sensitivity = copy.Rotary1Sensitivity; target.Rotary2Sensitivity = copy.Rotary2Sensitivity;
             target.Rotary3Sensitivity = copy.Rotary3Sensitivity; target.Rotary4Sensitivity = copy.Rotary4Sensitivity;

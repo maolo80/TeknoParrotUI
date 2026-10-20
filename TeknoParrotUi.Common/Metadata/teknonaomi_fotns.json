@@ -1,0 +1,11 @@
+{
+  "game_name": "Fist Of The North Star / Hokuto no Ken",
+  "game_genre": "Fighting",
+  "icon_name": "",
+  "platform": "Sammy Atomiswave",
+  "release_year": "2005",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select fotns.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep awbios.zip beside the ROM ZIP."
+}

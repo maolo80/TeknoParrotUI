@@ -660,6 +660,15 @@ namespace TeknoParrotUi
             },
             new UpdaterComponent
             {
+                name = "TeknoNaomi",
+                location = Path.Combine("TeknoNaomi", "TeknoNaomi.exe"),
+                reponame = "TeknoParrot",
+                opensource = false,
+                manualVersion = false,
+                folderOverride = "TeknoNaomi"
+            },
+            new UpdaterComponent
+            {
                 name = "TeknoHNG64",
                 location = Path.Combine("TeknoHNG64", "TeknoHNG64.exe"),
                 reponame = "TeknoParrot",

@@ -810,6 +810,9 @@ namespace TeknoParrotUi.Views
                 case EmulatorType.TeknoTZero:
                     loaderExe = ".\\TeknoTZero\\TeknoTZero.exe";
                     break;
+                case EmulatorType.TeknoNaomi:
+                    loaderExe = ".\\TeknoNaomi\\TeknoNaomi.exe";
+                    break;
                 case EmulatorType.TeknoModel3:
                     loaderExe = ".\\TeknoModel3\\TeknoModel3.exe";
                     break;
@@ -882,7 +885,23 @@ namespace TeknoParrotUi.Views
             }
 
             // Check second exe
-            if (gameProfile.HasTwoExecutables)
+            if (gameProfile.EmulatorType == EmulatorType.TeknoNaomi && TeknoNaomiProfileSettings.HasChd(gameProfile))
+            {
+                TeknoNaomiProfileSettings.Normalize(gameProfile);
+                string chdRoot;
+                try { chdRoot = TeknoNaomiProfileSettings.ChdRoot(gameProfile, Directory.GetCurrentDirectory()); }
+                catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is NotSupportedException || error is IOException)
+                {
+                    MessageBoxHelper.ErrorOK(error.Message);
+                    return false;
+                }
+                if (string.IsNullOrWhiteSpace(chdRoot) || !Directory.Exists(chdRoot))
+                {
+                    MessageBoxHelper.ErrorOK("Select the CHD Root folder below the ROM ZIP in Game Settings.");
+                    return false;
+                }
+            }
+            else if (gameProfile.HasTwoExecutables)
             {
                 if (string.IsNullOrEmpty(gameProfile.GamePath2))
                 {
@@ -1006,7 +1025,10 @@ namespace TeknoParrotUi.Views
                 }
             }
 
-            if (gameProfile.ProfileName != "tatsuvscap")
+            // This only matters for PC/Windows based games
+            if (gameProfile.EmulatorType == EmulatorType.TeknoParrot ||
+                gameProfile.EmulatorType == EmulatorType.OpenParrot ||
+                gameProfile.EmulatorType == EmulatorType.OpenParrotKonami)
             {
                 EmuBlacklist bl = new EmuBlacklist(gameProfile.GamePath);
                 EmuBlacklist bl2 = new EmuBlacklist(gameProfile.GamePath2);
@@ -1034,36 +1056,35 @@ namespace TeknoParrotUi.Views
                     if (!MessageBoxHelper.ErrorYesNo(err))
                         return false;
                 }
+            }
 
-                if (gameProfile.InvalidFiles != null)
+            if (gameProfile.InvalidFiles != null)
+            {
+                string[] filesToDelete = gameProfile.InvalidFiles.Split(',');
+                List<string> filesThatExist = new List<string>();
+
+                foreach (var file in filesToDelete)
                 {
-                    string[] filesToDelete = gameProfile.InvalidFiles.Split(',');
-                    List<string> filesThatExist = new List<string>();
-
-                    foreach (var file in filesToDelete)
+                    if (File.Exists(Path.Combine(Path.GetDirectoryName(gameProfile.GamePath), file)))
                     {
-                        if (File.Exists(Path.Combine(Path.GetDirectoryName(gameProfile.GamePath), file)))
-                        {
-                            filesThatExist.Add(file);
-                        }
-                    }
-
-                    if (filesThatExist.Count > 0)
-                    {
-                        var errorMsg = Properties.Resources.LibraryInvalidFiles;
-                        foreach (var fileName in filesThatExist)
-                        {
-                            errorMsg += fileName + Environment.NewLine;
-                        }
-                        errorMsg += Properties.Resources.LibraryInvalidFilesContinue;
-
-                        if (!MessageBoxHelper.WarningYesNo(errorMsg))
-                        {
-                            return false;
-                        }
+                        filesThatExist.Add(file);
                     }
                 }
 
+                if (filesThatExist.Count > 0)
+                {
+                    var errorMsg = Properties.Resources.LibraryInvalidFiles;
+                    foreach (var fileName in filesThatExist)
+                    {
+                        errorMsg += fileName + Environment.NewLine;
+                    }
+                    errorMsg += Properties.Resources.LibraryInvalidFilesContinue;
+
+                    if (!MessageBoxHelper.WarningYesNo(errorMsg))
+                    {
+                        return false;
+                    }
+                }
             }
 
             // Check raw input profile

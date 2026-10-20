@@ -1,0 +1,11 @@
+{
+  "game_name": "World Club Champion Football Serie A 2002-2003 Drive Checker (CDV-10007)",
+  "game_genre": "Utility",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2004",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select wccf2chk.zip or the merged parent archive naomigd.zip. Select the exact set in Game Revision; merged archives must contain that revision. Required CHD: cdv-10007.chd. Select CHD Root below the ROM ZIP; disks may be in the set/parent subfolder or directly in that folder."
+}

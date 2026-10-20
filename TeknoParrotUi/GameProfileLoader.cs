@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -116,7 +116,8 @@ namespace TeknoParrotUi.Common
                 for (int i = 0; i < other.JoystickButtons.Count; i++)
                 {
                     var oldButton = other.JoystickButtons[i];
-                    var button = gameProfile.JoystickButtons.FirstOrDefault(x => x.ButtonName == oldButton.ButtonName);
+                    var button = gameProfile.JoystickButtons.FirstOrDefault(x => x.ButtonName == oldButton.ButtonName &&
+                        (gameProfile.EmulatorType != EmulatorType.TeknoNaomi || x.InputMapping == oldButton.InputMapping));
                     if (button == null && TypeZeroControls.IsPowerShovel(gameProfile))
                         button = gameProfile.JoystickButtons.FirstOrDefault(x =>
                             TypeZeroControls.PreviousControlName(gameProfile, x.ButtonName) == oldButton.ButtonName);
@@ -124,6 +125,17 @@ namespace TeknoParrotUi.Common
                     {
                         button = gameProfile.JoystickButtons.FirstOrDefault(x =>
                             NamcoGameRevisions.PreviousControlName(gameProfile, x.ButtonName) == oldButton.ButtonName);
+                    }
+                    if (button == null && other.EmulatorType == EmulatorType.TeknoNaomi &&
+                        gameProfile.EmulatorType == EmulatorType.TeknoNaomi && !string.IsNullOrEmpty(oldButton.ButtonName))
+                    {
+                        button = gameProfile.JoystickButtons.FirstOrDefault(x =>
+                            ArcadeGameRevisions.PreviousTeknoNaomiControlName(gameProfile, x.ButtonName) == oldButton.ButtonName &&
+                            x.InputMapping == oldButton.InputMapping);
+                        // Cabinet labels can improve without changing the
+                        // persistent binding slot. Preserve all saved APIs.
+                        if (button == null)
+                            button = gameProfile.JoystickButtons.FirstOrDefault(x => x.InputMapping == oldButton.InputMapping);
                     }
                     if (button == null && gameProfile.EmulatorType == EmulatorType.TeknoModel2 &&
                         gameProfile.ExecutableName == "desert.zip" && oldButton.ButtonName == "Brake")
@@ -194,6 +206,7 @@ namespace TeknoParrotUi.Common
                 gameProfile.CabinetOutputSettings = other.CabinetOutputSettings?.Clone() ?? new CabinetOutputSettings();
                 gameProfile.GamePath = other.GamePath;
                 gameProfile.GamePath2 = other.GamePath2;
+                TeknoNaomiProfileSettings.Normalize(gameProfile, other);
                 initialDMigration?.Invoke();
             }
         }

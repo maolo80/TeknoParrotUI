@@ -1,4 +1,4 @@
-﻿namespace TeknoParrotUi.Common
+namespace TeknoParrotUi.Common
 {
     public enum EmulationProfile
     {
@@ -178,6 +178,7 @@
         // Taito Type Zero
         TeknoTZero,
         ALLSSoulReverse,
-        NuKanColle
+        NuKanColle,
+        TeknoNaomi
     }
 }

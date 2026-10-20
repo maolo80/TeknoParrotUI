@@ -1,0 +1,11 @@
+{
+  "game_name": "Akatsuki Blitzkampf Ausf. Achse (Japan)",
+  "game_genre": "Fighting",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2008",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select ausfache.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

@@ -1,0 +1,11 @@
+{
+  "game_name": "Radirgy Noa (Japan)",
+  "game_genre": "Vertical shoot 'em up",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2009",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select radirgyn.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

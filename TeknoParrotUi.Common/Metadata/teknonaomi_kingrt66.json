@@ -1,0 +1,11 @@
+{
+  "game_name": "The King of Route 66 (Rev A)",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI 2",
+  "release_year": "2002",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select kingrt66.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi2.zip beside the ROM ZIP."
+}

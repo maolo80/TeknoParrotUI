@@ -1,0 +1,11 @@
+{
+  "game_name": "Metal Slug 6",
+  "game_genre": "Run and gun",
+  "icon_name": "",
+  "platform": "Sammy Atomiswave",
+  "release_year": "2006",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select mslug6.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep awbios.zip beside the ROM ZIP."
+}

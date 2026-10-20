@@ -1,0 +1,368 @@
+<?xml version='1.0' encoding='utf-8'?>
+<GameProfile>
+  <ProfileName>teknonaomi_wldkicks</ProfileName>
+  <GamePath />
+  <GameNameInternal>World Kicks (World, WK2 Ver.A)</GameNameInternal>
+  <EmulationProfile>TeknoNaomi</EmulationProfile>
+  <EmulatorType>TeknoNaomi</EmulatorType>
+  <GameProfileRevision>12</GameProfileRevision>
+  <Is64Bit>true</Is64Bit>
+  <ExecutableName>wldkicks.zip</ExecutableName>
+  <HasTwoExecutables>false</HasTwoExecutables>
+  <HasSeparateTestMode>false</HasSeparateTestMode>
+  <DevOnly>false</DevOnly>
+  <Patreon>true</Patreon>
+  <HasTpoSupport>true</HasTpoSupport>
+  <GameVersion>wldkicks</GameVersion>
+  <ConfigValues>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Input API</FieldName>
+      <FieldValue>XInput</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>DirectInput</string>
+        <string>XInput</string>
+        <string>RawInput</string>
+        <string>MergedInput</string>
+      </FieldOptions>
+      <Hint>Bind the named cabinet controls below. Analog controls accept gamepad or DirectInput axes; the named direction buttons provide digital alternatives.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Save Root</FieldName>
+      <FieldValue />
+      <FieldType>Text</FieldType>
+      <Hint>Empty uses TeknoNaomi/state. Saves are kept separately for this exact revision and Cabinet ID.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>General</CategoryName>
+      <FieldName>Cabinet ID</FieldName>
+      <FieldValue>1</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+      </FieldOptions>
+      <Hint>Select this cabinet's saved settings. TPOnline assigns the link position automatically.</Hint>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>DisplayMode</FieldName>
+      <FieldValue>Windowed</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>Windowed</string>
+        <string>Fullscreen</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Internal Resolution</FieldName>
+      <FieldValue>4</FieldValue>
+      <FieldType>Dropdown</FieldType>
+      <FieldOptions>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+        <string>4</string>
+        <string>5</string>
+        <string>6</string>
+        <string>7</string>
+        <string>8</string>
+      </FieldOptions>
+    </FieldInformation>
+    <FieldInformation>
+      <CategoryName>Video</CategoryName>
+      <FieldName>Widescreen</FieldName>
+      <FieldValue>0</FieldValue>
+      <FieldType>Bool</FieldType>
+      <Hint>Render additional 3D scenery at 16:9. HUDs and fixed 2D screens stay centered; vertical games retain their original layout.</Hint>
+    </FieldInformation>
+  </ConfigValues>
+  <JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Test</ButtonName>
+      <InputMapping>Test</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Service</ButtonName>
+      <InputMapping>Service1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Coin 1</ButtonName>
+      <InputMapping>Coin1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Change / Start</ButtonName>
+      <InputMapping>P1ButtonStart</InputMapping>
+      <TeknoNaomiControl>p1.start</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Change / Start</ButtonName>
+      <InputMapping>P2ButtonStart</InputMapping>
+      <TeknoNaomiControl>p2.start</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Change / Start</ButtonName>
+      <InputMapping>JvsTwoP1ButtonStart</InputMapping>
+      <TeknoNaomiControl>p3.start</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Change / Start</ButtonName>
+      <InputMapping>JvsTwoP2ButtonStart</InputMapping>
+      <TeknoNaomiControl>p4.start</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Stick X</ButtonName>
+      <InputMapping>Analog0</InputMapping>
+      <TeknoNaomiControl>p1.axis0</TeknoNaomiControl>
+      <AnalogType>AnalogJoystick</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Stick Y</ButtonName>
+      <InputMapping>Analog2</InputMapping>
+      <TeknoNaomiControl>p1.axis1</TeknoNaomiControl>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Kick Strength</ButtonName>
+      <InputMapping>Analog10</InputMapping>
+      <TeknoNaomiControl>p1.axis5</TeknoNaomiControl>
+      <AnalogType>Gas</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Stick X</ButtonName>
+      <InputMapping>Analog12</InputMapping>
+      <TeknoNaomiControl>p2.axis0</TeknoNaomiControl>
+      <AnalogType>AnalogJoystick</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Stick Y</ButtonName>
+      <InputMapping>Analog14</InputMapping>
+      <TeknoNaomiControl>p2.axis1</TeknoNaomiControl>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Kick Strength</ButtonName>
+      <InputMapping>Analog22</InputMapping>
+      <TeknoNaomiControl>p2.axis5</TeknoNaomiControl>
+      <AnalogType>Gas</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Stick X</ButtonName>
+      <InputMapping>JvsTwoAnalog0</InputMapping>
+      <TeknoNaomiControl>p3.axis0</TeknoNaomiControl>
+      <AnalogType>AnalogJoystick</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Stick Y</ButtonName>
+      <InputMapping>JvsTwoAnalog2</InputMapping>
+      <TeknoNaomiControl>p3.axis1</TeknoNaomiControl>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Kick Strength</ButtonName>
+      <InputMapping>JvsTwoAnalog10</InputMapping>
+      <TeknoNaomiControl>p3.axis5</TeknoNaomiControl>
+      <AnalogType>Gas</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Stick X</ButtonName>
+      <InputMapping>JvsTwoAnalog12</InputMapping>
+      <TeknoNaomiControl>p4.axis0</TeknoNaomiControl>
+      <AnalogType>AnalogJoystick</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Stick Y</ButtonName>
+      <InputMapping>JvsTwoAnalog14</InputMapping>
+      <TeknoNaomiControl>p4.axis1</TeknoNaomiControl>
+      <AnalogType>AnalogJoystickReverse</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Kick Strength</ButtonName>
+      <InputMapping>JvsTwoAnalog20</InputMapping>
+      <TeknoNaomiControl>p4.axis5</TeknoNaomiControl>
+      <AnalogType>Gas</AnalogType>
+      <HideWithRawInput>true</HideWithRawInput>
+      <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Up (Digital)</ButtonName>
+      <InputMapping>P1ButtonUp</InputMapping>
+      <TeknoNaomiControl>p1.axis1-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Stick Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Down (Digital)</ButtonName>
+      <InputMapping>P1ButtonDown</InputMapping>
+      <TeknoNaomiControl>p1.axis1+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Stick Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Left (Digital)</ButtonName>
+      <InputMapping>P1ButtonLeft</InputMapping>
+      <TeknoNaomiControl>p1.axis0-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Stick X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Right (Digital)</ButtonName>
+      <InputMapping>P1ButtonRight</InputMapping>
+      <TeknoNaomiControl>p1.axis0+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P1 Stick X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Change</ButtonName>
+      <InputMapping>P1Button1</InputMapping>
+      <TeknoNaomiControl>p1.button1</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P1 Kick Button (Digital)</ButtonName>
+      <InputMapping>P1Button2</InputMapping>
+      <Hint>Optional digital alternative to P1 Kick Strength. Bind that axis for continuous control.</Hint>
+      <TeknoNaomiControl>p1.axis5+</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Up (Digital)</ButtonName>
+      <InputMapping>P2ButtonUp</InputMapping>
+      <TeknoNaomiControl>p2.axis1-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P2 Stick Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Down (Digital)</ButtonName>
+      <InputMapping>P2ButtonDown</InputMapping>
+      <TeknoNaomiControl>p2.axis1+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P2 Stick Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Left (Digital)</ButtonName>
+      <InputMapping>P2ButtonLeft</InputMapping>
+      <TeknoNaomiControl>p2.axis0-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P2 Stick X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Right (Digital)</ButtonName>
+      <InputMapping>P2ButtonRight</InputMapping>
+      <TeknoNaomiControl>p2.axis0+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P2 Stick X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Change</ButtonName>
+      <InputMapping>P2Button1</InputMapping>
+      <TeknoNaomiControl>p2.button1</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P2 Kick Button (Digital)</ButtonName>
+      <InputMapping>P2Button2</InputMapping>
+      <Hint>Optional digital alternative to P2 Kick Strength. Bind that axis for continuous control.</Hint>
+      <TeknoNaomiControl>p2.axis5+</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Change</ButtonName>
+      <InputMapping>JvsTwoP1Button1</InputMapping>
+      <TeknoNaomiControl>p3.button1</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Kick Button (Digital)</ButtonName>
+      <InputMapping>JvsTwoP1Button2</InputMapping>
+      <TeknoNaomiControl>p3.axis5+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P3 Kick Strength. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Left (Digital)</ButtonName>
+      <InputMapping>JvsTwoP1ButtonLeft</InputMapping>
+      <TeknoNaomiControl>p3.axis0-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P3 Stick X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Right (Digital)</ButtonName>
+      <InputMapping>JvsTwoP1ButtonRight</InputMapping>
+      <TeknoNaomiControl>p3.axis0+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P3 Stick X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Up (Digital)</ButtonName>
+      <InputMapping>JvsTwoP1ButtonUp</InputMapping>
+      <TeknoNaomiControl>p3.axis1-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P3 Stick Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P3 Down (Digital)</ButtonName>
+      <InputMapping>JvsTwoP1ButtonDown</InputMapping>
+      <TeknoNaomiControl>p3.axis1+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P3 Stick Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Change</ButtonName>
+      <InputMapping>JvsTwoP2Button1</InputMapping>
+      <TeknoNaomiControl>p4.button1</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Kick Button (Digital)</ButtonName>
+      <InputMapping>JvsTwoP2Button2</InputMapping>
+      <TeknoNaomiControl>p4.axis5+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P4 Kick Strength. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Left (Digital)</ButtonName>
+      <InputMapping>JvsTwoP2ButtonLeft</InputMapping>
+      <TeknoNaomiControl>p4.axis0-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P4 Stick X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Right (Digital)</ButtonName>
+      <InputMapping>JvsTwoP2ButtonRight</InputMapping>
+      <TeknoNaomiControl>p4.axis0+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P4 Stick X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Up (Digital)</ButtonName>
+      <InputMapping>JvsTwoP2ButtonUp</InputMapping>
+      <TeknoNaomiControl>p4.axis1-</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P4 Stick Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>P4 Down (Digital)</ButtonName>
+      <InputMapping>JvsTwoP2ButtonDown</InputMapping>
+      <TeknoNaomiControl>p4.axis1+</TeknoNaomiControl>
+      <Hint>Optional digital alternative to P4 Stick Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Menu Enter</ButtonName>
+      <InputMapping>TPSystem1</InputMapping>
+      <TeknoNaomiControl>p1.button3</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Menu Up</ButtonName>
+      <InputMapping>TPSystem2</InputMapping>
+      <TeknoNaomiControl>p1.button4</TeknoNaomiControl>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Menu Down</ButtonName>
+      <InputMapping>TPSystem3</InputMapping>
+      <TeknoNaomiControl>p1.button5</TeknoNaomiControl>
+    </JoystickButtons>
+  </JoystickButtons>
+</GameProfile>

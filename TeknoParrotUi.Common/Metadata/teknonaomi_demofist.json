@@ -1,0 +1,11 @@
+{
+  "game_name": "Demolish Fist",
+  "game_genre": "Action",
+  "icon_name": "",
+  "platform": "Sammy Atomiswave",
+  "release_year": "2003",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select demofist.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep awbios.zip beside the ROM ZIP."
+}

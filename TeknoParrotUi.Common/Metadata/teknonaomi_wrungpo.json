@@ -1,0 +1,11 @@
+{
+  "game_name": "Wave Runner GP (USA, Rev A)",
+  "game_genre": "",
+  "icon_name": "",
+  "platform": "Sega NAOMI",
+  "release_year": "2001",
+  "nvidia": "OK",
+  "amd": "OK",
+  "intel": "OK",
+  "general_issues": "Select wrungpo.zip or the merged parent archive wrungp.zip. Select the exact set in Game Revision; merged archives must contain that revision. Keep naomi.zip beside the ROM ZIP."
+}

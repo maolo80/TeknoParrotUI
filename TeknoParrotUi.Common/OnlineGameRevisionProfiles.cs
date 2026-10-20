@@ -15,6 +15,12 @@ namespace TeknoParrotUi.Common
         {
             if (string.IsNullOrWhiteSpace(gameId)) throw new ArgumentException("Missing online game ID");
             if (gameId.EndsWith("_tz", StringComparison.Ordinal)) return LoadTypeZeroProfile(gameId);
+            if (gameId.StartsWith("teknonaomi_", StringComparison.Ordinal))
+            {
+                var profile = ArcadeGameRevisions.LoadOnlineProfile(gameId);
+                if (!profile.HasTpoSupport) throw new ArgumentException("This game has no online multiplayer mode");
+                return profile;
+            }
             if (gameId.StartsWith("mvs_", StringComparison.Ordinal) ||
                 gameId.StartsWith("cps_", StringComparison.Ordinal) ||
                 gameId.StartsWith("ss32_", StringComparison.Ordinal))
