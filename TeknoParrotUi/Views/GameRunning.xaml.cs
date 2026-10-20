@@ -718,10 +718,10 @@ namespace TeknoParrotUi.Views
                 case EmulationProfile.ALLSIDTA:
                 case EmulationProfile.NuKanColle:
                 case EmulationProfile.ALLSFGO:
+                case EmulationProfile.ALLSSoulReverse:
                     _controlSender = new AimeButton();
                     break;
                 case EmulationProfile.DenshaDeGo:
-                case EmulationProfile.ALLSSoulReverse:
                     _controlSender = new NxL2Pipe();
                     break;
                 case EmulationProfile.TransformersShadowsRising:
