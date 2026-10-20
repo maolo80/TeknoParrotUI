@@ -9,7 +9,7 @@
 	<ExtraParameters></ExtraParameters>
 	<TestMenuExtraParameters></TestMenuExtraParameters>
 	<EmulationProfile>ALLSFGO</EmulationProfile>
-	<GameProfileRevision>18</GameProfileRevision>
+	<GameProfileRevision>20</GameProfileRevision>
 	<Is64Bit>true</Is64Bit>
 	<HasSeparateTestMode>false</HasSeparateTestMode>
 	<EmulatorType>TeknoParrot</EmulatorType>
@@ -93,6 +93,20 @@
 			<FieldValue>1</FieldValue>
 			<FieldType>Bool</FieldType>
 			<Hint>Enable to have TP emulate amdaemon, in that case only the game .exe is needed.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>TCP Timestamps</FieldName>
+			<FieldValue>1</FieldValue>
+			<FieldType>Bool</FieldType>
+			<Hint>Sends TCP timestamps on the game's connections to the server. The server closes every connection, and behind some routers a new connection then reuses the port of a closed one: without timestamps the server can ignore it for 1 to 3 s, which slows down booting and loading. Turn off only if the game cannot connect with it on.</Hint>
+		</FieldInformation>
+		<FieldInformation>
+			<CategoryName>General</CategoryName>
+			<FieldName>Speed Up Card Printing</FieldName>
+			<FieldValue>1</FieldValue>
+			<FieldType>Bool</FieldType>
+			<Hint>Shortens the waits the game makes for a real card printer: the printer checks between cards, the time before a printed card's Next button can be pressed, and the screen shown while the last card prints (6 s instead of 37 s).</Hint>
 		</FieldInformation>
 		<FieldInformation>
 			<CategoryName>General</CategoryName>
