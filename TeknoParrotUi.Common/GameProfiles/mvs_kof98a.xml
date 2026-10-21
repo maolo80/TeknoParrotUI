@@ -3,12 +3,12 @@
   <GamePath />
   <GameNameInternal>The King of Fighters '98 - The Slugfest / King of Fighters '98 - Dream Match Never Ends (NGM-2420, alt board)</GameNameInternal>
   <EmulationProfile>TeknoMVS</EmulationProfile>
-  <GameProfileRevision>5</GameProfileRevision>
+  <GameProfileRevision>6</GameProfileRevision>
   <EmulatorType>TeknoMVS</EmulatorType>
   <Is64Bit>true</Is64Bit>
   <ExecutableName>kof98a.zip</ExecutableName>
   <HasTwoExecutables>false</HasTwoExecutables>
-  <Patreon>true</Patreon>
+  <Patreon>false</Patreon>
   <DevOnly>false</DevOnly>
   <HasTpoSupport>true</HasTpoSupport>
   <TestMenuParameter>--test-menu</TestMenuParameter>

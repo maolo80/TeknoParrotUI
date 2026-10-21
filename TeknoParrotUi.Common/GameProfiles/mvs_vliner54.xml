@@ -3,12 +3,12 @@
   <GamePath />
   <GameNameInternal>V-Liner (v0.54)</GameNameInternal>
   <EmulationProfile>TeknoMVS</EmulationProfile>
-  <GameProfileRevision>5</GameProfileRevision>
+  <GameProfileRevision>6</GameProfileRevision>
   <EmulatorType>TeknoMVS</EmulatorType>
   <Is64Bit>true</Is64Bit>
   <ExecutableName>vliner54.zip</ExecutableName>
   <HasTwoExecutables>false</HasTwoExecutables>
-  <Patreon>true</Patreon>
+  <Patreon>false</Patreon>
   <DevOnly>false</DevOnly>
   <HasTpoSupport>false</HasTpoSupport>
   <TestMenuParameter>--test-menu</TestMenuParameter>

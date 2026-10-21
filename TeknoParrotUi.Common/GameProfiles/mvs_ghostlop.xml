@@ -3,12 +3,12 @@
   <GamePath />
   <GameNameInternal>Ghostlop (prototype)</GameNameInternal>
   <EmulationProfile>TeknoMVS</EmulationProfile>
-  <GameProfileRevision>5</GameProfileRevision>
+  <GameProfileRevision>6</GameProfileRevision>
   <EmulatorType>TeknoMVS</EmulatorType>
   <Is64Bit>true</Is64Bit>
   <ExecutableName>ghostlop.zip</ExecutableName>
   <HasTwoExecutables>false</HasTwoExecutables>
-  <Patreon>true</Patreon>
+  <Patreon>false</Patreon>
   <DevOnly>false</DevOnly>
   <HasTpoSupport>true</HasTpoSupport>
   <TestMenuParameter>--test-menu</TestMenuParameter>
