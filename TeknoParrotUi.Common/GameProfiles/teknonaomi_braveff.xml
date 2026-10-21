@@ -5,7 +5,7 @@
   <GameNameInternal>Brave Firefighters</GameNameInternal>
   <EmulationProfile>TeknoNaomi</EmulationProfile>
   <EmulatorType>TeknoNaomi</EmulatorType>
-  <GameProfileRevision>12</GameProfileRevision>
+  <GameProfileRevision>13</GameProfileRevision>
   <Is64Bit>true</Is64Bit>
   <ExecutableName>braveff.zip</ExecutableName>
   <HasTwoExecutables>false</HasTwoExecutables>
@@ -79,6 +79,10 @@
       <InputMapping>Service1</InputMapping>
     </JoystickButtons>
     <JoystickButtons>
+      <ButtonName>Service 2</ButtonName>
+      <InputMapping>Service2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
       <ButtonName>Coin 1</ButtonName>
       <InputMapping>Coin1</InputMapping>
     </JoystickButtons>
@@ -87,19 +91,22 @@
       <InputMapping>Coin2</InputMapping>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>Start</ButtonName>
+      <ButtonName>Player 1 Start</ButtonName>
       <InputMapping>P1ButtonStart</InputMapping>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>Nozzle 2 Service</ButtonName>
-      <InputMapping>Service2</InputMapping>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 2 Start</ButtonName>
+      <ButtonName>Player 2 Start</ButtonName>
       <InputMapping>P2ButtonStart</InputMapping>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>P1 Nozzle X</ButtonName>
+      <ButtonName>Player 1 Nozzle Device</ButtonName>
+      <InputMapping>P1LightGun</InputMapping>
+      <HideWithDirectInput>true</HideWithDirectInput>
+      <HideWithXInput>true</HideWithXInput>
+      <Hint>Select the mouse or light gun for this nozzle.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Player 1 Nozzle X</ButtonName>
       <InputMapping>Analog0</InputMapping>
       <AnalogType>AnalogJoystick</AnalogType>
       <TeknoNaomiControl>p1.axis0</TeknoNaomiControl>
@@ -107,7 +114,7 @@
       <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>P1 Nozzle Y</ButtonName>
+      <ButtonName>Player 1 Nozzle Y</ButtonName>
       <InputMapping>Analog2</InputMapping>
       <AnalogType>AnalogJoystickReverse</AnalogType>
       <TeknoNaomiControl>p1.axis1</TeknoNaomiControl>
@@ -115,7 +122,42 @@
       <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>P2 Nozzle X</ButtonName>
+      <ButtonName>Player 1 Water</ButtonName>
+      <InputMapping>P1Button1</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Player 1 Fog</ButtonName>
+      <InputMapping>P1Button2</InputMapping>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Player 1 Aim Up (Digital)</ButtonName>
+      <InputMapping>P1ButtonUp</InputMapping>
+      <Hint>Optional digital alternative to Player 1 Nozzle Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Player 1 Aim Down (Digital)</ButtonName>
+      <InputMapping>P1ButtonDown</InputMapping>
+      <Hint>Optional digital alternative to Player 1 Nozzle Y. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Player 1 Aim Left (Digital)</ButtonName>
+      <InputMapping>P1ButtonLeft</InputMapping>
+      <Hint>Optional digital alternative to Player 1 Nozzle X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Player 1 Aim Right (Digital)</ButtonName>
+      <InputMapping>P1ButtonRight</InputMapping>
+      <Hint>Optional digital alternative to Player 1 Nozzle X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Player 2 Nozzle Device</ButtonName>
+      <InputMapping>P2LightGun</InputMapping>
+      <HideWithDirectInput>true</HideWithDirectInput>
+      <HideWithXInput>true</HideWithXInput>
+      <Hint>Select the mouse or light gun for this nozzle.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Player 2 Nozzle X</ButtonName>
       <InputMapping>Analog12</InputMapping>
       <AnalogType>AnalogJoystick</AnalogType>
       <TeknoNaomiControl>p2.axis0</TeknoNaomiControl>
@@ -123,7 +165,7 @@
       <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>P2 Nozzle Y</ButtonName>
+      <ButtonName>Player 2 Nozzle Y</ButtonName>
       <InputMapping>Analog14</InputMapping>
       <AnalogType>AnalogJoystickReverse</AnalogType>
       <TeknoNaomiControl>p2.axis1</TeknoNaomiControl>
@@ -131,82 +173,32 @@
       <Hint>Bind a continuous axis. Digital alternatives are optional.</Hint>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>Nozzle 1 Aim Up (Digital)</ButtonName>
-      <InputMapping>P1ButtonUp</InputMapping>
-      <Hint>Optional digital alternative to P1 Nozzle Y. Bind that axis for continuous control.</Hint>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 1 Aim Down (Digital)</ButtonName>
-      <InputMapping>P1ButtonDown</InputMapping>
-      <Hint>Optional digital alternative to P1 Nozzle Y. Bind that axis for continuous control.</Hint>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 1 Aim Left (Digital)</ButtonName>
-      <InputMapping>P1ButtonLeft</InputMapping>
-      <Hint>Optional digital alternative to P1 Nozzle X. Bind that axis for continuous control.</Hint>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 1 Aim Right (Digital)</ButtonName>
-      <InputMapping>P1ButtonRight</InputMapping>
-      <Hint>Optional digital alternative to P1 Nozzle X. Bind that axis for continuous control.</Hint>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 2 Aim Up (Digital)</ButtonName>
-      <InputMapping>P2ButtonUp</InputMapping>
-      <Hint>Optional digital alternative to P2 Nozzle Y. Bind that axis for continuous control.</Hint>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 2 Aim Down (Digital)</ButtonName>
-      <InputMapping>P2ButtonDown</InputMapping>
-      <Hint>Optional digital alternative to P2 Nozzle Y. Bind that axis for continuous control.</Hint>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 2 Aim Left (Digital)</ButtonName>
-      <InputMapping>P2ButtonLeft</InputMapping>
-      <Hint>Optional digital alternative to P2 Nozzle X. Bind that axis for continuous control.</Hint>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 2 Aim Right (Digital)</ButtonName>
-      <InputMapping>P2ButtonRight</InputMapping>
-      <Hint>Optional digital alternative to P2 Nozzle X. Bind that axis for continuous control.</Hint>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 1 Water</ButtonName>
-      <InputMapping>P1Button1</InputMapping>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 1 Fog</ButtonName>
-      <InputMapping>P1Button2</InputMapping>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 1 Off-screen</ButtonName>
-      <InputMapping>P1Button3</InputMapping>
-    </JoystickButtons>
-    <JoystickButtons>
-      <ButtonName>Nozzle 2 Water</ButtonName>
+      <ButtonName>Player 2 Water</ButtonName>
       <InputMapping>P2Button1</InputMapping>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>Nozzle 2 Fog</ButtonName>
+      <ButtonName>Player 2 Fog</ButtonName>
       <InputMapping>P2Button2</InputMapping>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>Nozzle 2 Off-screen</ButtonName>
-      <InputMapping>P2Button3</InputMapping>
+      <ButtonName>Player 2 Aim Up (Digital)</ButtonName>
+      <InputMapping>P2ButtonUp</InputMapping>
+      <Hint>Optional digital alternative to Player 2 Nozzle Y. Bind that axis for continuous control.</Hint>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>P1 Nozzle Device</ButtonName>
-      <InputMapping>P1LightGun</InputMapping>
-      <HideWithDirectInput>true</HideWithDirectInput>
-      <HideWithXInput>true</HideWithXInput>
-      <Hint>Select the mouse or light gun for this nozzle.</Hint>
+      <ButtonName>Player 2 Aim Down (Digital)</ButtonName>
+      <InputMapping>P2ButtonDown</InputMapping>
+      <Hint>Optional digital alternative to Player 2 Nozzle Y. Bind that axis for continuous control.</Hint>
     </JoystickButtons>
     <JoystickButtons>
-      <ButtonName>P2 Nozzle Device</ButtonName>
-      <InputMapping>P2LightGun</InputMapping>
-      <HideWithDirectInput>true</HideWithDirectInput>
-      <HideWithXInput>true</HideWithXInput>
-      <Hint>Select the mouse or light gun for this nozzle.</Hint>
+      <ButtonName>Player 2 Aim Left (Digital)</ButtonName>
+      <InputMapping>P2ButtonLeft</InputMapping>
+      <Hint>Optional digital alternative to Player 2 Nozzle X. Bind that axis for continuous control.</Hint>
+    </JoystickButtons>
+    <JoystickButtons>
+      <ButtonName>Player 2 Aim Right (Digital)</ButtonName>
+      <InputMapping>P2ButtonRight</InputMapping>
+      <Hint>Optional digital alternative to Player 2 Nozzle X. Bind that axis for continuous control.</Hint>
     </JoystickButtons>
   </JoystickButtons>
 </GameProfile>

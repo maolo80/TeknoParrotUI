@@ -91,6 +91,9 @@ internal static class ReleaseChecks
                 InputMapping.Service2, InputMapping.P2ButtonStart, InputMapping.JvsTwoService1, InputMapping.JvsTwoService2,
                 InputMapping.JvsTwoCoin1, InputMapping.JvsTwoCoin2, InputMapping.JvsTwoP1ButtonStart, InputMapping.JvsTwoP2ButtonStart };
             var expected = management.Where(m => p.JoystickButtons.Any(b => b.InputMapping == m)).ToArray();
+            if (p.GameVersion == "braveff")
+                expected = new[] { InputMapping.Test, InputMapping.Service1, InputMapping.Service2,
+                    InputMapping.Coin1, InputMapping.Coin2, InputMapping.P1ButtonStart, InputMapping.P2ButtonStart };
             Require(p.JoystickButtons.Take(expected.Length).Select(b => b.InputMapping).SequenceEqual(expected),
                 "Test, Service, Coins, Start order: " + p.ProfileName);
             var meta = File.ReadAllText(Path.Combine(common, "Metadata", p.ProfileName + ".json"));
@@ -123,6 +126,12 @@ internal static class ReleaseChecks
             foreach (var b in p.JoystickButtons.Where(b => b.TeknoNaomiControl != null && (b.TeknoNaomiControl.EndsWith(".axis4") || b.TeknoNaomiControl.EndsWith(".axis5"))))
                 Require(b.AnalogType == AnalogType.Gas || b.AnalogType == AnalogType.Brake, "Zero-neutral demand: " + p.ProfileName + ":" + b.ButtonName);
         var brave = profiles["teknonaomi_braveff"];
+        Require(brave.JoystickButtons.Single(b => b.InputMapping == InputMapping.P1ButtonStart).ButtonName == "Player 1 Start" &&
+            brave.JoystickButtons.Single(b => b.InputMapping == InputMapping.P2ButtonStart).ButtonName == "Player 2 Start" &&
+            brave.JoystickButtons.Single(b => b.InputMapping == InputMapping.Service2).ButtonName == "Service 2",
+            "Brave uses consistent player and service names");
+        Require(!brave.JoystickButtons.Any(b => b.InputMapping == InputMapping.P1Button3 || b.InputMapping == InputMapping.P2Button3),
+            "Brave off-screen sensors are not exposed as reload buttons");
         Require(brave.JoystickButtons.Count(b => b.AnalogType != AnalogType.None) == 4, "Independent two-nozzle X/Y axes");
         Require(brave.JoystickButtons.Where(b => b.ButtonName.Contains("Aim ")).All(b => b.ButtonName.EndsWith("(Digital)")), "Digital aim alternatives labelled");
         var confmiss = profiles["teknonaomi_confmiss"].Clone();
