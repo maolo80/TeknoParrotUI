@@ -11,6 +11,15 @@ migrate, and renamed controls retain assignments by mapping ID. Audio and normal
 pacing are always enabled; Mute Audio and Host Timing are removed from settings
 and ignored when present in old saved profiles.
 
+Runner options appear in every profile, including saved ones, without a
+revision bump: Cabinet Outputs (`--outputs`, on by default, for MAMEOutput
+lamps, motors and force feedback), Free Play (`--free-play`), BIOS
+(`--bios N`, empty uses the runner default) and Precise SH-4 FPU
+(`--sh4-precise-fpu`). Video adds Side-by-Side 3D (`--sbs`) and Enable VR
+(`--vr`) with screen distance and width (0.25-8 m), head-locked screen, VR
+filter and Touch controls. VR takes precedence over side-by-side. The runner
+has no V-sync or presentation-filter option, so neither is offered.
+
 Brave Firefighters has independent nozzle X/Y axes for both players. NASCAR
 has wheel, gas and brake axes. Maraca, sword, rod/reel, trackball-speed, clutch
 and pedal controls use continuous values; labelled digital alternatives remain
