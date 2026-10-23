@@ -24,6 +24,37 @@ namespace TeknoParrotUi.Common
                 f.FieldName == "Mute Audio" || f.FieldName == "Host Timing");
             profile.HasTwoExecutables = HasChd(profile);
             NormalizeCabinet(profile, saved);
+            AddRunnerOptions(profile);
+        }
+
+        // Runner options that predate their profile fields. Missing fields are added
+        // with defaults, so stock and saved profiles gain them without a revision bump.
+        private static void AddRunnerOptions(GameProfile profile)
+        {
+            void Add(string category, string name, FieldType type, string value, string hint, params string[] options)
+            {
+                var field = profile.ConfigValues.FirstOrDefault(f => f.FieldName == name);
+                if (field == null)
+                    profile.ConfigValues.Add(field = new FieldInformation { CategoryName = category, FieldName = name, FieldValue = value });
+                field.FieldType = type;
+                field.Hint = hint;
+                if (options.Length > 0) field.FieldOptions = options.ToList();
+            }
+            Add("General", "Cabinet Outputs", FieldType.Bool, "1",
+                "Publish lamps, motors and force feedback to MAMEOutput clients.");
+            Add("General", "Free Play", FieldType.Bool, "0", "Set the BIOS coin setting to FREE PLAY.");
+            Add("General", "BIOS", FieldType.Text, "",
+                "Empty selects the default BIOS. A number selects another BIOS, for example a different region.");
+            Add("General", "Precise SH-4 FPU", FieldType.Bool, "0",
+                "Keep exact SH-4 floating-point status and exceptional values. Slower; try it for physics or geometry glitches.");
+            Add("Video", "Side-by-Side 3D", FieldType.Bool, "0", "Render both eyes of each scene and show them side by side.");
+            Add("Video", "Enable VR", FieldType.Bool, "0",
+                "Show the game on a virtual screen in an OpenXR headset. The window mirrors the left eye; hold Menu for settings.");
+            Add("Video", "Use VR Controls", FieldType.Bool, "1", "Play with the Touch controllers while VR is enabled.");
+            Add("Video", "VR Screen Distance", FieldType.Text, "2", "Virtual screen distance in metres, 0.25 to 8.");
+            Add("Video", "VR Screen Width", FieldType.Text, "2.4", "Virtual screen width in metres, 0.25 to 8.");
+            Add("Video", "VR Head Locked", FieldType.Bool, "0", "Keep the virtual screen fixed to the headset.");
+            Add("Video", "VR Filter", FieldType.Dropdown, "linear", "Scaling into the headset image.", "linear", "nearest");
         }
 
         public static int CabinetCount(GameProfile profile) =>

@@ -67,6 +67,39 @@ internal static class ReleaseChecks
         }
     }
 
+    private static void RunnerOptions(GameProfile stock, string root)
+    {
+        string Arguments(GameProfile p) => TeknoNaomiLaunch.Plan(p, root, p.GamePath).StartInfo.Arguments;
+        void Set(GameProfile p, string name, string value) => p.ConfigValues.Single(f => f.FieldName == name).FieldValue = value;
+        var p0 = stock.Clone();
+        TeknoNaomiProfileSettings.Normalize(p0);
+        var names = new[] { "Cabinet Outputs", "Free Play", "BIOS", "Precise SH-4 FPU", "Side-by-Side 3D", "Enable VR",
+            "Use VR Controls", "VR Screen Distance", "VR Screen Width", "VR Head Locked", "VR Filter" };
+        Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields are added once");
+        TeknoNaomiProfileSettings.Normalize(p0);
+        Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields survive a second normalization");
+        var defaults = Arguments(p0);
+        Require(defaults.Contains("\"--outputs\"") && !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr" }.Any(defaults.Contains),
+            "Runner option defaults");
+        Set(p0, "Free Play", "1"); Set(p0, "Precise SH-4 FPU", "1"); Set(p0, "BIOS", "2"); Set(p0, "Cabinet Outputs", "0");
+        Set(p0, "Side-by-Side 3D", "1");
+        var enabled = Arguments(p0);
+        Require(enabled.Contains("\"--free-play\"") && enabled.Contains("\"--sh4-precise-fpu\"") &&
+            enabled.Contains("\"--bios\" \"2\"") && enabled.Contains("\"--sbs\"") && !enabled.Contains("--outputs"), "Runner options enabled");
+        Set(p0, "Enable VR", "1"); Set(p0, "VR Screen Distance", "1,5"); Set(p0, "Use VR Controls", "0"); Set(p0, "VR Head Locked", "1");
+        var vr = Arguments(p0);
+        Require(vr.Contains("\"--vr\" \"--vr-screen-distance\" \"1.5\" \"--vr-screen-width\" \"2.4\" \"--vr-filter\" \"linear\"") &&
+            vr.Contains("\"--vr-head-locked\"") && vr.Contains("\"--no-vr-controls\"") && !vr.Contains("--sbs"), "VR options");
+        foreach (var invalid in new[] { new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
+        {
+            var p = p0.Clone();
+            Set(p, invalid[0], invalid[1]);
+            var rejected = false;
+            try { Arguments(p); } catch (InvalidOperationException) { rejected = true; }
+            Require(rejected, "Rejects " + invalid[0] + " = " + invalid[1]);
+        }
+    }
+
     public static void Run(string root, string output)
     {
         var common = Path.Combine(Path.GetFullPath(root), "TeknoParrotUi.Common");
@@ -113,6 +146,7 @@ internal static class ReleaseChecks
             Require(plan.Cabinet == "tpui-1", "Default cabinet retains existing saves: " + p.ProfileName);
         }
         Require(analog == 126 && disks > 0, "Continuous controls and CHD coverage");
+        RunnerOptions(profiles["teknonaomi_f355"], root);
         foreach (var id in new[] { "teknonaomi_sgnascar", "teknonaomi_sgnascaro" })
         {
             var p = profiles[id];
