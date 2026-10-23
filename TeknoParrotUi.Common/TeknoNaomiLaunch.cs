@@ -42,9 +42,9 @@ namespace TeknoParrotUi.Common
             uiRoot = Path.GetFullPath(uiRoot);
             string Setting(string name, string fallback = "") => profile.ConfigValues?.FirstOrDefault(f => f.FieldName == name)?.FieldValue ?? fallback;
             string Resolve(string path) => Path.GetFullPath(Path.IsPathRooted(path) ? path : Path.Combine(uiRoot, path));
-            bool Enabled(string name)
+            bool Enabled(string name, bool fallback = false)
             {
-                var value = Setting(name, "0");
+                var value = Setting(name, fallback ? "1" : "0");
                 if (value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase)) return true;
                 if (value == "0" || value.Equals("false", StringComparison.OrdinalIgnoreCase)) return false;
                 throw new InvalidOperationException("Invalid " + name + " setting.");
@@ -93,6 +93,35 @@ namespace TeknoParrotUi.Common
             if (chdRoot.Length != 0) args.AddRange(new[] { "--chd-root", chdRoot });
             if (display == "Fullscreen") args.Add("--fullscreen");
             if (Enabled("Widescreen")) args.Add("--widescreen");
+            if (Enabled("Cabinet Outputs")) args.Add("--outputs");
+            if (Enabled("Free Play")) args.Add("--free-play");
+            if (Enabled("Precise SH-4 FPU")) args.Add("--sh4-precise-fpu");
+            var bios = Setting("BIOS").Trim();
+            if (bios.Length != 0)
+            {
+                if (!int.TryParse(bios, NumberStyles.None, CultureInfo.InvariantCulture, out var biosId) || biosId > 99)
+                    throw new InvalidOperationException("BIOS must be empty or a number from 0 to 99.");
+                args.AddRange(new[] { "--bios", biosId.ToString(CultureInfo.InvariantCulture) });
+            }
+            if (Enabled("Enable VR"))
+            {
+                string Metres(string name, string fallback)
+                {
+                    var text = Setting(name, fallback).Trim().Replace(',', '.');
+                    if (text.Length == 0) text = fallback;
+                    if (!double.TryParse(text, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var metres) ||
+                        metres < 0.25 || metres > 8)
+                        throw new InvalidOperationException(name + " must be from 0.25 to 8 metres.");
+                    return metres.ToString(CultureInfo.InvariantCulture);
+                }
+                var filter = Setting("VR Filter", "linear");
+                if (filter != "linear" && filter != "nearest") throw new InvalidOperationException("Invalid VR Filter.");
+                args.AddRange(new[] { "--vr", "--vr-screen-distance", Metres("VR Screen Distance", "2"),
+                    "--vr-screen-width", Metres("VR Screen Width", "2.4"), "--vr-filter", filter });
+                if (Enabled("VR Head Locked")) args.Add("--vr-head-locked");
+                if (!Enabled("Use VR Controls", true)) args.Add("--no-vr-controls");
+            }
+            else if (Enabled("Side-by-Side 3D")) args.Add("--sbs");
             return new TeknoNaomiLaunchPlan { Set = entry.Set, RomArchive = archive, ChdRoot = chdRoot,
                 StateRoot = state, Cabinet = cabinet, BindingsPath = bindingPath, BindingsText = bindings,
                 StartInfo = new ProcessStartInfo(Path.Combine(work, "TeknoNaomi.exe"), string.Join(" ", args.Select(Quote)))
