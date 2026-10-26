@@ -90,7 +90,27 @@ internal static class ReleaseChecks
         var vr = Arguments(p0);
         Require(vr.Contains("\"--vr\" \"--vr-screen-distance\" \"1.5\" \"--vr-screen-width\" \"2.4\" \"--vr-filter\" \"linear\"") &&
             vr.Contains("\"--vr-head-locked\"") && vr.Contains("\"--no-vr-controls\"") && !vr.Contains("--sbs"), "VR options");
-        foreach (var invalid in new[] { new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
+        var resolution = p0.ConfigValues.Single(f => f.FieldName == "Internal Resolution");
+        Require(resolution.FieldOptions.Count(o => o == "Auto") == 1 && resolution.FieldOptions[0] == "Auto" && resolution.FieldValue == "4",
+            "Auto resolution is offered once without changing the default");
+        var display = TeknoNaomiLaunch.DisplayHeight;
+        try
+        {
+            Set(p0, "Internal Resolution", "Auto");
+            foreach (var pair in new[] { new[] { 2160, 4 }, new[] { 1440, 3 }, new[] { 1080, 2 }, new[] { 1200, 2 }, new[] { 720, 1 },
+                new[] { 300, 1 }, new[] { 4320, 8 }, new[] { 0, 4 } })
+            {
+                TeknoNaomiLaunch.DisplayHeight = () => pair[0];
+                var plan = TeknoNaomiLaunch.Plan(p0, root, p0.GamePath);
+                Require(plan.RenderScale == pair[1] && plan.AutoRenderScale &&
+                    plan.StartInfo.Arguments.Contains("\"--render-scale\" \"" + pair[1] + "\""), "Auto resolution for " + pair[0] + " lines");
+            }
+            TeknoNaomiLaunch.DisplayHeight = () => throw new InvalidOperationException("Display queried for a fixed scale");
+            Set(p0, "Internal Resolution", "3");
+            Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == 3, "Fixed resolution ignores the display");
+        }
+        finally { TeknoNaomiLaunch.DisplayHeight = display; }
+        foreach (var invalid in new[] { new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
         {
             var p = p0.Clone();
             Set(p, invalid[0], invalid[1]);

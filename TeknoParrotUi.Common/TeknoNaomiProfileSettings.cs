@@ -41,6 +41,14 @@ namespace TeknoParrotUi.Common
                 field.Hint = hint;
                 if (options.Length > 0) field.FieldOptions = options.ToList();
             }
+            var resolution = profile.ConfigValues.FirstOrDefault(f => f.FieldName == "Internal Resolution");
+            if (resolution?.FieldOptions != null)
+            {
+                if (!resolution.FieldOptions.Contains(TeknoNaomiLaunch.AutoResolution))
+                    resolution.FieldOptions.Insert(0, TeknoNaomiLaunch.AutoResolution);
+                resolution.Hint = "Auto picks the largest scale whose 480 lines fit the primary display (2 at 1080p, 3 at 1440p, 4 at 2160p). " +
+                    "Scales above the display are reduced with nearest sampling and look worse, not sharper.";
+            }
             Add("General", "Cabinet Outputs", FieldType.Bool, "1",
                 "Publish lamps, motors and force feedback to MAMEOutput clients.");
             Add("General", "Free Play", FieldType.Bool, "0", "Set the BIOS coin setting to FREE PLAY.");
