@@ -876,8 +876,8 @@
       <MoveToCefSharpFolder Include="$(OutputPath)CefSharp*.dll" />
     </ItemGroup>
     <Copy SourceFiles="..\packages\CefSharp.Common.136.1.40\lib\net462\CefSharp.Core.dll" DestinationFolder="$(OutputPath)$(CefSharpTargetDir)" SkipUnchangedFiles="true" />
-    <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)libs" OverwriteReadOnlyFiles="true" />
-    <Move SourceFiles="@(MoveToCefSharpFolder)" DestinationFolder="$(OutputPath)$(CefSharpTargetDir)" OverwriteReadOnlyFiles="true" />
+    <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)libs" OverwriteReadOnlyFiles="true" Condition="Exists('%(MoveToLibFolder.FullPath)')" />
+    <Move SourceFiles="@(MoveToCefSharpFolder)" DestinationFolder="$(OutputPath)$(CefSharpTargetDir)" OverwriteReadOnlyFiles="true" Condition="Exists('%(MoveToCefSharpFolder.FullPath)')" />
     <RemoveDir Directories="$(OutputPath)\locales\" />
   </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
