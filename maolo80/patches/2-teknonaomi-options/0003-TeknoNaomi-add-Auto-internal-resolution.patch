@@ -1,0 +1,1929 @@
+From 5779a42ef1da4fa80ae9b151f14147273a5e8db8 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Mon, 26 Oct 2026 14:51:42 +0000
+Subject: [PATCH 3/3] TeknoNaomi: add Auto internal resolution
+
+The runner reduces its raster to the window with nearest sampling, so a
+render scale above the display only discards rows: 8x on a 2160p screen
+looks worse than 4x. Auto picks the largest scale whose 480 source lines
+fit the primary display's current mode (physical pixels, read with
+EnumDisplaySettings as MonitorSelection does), from 1 to 8, and falls
+back to 4 when the display is unknown. The default stays 4.
+
+The launch log now names the render scale and whether Auto chose it.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ TeknoParrotUi.Common/TeknoNaomiLaunch.cs      | 59 ++++++++++++++++++-
+ .../TeknoNaomiProfileSettings.cs              |  8 +++
+ TeknoParrotUi.Common/out2/media/18wheelr.zip  |  0
+ TeknoParrotUi.Common/out2/media/18wheelro.zip |  0
+ TeknoParrotUi.Common/out2/media/18wheelrt.zip |  0
+ TeknoParrotUi.Common/out2/media/18wheels.zip  |  0
+ TeknoParrotUi.Common/out2/media/18wheelu.zip  |  0
+ TeknoParrotUi.Common/out2/media/airtrix.zip   |  0
+ TeknoParrotUi.Common/out2/media/airtrixo.zip  |  0
+ TeknoParrotUi.Common/out2/media/alienfnt.zip  |  0
+ TeknoParrotUi.Common/out2/media/alienfnta.zip |  0
+ TeknoParrotUi.Common/out2/media/alpilot.zip   |  0
+ TeknoParrotUi.Common/out2/media/alpilotj.zip  |  0
+ TeknoParrotUi.Common/out2/media/anmlbskt.zip  |  0
+ TeknoParrotUi.Common/out2/media/anmlbskta.zip |  0
+ TeknoParrotUi.Common/out2/media/anpanman2.zip |  0
+ .../out2/media/anpanman2a.zip                 |  0
+ TeknoParrotUi.Common/out2/media/asndynmt.zip  |  0
+ TeknoParrotUi.Common/out2/media/asndynmto.zip |  0
+ TeknoParrotUi.Common/out2/media/ausfache.zip  |  0
+ TeknoParrotUi.Common/out2/media/azumanga.zip  |  0
+ TeknoParrotUi.Common/out2/media/basschal.zip  |  0
+ TeknoParrotUi.Common/out2/media/basschalo.zip |  0
+ TeknoParrotUi.Common/out2/media/bdrdown.zip   |  0
+ TeknoParrotUi.Common/out2/media/beachspi.zip  |  0
+ TeknoParrotUi.Common/out2/media/blokpong.zip  |  0
+ TeknoParrotUi.Common/out2/media/braveff.zip   |  0
+ TeknoParrotUi.Common/out2/media/capsnk.zip    |  0
+ TeknoParrotUi.Common/out2/media/capsnka.zip   |  0
+ TeknoParrotUi.Common/out2/media/capsnkb.zip   |  0
+ TeknoParrotUi.Common/out2/media/cfield.zip    |  0
+ TeknoParrotUi.Common/out2/media/chocomk.zip   |  0
+ TeknoParrotUi.Common/out2/media/claychal.zip  |  0
+ TeknoParrotUi.Common/out2/media/cleoftp.zip   |  0
+ TeknoParrotUi.Common/out2/media/clubk2k3.zip  |  0
+ TeknoParrotUi.Common/out2/media/clubk2kp.zip  |  0
+ TeknoParrotUi.Common/out2/media/clubk2kpa.zip |  0
+ TeknoParrotUi.Common/out2/media/clubkcyc.zip  |  0
+ TeknoParrotUi.Common/out2/media/clubkcyco.zip |  0
+ TeknoParrotUi.Common/out2/media/clubkprz.zip  |  0
+ TeknoParrotUi.Common/out2/media/clubkpzb.zip  |  0
+ TeknoParrotUi.Common/out2/media/clubkpzbp.zip |  0
+ TeknoParrotUi.Common/out2/media/clubkrt.zip   |  0
+ TeknoParrotUi.Common/out2/media/clubkrta.zip  |  0
+ TeknoParrotUi.Common/out2/media/clubkrtc.zip  |  0
+ TeknoParrotUi.Common/out2/media/clubkrto.zip  |  0
+ TeknoParrotUi.Common/out2/media/confmiss.zip  |  0
+ TeknoParrotUi.Common/out2/media/crackndj.zip  |  0
+ TeknoParrotUi.Common/out2/media/crakndj2.zip  |  0
+ TeknoParrotUi.Common/out2/media/crzytaxi.zip  |  0
+ TeknoParrotUi.Common/out2/media/csmash.zip    |  0
+ TeknoParrotUi.Common/out2/media/csmasho.zip   |  0
+ TeknoParrotUi.Common/out2/media/cspike.zip    |  0
+ TeknoParrotUi.Common/out2/media/cvs2.zip      |  0
+ TeknoParrotUi.Common/out2/media/cvs2mf.zip    |  0
+ TeknoParrotUi.Common/out2/media/cvsgd.zip     |  0
+ TeknoParrotUi.Common/out2/media/deathcox.zip  |  0
+ TeknoParrotUi.Common/out2/media/deathcoxj.zip |  0
+ TeknoParrotUi.Common/out2/media/deathcoxo.zip |  0
+ TeknoParrotUi.Common/out2/media/demofist.zip  |  0
+ TeknoParrotUi.Common/out2/media/derbyo2k.zip  |  0
+ TeknoParrotUi.Common/out2/media/derbyoc.zip   |  0
+ TeknoParrotUi.Common/out2/media/derbyoc2.zip  |  0
+ TeknoParrotUi.Common/out2/media/derbyocw.zip  |  0
+ TeknoParrotUi.Common/out2/media/dirtypig.zip  |  0
+ TeknoParrotUi.Common/out2/media/doa2.zip      |  0
+ TeknoParrotUi.Common/out2/media/doa2a.zip     |  0
+ TeknoParrotUi.Common/out2/media/doa2m.zip     |  0
+ TeknoParrotUi.Common/out2/media/dolphin.zip   |  0
+ TeknoParrotUi.Common/out2/media/dragntr.zip   |  0
+ TeknoParrotUi.Common/out2/media/dragntr2.zip  |  0
+ TeknoParrotUi.Common/out2/media/dragntr3.zip  |  0
+ TeknoParrotUi.Common/out2/media/dragntra.zip  |  0
+ TeknoParrotUi.Common/out2/media/drbyocwa.zip  |  0
+ TeknoParrotUi.Common/out2/media/drbyocwb.zip  |  0
+ TeknoParrotUi.Common/out2/media/drbyocwc.zip  |  0
+ TeknoParrotUi.Common/out2/media/drbyocwt.zip  |  0
+ TeknoParrotUi.Common/out2/media/dybb99.zip    |  0
+ TeknoParrotUi.Common/out2/media/dybbnao.zip   |  0
+ TeknoParrotUi.Common/out2/media/dygolf.zip    |  0
+ TeknoParrotUi.Common/out2/media/dygolfp.zip   |  0
+ TeknoParrotUi.Common/out2/media/f355.zip      |  0
+ TeknoParrotUi.Common/out2/media/f355p.zip     |  0
+ TeknoParrotUi.Common/out2/media/f355twin.zip  |  0
+ TeknoParrotUi.Common/out2/media/f355twinp.zip |  0
+ TeknoParrotUi.Common/out2/media/f355twn2.zip  |  0
+ TeknoParrotUi.Common/out2/media/fotns.zip     |  0
+ TeknoParrotUi.Common/out2/media/ftspeed.zip   |  0
+ TeknoParrotUi.Common/out2/media/ggisuka.zip   |  0
+ TeknoParrotUi.Common/out2/media/ggram2.zip    |  0
+ TeknoParrotUi.Common/out2/media/ggx.zip       |  0
+ TeknoParrotUi.Common/out2/media/ggx15.zip     |  0
+ TeknoParrotUi.Common/out2/media/ggxx.zip      |  0
+ TeknoParrotUi.Common/out2/media/ggxxac.zip    |  0
+ TeknoParrotUi.Common/out2/media/ggxxrl.zip    |  0
+ TeknoParrotUi.Common/out2/media/ggxxrlo.zip   |  0
+ TeknoParrotUi.Common/out2/media/ggxxsla.zip   |  0
+ TeknoParrotUi.Common/out2/media/gram2000.zip  |  0
+ TeknoParrotUi.Common/out2/media/gundmct.zip   |  0
+ TeknoParrotUi.Common/out2/media/gundmgd.zip   |  0
+ TeknoParrotUi.Common/out2/media/gundmxgd.zip  |  0
+ TeknoParrotUi.Common/out2/media/gunsur2.zip   |  0
+ TeknoParrotUi.Common/out2/media/gunsur2j.zip  |  0
+ TeknoParrotUi.Common/out2/media/gwing2.zip    |  0
+ TeknoParrotUi.Common/out2/media/hmgeo.zip     |  0
+ TeknoParrotUi.Common/out2/media/hopper.zip    |  0
+ TeknoParrotUi.Common/out2/media/hotd2.zip     |  0
+ TeknoParrotUi.Common/out2/media/hotd2e.zip    |  0
+ TeknoParrotUi.Common/out2/media/hotd2o.zip    |  0
+ TeknoParrotUi.Common/out2/media/hotd2p.zip    |  0
+ TeknoParrotUi.Common/out2/media/ikaruga.zip   |  0
+ TeknoParrotUi.Common/out2/media/illvelo.zip   |  0
+ TeknoParrotUi.Common/out2/media/inidv3ca.zip  |  0
+ TeknoParrotUi.Common/out2/media/inidv3cy.zip  |  0
+ TeknoParrotUi.Common/out2/media/initd.zip     |  0
+ TeknoParrotUi.Common/out2/media/initdexp.zip  |  0
+ TeknoParrotUi.Common/out2/media/initdexpo.zip |  0
+ TeknoParrotUi.Common/out2/media/initdo.zip    |  0
+ TeknoParrotUi.Common/out2/media/initdv2e.zip  |  0
+ TeknoParrotUi.Common/out2/media/initdv2j.zip  |  0
+ TeknoParrotUi.Common/out2/media/initdv2ja.zip |  0
+ TeknoParrotUi.Common/out2/media/initdv2jo.zip |  0
+ TeknoParrotUi.Common/out2/media/initdv3e.zip  |  0
+ TeknoParrotUi.Common/out2/media/initdv3j.zip  |  0
+ TeknoParrotUi.Common/out2/media/initdv3jb.zip |  0
+ TeknoParrotUi.Common/out2/media/inunoos.zip   |  0
+ TeknoParrotUi.Common/out2/media/jambo.zip     |  0
+ TeknoParrotUi.Common/out2/media/jingystm.zip  |  0
+ TeknoParrotUi.Common/out2/media/karous.zip    |  0
+ TeknoParrotUi.Common/out2/media/keyboard.zip  |  0
+ TeknoParrotUi.Common/out2/media/kick4csh.zip  |  0
+ TeknoParrotUi.Common/out2/media/kingrt66.zip  |  0
+ TeknoParrotUi.Common/out2/media/kingrt66p.zip |  0
+ TeknoParrotUi.Common/out2/media/kofnw.zip     |  0
+ TeknoParrotUi.Common/out2/media/kofnwj.zip    |  0
+ TeknoParrotUi.Common/out2/media/kofxi.zip     |  0
+ TeknoParrotUi.Common/out2/media/kov7sprt.zip  |  0
+ TeknoParrotUi.Common/out2/media/kurucham.zip  |  0
+ TeknoParrotUi.Common/out2/media/lupinsho.zip  |  0
+ TeknoParrotUi.Common/out2/media/lupinshoo.zip |  0
+ TeknoParrotUi.Common/out2/media/luptype.zip   |  0
+ TeknoParrotUi.Common/out2/media/mamonoro.zip  |  0
+ TeknoParrotUi.Common/out2/media/manicpnc.zip  |  0
+ TeknoParrotUi.Common/out2/media/marstv.zip    |  0
+ TeknoParrotUi.Common/out2/media/maxspeed.zip  |  0
+ TeknoParrotUi.Common/out2/media/mazan.zip     |  0
+ TeknoParrotUi.Common/out2/media/mazanj.zip    |  0
+ TeknoParrotUi.Common/out2/media/mazanu.zip    |  0
+ TeknoParrotUi.Common/out2/media/mbaa.zip      |  0
+ TeknoParrotUi.Common/out2/media/mbaao.zip     |  0
+ TeknoParrotUi.Common/out2/media/meltyb.zip    |  0
+ TeknoParrotUi.Common/out2/media/meltybld.zip  |  0
+ TeknoParrotUi.Common/out2/media/meltyblo.zip  |  0
+ TeknoParrotUi.Common/out2/media/meltybo.zip   |  0
+ TeknoParrotUi.Common/out2/media/mj1.zip       |  0
+ TeknoParrotUi.Common/out2/media/mj1a.zip      |  0
+ TeknoParrotUi.Common/out2/media/mj1b.zip      |  0
+ TeknoParrotUi.Common/out2/media/mj1c.zip      |  0
+ TeknoParrotUi.Common/out2/media/mj1d.zip      |  0
+ TeknoParrotUi.Common/out2/media/mj1e.zip      |  0
+ TeknoParrotUi.Common/out2/media/moeru.zip     |  0
+ TeknoParrotUi.Common/out2/media/mok.zip       |  0
+ TeknoParrotUi.Common/out2/media/monkeyba.zip  |  0
+ TeknoParrotUi.Common/out2/media/mslug6.zip    |  0
+ TeknoParrotUi.Common/out2/media/mushi2eo.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushi2k3.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushi2k4.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushi2k5.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushi2k61.zip |  0
+ TeknoParrotUi.Common/out2/media/mushi2k62.zip |  0
+ TeknoParrotUi.Common/out2/media/mushik2e.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushik2k.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushik4e.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushik4t.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushikc.zip   |  0
+ TeknoParrotUi.Common/out2/media/mushike.zip   |  0
+ TeknoParrotUi.Common/out2/media/mushikeo.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushikep.zip  |  0
+ TeknoParrotUi.Common/out2/media/mushikk.zip   |  0
+ TeknoParrotUi.Common/out2/media/mvsc2.zip     |  0
+ TeknoParrotUi.Common/out2/media/mvsc2u.zip    |  0
+ TeknoParrotUi.Common/out2/media/ndcfboxa.zip  |  0
+ TeknoParrotUi.Common/out2/media/ngbc.zip      |  0
+ TeknoParrotUi.Common/out2/media/ngbcj.zip     |  0
+ TeknoParrotUi.Common/out2/media/ngdup23a.zip  |  0
+ TeknoParrotUi.Common/out2/media/ngdup23c.zip  |  0
+ TeknoParrotUi.Common/out2/media/ngdup23e.zip  |  0
+ TeknoParrotUi.Common/out2/media/ninjaslt.zip  |  0
+ TeknoParrotUi.Common/out2/media/ninjaslta.zip |  0
+ TeknoParrotUi.Common/out2/media/ninjasltj.zip |  0
+ TeknoParrotUi.Common/out2/media/ninjasltu.zip |  0
+ TeknoParrotUi.Common/out2/media/ntvmys.zip    |  0
+ TeknoParrotUi.Common/out2/media/oinori.zip    |  0
+ TeknoParrotUi.Common/out2/media/otrigger.zip  |  0
+ TeknoParrotUi.Common/out2/media/pharrier.zip  |  0
+ TeknoParrotUi.Common/out2/media/pjustic.zip   |  0
+ TeknoParrotUi.Common/out2/media/pjustica.zip  |  0
+ TeknoParrotUi.Common/out2/media/pokasuka.zip  |  0
+ TeknoParrotUi.Common/out2/media/pstone.zip    |  0
+ TeknoParrotUi.Common/out2/media/pstone2.zip   |  0
+ TeknoParrotUi.Common/out2/media/pstone2b.zip  |  0
+ TeknoParrotUi.Common/out2/media/psyvar2.zip   |  0
+ TeknoParrotUi.Common/out2/media/puyoda.zip    |  0
+ TeknoParrotUi.Common/out2/media/puyofev.zip   |  0
+ TeknoParrotUi.Common/out2/media/puyofevj.zip  |  0
+ TeknoParrotUi.Common/out2/media/puyofevp.zip  |  0
+ TeknoParrotUi.Common/out2/media/qmegamis.zip  |  0
+ TeknoParrotUi.Common/out2/media/quizqgd.zip   |  0
+ TeknoParrotUi.Common/out2/media/radirgy.zip   |  0
+ TeknoParrotUi.Common/out2/media/radirgyn.zip  |  0
+ TeknoParrotUi.Common/out2/media/radirgyo.zip  |  0
+ TeknoParrotUi.Common/out2/media/rangrmsn.zip  |  0
+ TeknoParrotUi.Common/out2/media/rhytngk.zip   |  0
+ TeknoParrotUi.Common/out2/media/ringout.zip   |  0
+ TeknoParrotUi.Common/out2/media/ringouto.zip  |  0
+ TeknoParrotUi.Common/out2/media/rumblef.zip   |  0
+ TeknoParrotUi.Common/out2/media/rumblef2.zip  |  0
+ TeknoParrotUi.Common/out2/media/rumblefp.zip  |  0
+ TeknoParrotUi.Common/out2/media/rumblf2p.zip  |  0
+ TeknoParrotUi.Common/out2/media/salmankt.zip  |  0
+ TeknoParrotUi.Common/out2/media/samba.zip     |  0
+ TeknoParrotUi.Common/out2/media/samba2k.zip   |  0
+ TeknoParrotUi.Common/out2/media/sambaa.zip    |  0
+ TeknoParrotUi.Common/out2/media/sambap.zip    |  0
+ TeknoParrotUi.Common/out2/media/samsptk.zip   |  0
+ TeknoParrotUi.Common/out2/media/senko.zip     |  0
+ TeknoParrotUi.Common/out2/media/senkoo.zip    |  0
+ TeknoParrotUi.Common/out2/media/senkosp.zip   |  0
+ TeknoParrotUi.Common/out2/media/sfz3ugd.zip   |  0
+ TeknoParrotUi.Common/out2/media/sgdrvsim.zip  |  0
+ TeknoParrotUi.Common/out2/media/sgnascar.zip  |  0
+ TeknoParrotUi.Common/out2/media/sgnascaro.zip |  0
+ TeknoParrotUi.Common/out2/media/sgtetris.zip  |  0
+ TeknoParrotUi.Common/out2/media/shaktam.zip   |  0
+ TeknoParrotUi.Common/out2/media/shaktamb.zip  |  0
+ TeknoParrotUi.Common/out2/media/shaktmsp.zip  |  0
+ TeknoParrotUi.Common/out2/media/shangril.zip  |  0
+ TeknoParrotUi.Common/out2/media/shikgam2.zip  |  0
+ TeknoParrotUi.Common/out2/media/shootopl.zip  |  0
+ TeknoParrotUi.Common/out2/media/shootpl.zip   |  0
+ TeknoParrotUi.Common/out2/media/shootplm.zip  |  0
+ TeknoParrotUi.Common/out2/media/shootplmp.zip |  0
+ TeknoParrotUi.Common/out2/media/shors2k1.zip  |  0
+ TeknoParrotUi.Common/out2/media/shors2k2.zip  |  0
+ TeknoParrotUi.Common/out2/media/shors2k2l.zip |  0
+ TeknoParrotUi.Common/out2/media/shors2k2m.zip |  0
+ TeknoParrotUi.Common/out2/media/shors2k2s.zip |  0
+ TeknoParrotUi.Common/out2/media/shorse.zip    |  0
+ TeknoParrotUi.Common/out2/media/shorsel.zip   |  0
+ TeknoParrotUi.Common/out2/media/shorsem.zip   |  0
+ TeknoParrotUi.Common/out2/media/shorsep.zip   |  0
+ TeknoParrotUi.Common/out2/media/shorsepb.zip  |  0
+ TeknoParrotUi.Common/out2/media/shorsepl.zip  |  0
+ TeknoParrotUi.Common/out2/media/shorsepm.zip  |  0
+ TeknoParrotUi.Common/out2/media/shorsepr.zip  |  0
+ TeknoParrotUi.Common/out2/media/shorseprl.zip |  0
+ TeknoParrotUi.Common/out2/media/shorseprs.zip |  0
+ .../out2/media/shorseprvl.zip                 |  0
+ .../out2/media/shorseprvr.zip                 |  0
+ TeknoParrotUi.Common/out2/media/shorseps.zip  |  0
+ TeknoParrotUi.Common/out2/media/sl2007.zip    |  0
+ TeknoParrotUi.Common/out2/media/slasho.zip    |  0
+ TeknoParrotUi.Common/out2/media/slashout.zip  |  0
+ TeknoParrotUi.Common/out2/media/smarinef.zip  |  0
+ TeknoParrotUi.Common/out2/media/smlg99.zip    |  0
+ TeknoParrotUi.Common/out2/media/soulsurf.zip  |  0
+ TeknoParrotUi.Common/out2/media/spawn.zip     |  0
+ TeknoParrotUi.Common/out2/media/spkrbtl.zip   |  0
+ TeknoParrotUi.Common/out2/media/sprtjam.zip   |  0
+ TeknoParrotUi.Common/out2/media/sprtshot.zip  |  0
+ TeknoParrotUi.Common/out2/media/ss2005.zip    |  0
+ TeknoParrotUi.Common/out2/media/ss2005o.zip   |  0
+ TeknoParrotUi.Common/out2/media/sstrkfgt.zip  |  0
+ TeknoParrotUi.Common/out2/media/sstrkfgta.zip |  0
+ TeknoParrotUi.Common/out2/media/starseek.zip  |  0
+ TeknoParrotUi.Common/out2/media/suchie3.zip   |  0
+ TeknoParrotUi.Common/out2/media/sushibar.zip  |  0
+ TeknoParrotUi.Common/out2/media/swracer.zip   |  0
+ TeknoParrotUi.Common/out2/media/takoron.zip   |  0
+ TeknoParrotUi.Common/out2/media/tduno.zip     |  0
+ TeknoParrotUi.Common/out2/media/tduno2.zip    |  0
+ TeknoParrotUi.Common/out2/media/tetkiwam.zip  |  0
+ TeknoParrotUi.Common/out2/media/tokyobus.zip  |  0
+ TeknoParrotUi.Common/out2/media/totd.zip      |  0
+ TeknoParrotUi.Common/out2/media/totdo.zip     |  0
+ TeknoParrotUi.Common/out2/media/toukon4.zip   |  0
+ TeknoParrotUi.Common/out2/media/toyfight.zip  |  0
+ TeknoParrotUi.Common/out2/media/trgheart.zip  |  0
+ TeknoParrotUi.Common/out2/media/trghearto.zip |  0
+ TeknoParrotUi.Common/out2/media/trizeal.zip   |  0
+ TeknoParrotUi.Common/out2/media/undefeat.zip  |  0
+ TeknoParrotUi.Common/out2/media/usagiym.zip   |  0
+ TeknoParrotUi.Common/out2/media/vathlete.zip  |  0
+ TeknoParrotUi.Common/out2/media/vathletep.zip |  0
+ TeknoParrotUi.Common/out2/media/vf4.zip       |  0
+ TeknoParrotUi.Common/out2/media/vf4b.zip      |  0
+ TeknoParrotUi.Common/out2/media/vf4cart.zip   |  0
+ TeknoParrotUi.Common/out2/media/vf4evo.zip    |  0
+ TeknoParrotUi.Common/out2/media/vf4evoa.zip   |  0
+ TeknoParrotUi.Common/out2/media/vf4evob.zip   |  0
+ TeknoParrotUi.Common/out2/media/vf4evoct.zip  |  0
+ TeknoParrotUi.Common/out2/media/vf4o.zip      |  0
+ TeknoParrotUi.Common/out2/media/vf4tuned.zip  |  0
+ TeknoParrotUi.Common/out2/media/vf4tuneda.zip |  0
+ TeknoParrotUi.Common/out2/media/vf4tunedd.zip |  0
+ TeknoParrotUi.Common/out2/media/vfurlong.zip  |  0
+ TeknoParrotUi.Common/out2/media/virnba.zip    |  0
+ TeknoParrotUi.Common/out2/media/virnbao.zip   |  0
+ TeknoParrotUi.Common/out2/media/virnbap.zip   |  0
+ TeknoParrotUi.Common/out2/media/virnbapa.zip  |  0
+ TeknoParrotUi.Common/out2/media/von4.zip      |  0
+ TeknoParrotUi.Common/out2/media/vonot.zip     |  0
+ TeknoParrotUi.Common/out2/media/vs2_2k.zip    |  0
+ TeknoParrotUi.Common/out2/media/vs2_2ko.zip   |  0
+ TeknoParrotUi.Common/out2/media/vstrik3.zip   |  0
+ TeknoParrotUi.Common/out2/media/vstrik3c.zip  |  0
+ TeknoParrotUi.Common/out2/media/vstrik3co.zip |  0
+ TeknoParrotUi.Common/out2/media/vtenis2c.zip  |  0
+ TeknoParrotUi.Common/out2/media/vtennis.zip   |  0
+ TeknoParrotUi.Common/out2/media/vtennis2.zip  |  0
+ TeknoParrotUi.Common/out2/media/vtennisg.zip  |  0
+ TeknoParrotUi.Common/out2/media/waidrive.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf116.zip   |  0
+ TeknoParrotUi.Common/out2/media/wccf1dup.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf212e.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf234j.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf2chk.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf310j.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf322e.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf331e.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf331j.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf341j.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf400j.zip  |  0
+ TeknoParrotUi.Common/out2/media/wccf420e.zip  |  0
+ TeknoParrotUi.Common/out2/media/wldkicks.zip  |  0
+ TeknoParrotUi.Common/out2/media/wldkicksj.zip |  0
+ .../out2/media/wldkickspj.zip                 |  0
+ .../out2/media/wldkickspw.zip                 |  0
+ TeknoParrotUi.Common/out2/media/wldkicksu.zip |  0
+ TeknoParrotUi.Common/out2/media/wldrider.zip  |  0
+ TeknoParrotUi.Common/out2/media/wrungp.zip    |  0
+ TeknoParrotUi.Common/out2/media/wrungpo.zip   |  0
+ TeknoParrotUi.Common/out2/media/wsbbgd.zip    |  0
+ TeknoParrotUi.Common/out2/media/wwfroyal.zip  |  0
+ TeknoParrotUi.Common/out2/media/xtrmhnt2.zip  |  0
+ TeknoParrotUi.Common/out2/media/xtrmhunt.zip  |  0
+ TeknoParrotUi.Common/out2/media/zerogu2.zip   |  0
+ TeknoParrotUi.Common/out2/media/zombrvn.zip   |  0
+ TeknoParrotUi.Common/out2/media/zombrvne.zip  |  0
+ TeknoParrotUi.Common/out2/media/zombrvno.zip  |  0
+ TeknoParrotUi.Common/out2/media/zunou.zip     |  0
+ Tests/TeknoNaomiRelease/Program.cs            | 22 ++++++-
+ 352 files changed, 85 insertions(+), 4 deletions(-)
+ create mode 100644 TeknoParrotUi.Common/out2/media/18wheelr.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/18wheelro.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/18wheelrt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/18wheels.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/18wheelu.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/airtrix.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/airtrixo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/alienfnt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/alienfnta.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/alpilot.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/alpilotj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/anmlbskt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/anmlbskta.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/anpanman2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/anpanman2a.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/asndynmt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/asndynmto.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ausfache.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/azumanga.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/basschal.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/basschalo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/bdrdown.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/beachspi.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/blokpong.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/braveff.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/capsnk.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/capsnka.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/capsnkb.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/cfield.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/chocomk.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/claychal.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/cleoftp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubk2k3.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubk2kp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubk2kpa.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubkcyc.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubkcyco.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubkprz.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubkpzb.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubkpzbp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubkrt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubkrta.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubkrtc.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/clubkrto.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/confmiss.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/crackndj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/crakndj2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/crzytaxi.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/csmash.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/csmasho.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/cspike.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/cvs2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/cvs2mf.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/cvsgd.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/deathcox.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/deathcoxj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/deathcoxo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/demofist.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/derbyo2k.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/derbyoc.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/derbyoc2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/derbyocw.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dirtypig.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/doa2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/doa2a.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/doa2m.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dolphin.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dragntr.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dragntr2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dragntr3.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dragntra.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/drbyocwa.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/drbyocwb.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/drbyocwc.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/drbyocwt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dybb99.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dybbnao.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dygolf.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/dygolfp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/f355.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/f355p.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/f355twin.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/f355twinp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/f355twn2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/fotns.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ftspeed.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ggisuka.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ggram2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ggx.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ggx15.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ggxx.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ggxxac.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ggxxrl.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ggxxrlo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ggxxsla.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/gram2000.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/gundmct.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/gundmgd.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/gundmxgd.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/gunsur2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/gunsur2j.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/gwing2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/hmgeo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/hopper.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/hotd2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/hotd2e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/hotd2o.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/hotd2p.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ikaruga.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/illvelo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/inidv3ca.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/inidv3cy.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initd.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdexp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdexpo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdv2e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdv2j.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdv2ja.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdv2jo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdv3e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdv3j.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/initdv3jb.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/inunoos.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/jambo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/jingystm.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/karous.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/keyboard.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/kick4csh.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/kingrt66.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/kingrt66p.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/kofnw.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/kofnwj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/kofxi.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/kov7sprt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/kurucham.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/lupinsho.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/lupinshoo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/luptype.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mamonoro.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/manicpnc.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/marstv.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/maxspeed.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mazan.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mazanj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mazanu.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mbaa.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mbaao.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/meltyb.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/meltybld.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/meltyblo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/meltybo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mj1.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mj1a.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mj1b.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mj1c.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mj1d.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mj1e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/moeru.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mok.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/monkeyba.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mslug6.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushi2eo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushi2k3.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushi2k4.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushi2k5.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushi2k61.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushi2k62.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushik2e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushik2k.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushik4e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushik4t.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushikc.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushike.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushikeo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushikep.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mushikk.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mvsc2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/mvsc2u.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ndcfboxa.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ngbc.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ngbcj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ngdup23a.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ngdup23c.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ngdup23e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ninjaslt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ninjaslta.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ninjasltj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ninjasltu.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ntvmys.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/oinori.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/otrigger.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/pharrier.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/pjustic.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/pjustica.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/pokasuka.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/pstone.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/pstone2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/pstone2b.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/psyvar2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/puyoda.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/puyofev.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/puyofevj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/puyofevp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/qmegamis.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/quizqgd.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/radirgy.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/radirgyn.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/radirgyo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/rangrmsn.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/rhytngk.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ringout.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ringouto.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/rumblef.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/rumblef2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/rumblefp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/rumblf2p.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/salmankt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/samba.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/samba2k.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sambaa.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sambap.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/samsptk.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/senko.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/senkoo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/senkosp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sfz3ugd.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sgdrvsim.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sgnascar.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sgnascaro.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sgtetris.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shaktam.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shaktamb.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shaktmsp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shangril.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shikgam2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shootopl.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shootpl.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shootplm.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shootplmp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shors2k1.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shors2k2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shors2k2l.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shors2k2m.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shors2k2s.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorse.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorsel.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorsem.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorsep.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorsepb.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorsepl.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorsepm.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorsepr.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorseprl.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorseprs.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorseprvl.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorseprvr.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/shorseps.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sl2007.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/slasho.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/slashout.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/smarinef.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/smlg99.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/soulsurf.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/spawn.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/spkrbtl.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sprtjam.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sprtshot.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ss2005.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/ss2005o.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sstrkfgt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sstrkfgta.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/starseek.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/suchie3.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/sushibar.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/swracer.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/takoron.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/tduno.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/tduno2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/tetkiwam.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/tokyobus.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/totd.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/totdo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/toukon4.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/toyfight.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/trgheart.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/trghearto.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/trizeal.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/undefeat.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/usagiym.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vathlete.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vathletep.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4b.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4cart.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4evo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4evoa.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4evob.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4evoct.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4o.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4tuned.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4tuneda.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vf4tunedd.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vfurlong.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/virnba.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/virnbao.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/virnbap.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/virnbapa.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/von4.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vonot.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vs2_2k.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vs2_2ko.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vstrik3.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vstrik3c.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vstrik3co.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vtenis2c.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vtennis.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vtennis2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/vtennisg.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/waidrive.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf116.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf1dup.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf212e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf234j.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf2chk.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf310j.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf322e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf331e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf331j.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf341j.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf400j.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wccf420e.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wldkicks.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wldkicksj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wldkickspj.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wldkickspw.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wldkicksu.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wldrider.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wrungp.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wrungpo.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wsbbgd.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/wwfroyal.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/xtrmhnt2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/xtrmhunt.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/zerogu2.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/zombrvn.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/zombrvne.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/zombrvno.zip
+ create mode 100644 TeknoParrotUi.Common/out2/media/zunou.zip
+
+diff --git a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+index 4aaa7e5..c55d18a 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+@@ -4,6 +4,7 @@ using System.Diagnostics;
+ using System.Globalization;
+ using System.IO;
+ using System.Linq;
++using System.Runtime.InteropServices;
+ using System.Text;
+ 
+ namespace TeknoParrotUi.Common
+@@ -17,12 +18,25 @@ namespace TeknoParrotUi.Common
+         public string Cabinet { get; internal set; }
+         public string BindingsPath { get; internal set; }
+         public string BindingsText { get; internal set; }
++        public int RenderScale { get; internal set; }
++        public bool AutoRenderScale { get; internal set; }
+         public ProcessStartInfo StartInfo { get; internal set; }
+     }
+ 
+     // Plans are device-free. Prepare writes only a newly named launch binding file.
+     public static class TeknoNaomiLaunch
+     {
++        public const string AutoResolution = "Auto";
++
++        // Height in physical pixels of the primary display; 0 when unknown. Tests replace it.
++        public static Func<int> DisplayHeight { get; set; } = PrimaryDisplayHeight;
++
++        // The runner reduces its raster to the window with nearest sampling, so a
++        // scale above the display only discards rows. Pick the largest scale whose
++        // 480 source lines still fit the display height.
++        public static int AutoRenderScale(int displayHeight) =>
++            displayHeight <= 0 ? 4 : Math.Max(1, Math.Min(8, displayHeight / 480));
++
+         public static TeknoNaomiLaunchPlan Plan(GameProfile profile, string uiRoot,
+             string gameLocation, bool isTest = false)
+         {
+@@ -81,8 +95,12 @@ namespace TeknoParrotUi.Common
+             var configuredStateRoot = Setting("Save Root");
+             var state = Resolve(string.IsNullOrWhiteSpace(configuredStateRoot) ? Path.Combine(work, "state") : configuredStateRoot);
+             var cabinet = TeknoNaomiProfileSettings.CabinetStateId(profile);
+-            if (!int.TryParse(Setting("Internal Resolution", "4"), NumberStyles.None, CultureInfo.InvariantCulture, out var scale) || scale < 1 || scale > 8)
+-                throw new InvalidOperationException("Internal Resolution must be from 1 to 8.");
++            var resolution = Setting("Internal Resolution", "4");
++            var autoScale = resolution == AutoResolution;
++            int scale;
++            if (autoScale) scale = AutoRenderScale(DisplayHeight?.Invoke() ?? 0);
++            else if (!int.TryParse(resolution, NumberStyles.None, CultureInfo.InvariantCulture, out scale) || scale < 1 || scale > 8)
++                throw new InvalidOperationException("Internal Resolution must be Auto or from 1 to 8.");
+             var display = Setting("DisplayMode", "Windowed");
+             if (display != "Windowed" && display != "Fullscreen") throw new InvalidOperationException("Invalid DisplayMode.");
+             var bindings = TeknoNaomiInputBindings.Serialize(profile, entry.Set);
+@@ -124,6 +142,7 @@ namespace TeknoParrotUi.Common
+             else if (Enabled("Side-by-Side 3D")) args.Add("--sbs");
+             return new TeknoNaomiLaunchPlan { Set = entry.Set, RomArchive = archive, ChdRoot = chdRoot,
+                 StateRoot = state, Cabinet = cabinet, BindingsPath = bindingPath, BindingsText = bindings,
++                RenderScale = scale, AutoRenderScale = autoScale,
+                 StartInfo = new ProcessStartInfo(Path.Combine(work, "TeknoNaomi.exe"), string.Join(" ", args.Select(Quote)))
+                 { UseShellExecute = false, CreateNoWindow = true, WorkingDirectory = work, RedirectStandardError = true } };
+         }
+@@ -138,10 +157,44 @@ namespace TeknoParrotUi.Common
+             Directory.CreateDirectory(Path.GetDirectoryName(plan.BindingsPath));
+             using (var file = new FileStream(plan.BindingsPath, FileMode.CreateNew, FileAccess.Write, FileShare.Read))
+             using (var writer = new StreamWriter(file, new UTF8Encoding(false, true))) writer.Write(plan.BindingsText);
+-            log?.Invoke("TeknoNaomi: " + plan.Set + ", cabinet " + plan.Cabinet + ". Saved bindings exported for this launch.");
++            log?.Invoke("TeknoNaomi: " + plan.Set + ", cabinet " + plan.Cabinet + ", render scale " + plan.RenderScale +
++                (plan.AutoRenderScale ? " (Auto)" : "") + ". Saved bindings exported for this launch.");
+             return plan.StartInfo;
+         }
+ 
++        private static int PrimaryDisplayHeight()
++        {
++            try
++            {
++                var mode = new DisplayMode { dmSize = (short)Marshal.SizeOf(typeof(DisplayMode)) };
++                return EnumDisplaySettings(null, EnumCurrentSettings, ref mode) ? mode.dmPelsHeight : 0;
++            }
++            catch (Exception error) when (error is DllNotFoundException || error is EntryPointNotFoundException)
++            {
++                return 0;
++            }
++        }
++
++        private const int EnumCurrentSettings = -1;
++
++        [DllImport("user32.dll", CharSet = CharSet.Auto)]
++        private static extern bool EnumDisplaySettings(string deviceName, int modeNumber, ref DisplayMode mode);
++
++        // DEVMODE, as in MonitorSelection. The current mode is in physical pixels,
++        // unaffected by Windows display scaling.
++        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
++        private struct DisplayMode
++        {
++            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string dmDeviceName;
++            public short dmSpecVersion, dmDriverVersion, dmSize, dmDriverExtra;
++            public int dmFields, dmPositionX, dmPositionY, dmDisplayOrientation, dmDisplayFixedOutput;
++            public short dmColor, dmDuplex, dmYResolution, dmTTOption, dmCollate;
++            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string dmFormName;
++            public short dmLogPixels;
++            public int dmBitsPerPel, dmPelsWidth, dmPelsHeight, dmDisplayFlags, dmDisplayFrequency;
++            public int dmICMMethod, dmICMIntent, dmMediaType, dmDitherType, dmReserved1, dmReserved2, dmPanningWidth, dmPanningHeight;
++        }
++
+         private static bool SamePath(string a, string b) => string.Equals(Path.GetFullPath(a).TrimEnd('\\', '/'), Path.GetFullPath(b).TrimEnd('\\', '/'), StringComparison.OrdinalIgnoreCase);
+ 
+         public static string Quote(string value)
+diff --git a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+index f66d411..3cd5542 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+@@ -41,6 +41,14 @@ namespace TeknoParrotUi.Common
+                 field.Hint = hint;
+                 if (options.Length > 0) field.FieldOptions = options.ToList();
+             }
++            var resolution = profile.ConfigValues.FirstOrDefault(f => f.FieldName == "Internal Resolution");
++            if (resolution?.FieldOptions != null)
++            {
++                if (!resolution.FieldOptions.Contains(TeknoNaomiLaunch.AutoResolution))
++                    resolution.FieldOptions.Insert(0, TeknoNaomiLaunch.AutoResolution);
++                resolution.Hint = "Auto picks the largest scale whose 480 lines fit the primary display (2 at 1080p, 3 at 1440p, 4 at 2160p). " +
++                    "Scales above the display are reduced with nearest sampling and look worse, not sharper.";
++            }
+             Add("General", "Cabinet Outputs", FieldType.Bool, "1",
+                 "Publish lamps, motors and force feedback to MAMEOutput clients.");
+             Add("General", "Free Play", FieldType.Bool, "0", "Set the BIOS coin setting to FREE PLAY.");
+diff --git a/TeknoParrotUi.Common/out2/media/18wheelr.zip b/TeknoParrotUi.Common/out2/media/18wheelr.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/18wheelro.zip b/TeknoParrotUi.Common/out2/media/18wheelro.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/18wheelrt.zip b/TeknoParrotUi.Common/out2/media/18wheelrt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/18wheels.zip b/TeknoParrotUi.Common/out2/media/18wheels.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/18wheelu.zip b/TeknoParrotUi.Common/out2/media/18wheelu.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/airtrix.zip b/TeknoParrotUi.Common/out2/media/airtrix.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/airtrixo.zip b/TeknoParrotUi.Common/out2/media/airtrixo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/alienfnt.zip b/TeknoParrotUi.Common/out2/media/alienfnt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/alienfnta.zip b/TeknoParrotUi.Common/out2/media/alienfnta.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/alpilot.zip b/TeknoParrotUi.Common/out2/media/alpilot.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/alpilotj.zip b/TeknoParrotUi.Common/out2/media/alpilotj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/anmlbskt.zip b/TeknoParrotUi.Common/out2/media/anmlbskt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/anmlbskta.zip b/TeknoParrotUi.Common/out2/media/anmlbskta.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/anpanman2.zip b/TeknoParrotUi.Common/out2/media/anpanman2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/anpanman2a.zip b/TeknoParrotUi.Common/out2/media/anpanman2a.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/asndynmt.zip b/TeknoParrotUi.Common/out2/media/asndynmt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/asndynmto.zip b/TeknoParrotUi.Common/out2/media/asndynmto.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ausfache.zip b/TeknoParrotUi.Common/out2/media/ausfache.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/azumanga.zip b/TeknoParrotUi.Common/out2/media/azumanga.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/basschal.zip b/TeknoParrotUi.Common/out2/media/basschal.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/basschalo.zip b/TeknoParrotUi.Common/out2/media/basschalo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/bdrdown.zip b/TeknoParrotUi.Common/out2/media/bdrdown.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/beachspi.zip b/TeknoParrotUi.Common/out2/media/beachspi.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/blokpong.zip b/TeknoParrotUi.Common/out2/media/blokpong.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/braveff.zip b/TeknoParrotUi.Common/out2/media/braveff.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/capsnk.zip b/TeknoParrotUi.Common/out2/media/capsnk.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/capsnka.zip b/TeknoParrotUi.Common/out2/media/capsnka.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/capsnkb.zip b/TeknoParrotUi.Common/out2/media/capsnkb.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/cfield.zip b/TeknoParrotUi.Common/out2/media/cfield.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/chocomk.zip b/TeknoParrotUi.Common/out2/media/chocomk.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/claychal.zip b/TeknoParrotUi.Common/out2/media/claychal.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/cleoftp.zip b/TeknoParrotUi.Common/out2/media/cleoftp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubk2k3.zip b/TeknoParrotUi.Common/out2/media/clubk2k3.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubk2kp.zip b/TeknoParrotUi.Common/out2/media/clubk2kp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubk2kpa.zip b/TeknoParrotUi.Common/out2/media/clubk2kpa.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubkcyc.zip b/TeknoParrotUi.Common/out2/media/clubkcyc.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubkcyco.zip b/TeknoParrotUi.Common/out2/media/clubkcyco.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubkprz.zip b/TeknoParrotUi.Common/out2/media/clubkprz.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubkpzb.zip b/TeknoParrotUi.Common/out2/media/clubkpzb.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubkpzbp.zip b/TeknoParrotUi.Common/out2/media/clubkpzbp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubkrt.zip b/TeknoParrotUi.Common/out2/media/clubkrt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubkrta.zip b/TeknoParrotUi.Common/out2/media/clubkrta.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubkrtc.zip b/TeknoParrotUi.Common/out2/media/clubkrtc.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/clubkrto.zip b/TeknoParrotUi.Common/out2/media/clubkrto.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/confmiss.zip b/TeknoParrotUi.Common/out2/media/confmiss.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/crackndj.zip b/TeknoParrotUi.Common/out2/media/crackndj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/crakndj2.zip b/TeknoParrotUi.Common/out2/media/crakndj2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/crzytaxi.zip b/TeknoParrotUi.Common/out2/media/crzytaxi.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/csmash.zip b/TeknoParrotUi.Common/out2/media/csmash.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/csmasho.zip b/TeknoParrotUi.Common/out2/media/csmasho.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/cspike.zip b/TeknoParrotUi.Common/out2/media/cspike.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/cvs2.zip b/TeknoParrotUi.Common/out2/media/cvs2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/cvs2mf.zip b/TeknoParrotUi.Common/out2/media/cvs2mf.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/cvsgd.zip b/TeknoParrotUi.Common/out2/media/cvsgd.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/deathcox.zip b/TeknoParrotUi.Common/out2/media/deathcox.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/deathcoxj.zip b/TeknoParrotUi.Common/out2/media/deathcoxj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/deathcoxo.zip b/TeknoParrotUi.Common/out2/media/deathcoxo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/demofist.zip b/TeknoParrotUi.Common/out2/media/demofist.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/derbyo2k.zip b/TeknoParrotUi.Common/out2/media/derbyo2k.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/derbyoc.zip b/TeknoParrotUi.Common/out2/media/derbyoc.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/derbyoc2.zip b/TeknoParrotUi.Common/out2/media/derbyoc2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/derbyocw.zip b/TeknoParrotUi.Common/out2/media/derbyocw.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dirtypig.zip b/TeknoParrotUi.Common/out2/media/dirtypig.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/doa2.zip b/TeknoParrotUi.Common/out2/media/doa2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/doa2a.zip b/TeknoParrotUi.Common/out2/media/doa2a.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/doa2m.zip b/TeknoParrotUi.Common/out2/media/doa2m.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dolphin.zip b/TeknoParrotUi.Common/out2/media/dolphin.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dragntr.zip b/TeknoParrotUi.Common/out2/media/dragntr.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dragntr2.zip b/TeknoParrotUi.Common/out2/media/dragntr2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dragntr3.zip b/TeknoParrotUi.Common/out2/media/dragntr3.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dragntra.zip b/TeknoParrotUi.Common/out2/media/dragntra.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/drbyocwa.zip b/TeknoParrotUi.Common/out2/media/drbyocwa.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/drbyocwb.zip b/TeknoParrotUi.Common/out2/media/drbyocwb.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/drbyocwc.zip b/TeknoParrotUi.Common/out2/media/drbyocwc.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/drbyocwt.zip b/TeknoParrotUi.Common/out2/media/drbyocwt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dybb99.zip b/TeknoParrotUi.Common/out2/media/dybb99.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dybbnao.zip b/TeknoParrotUi.Common/out2/media/dybbnao.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dygolf.zip b/TeknoParrotUi.Common/out2/media/dygolf.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/dygolfp.zip b/TeknoParrotUi.Common/out2/media/dygolfp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/f355.zip b/TeknoParrotUi.Common/out2/media/f355.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/f355p.zip b/TeknoParrotUi.Common/out2/media/f355p.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/f355twin.zip b/TeknoParrotUi.Common/out2/media/f355twin.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/f355twinp.zip b/TeknoParrotUi.Common/out2/media/f355twinp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/f355twn2.zip b/TeknoParrotUi.Common/out2/media/f355twn2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/fotns.zip b/TeknoParrotUi.Common/out2/media/fotns.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ftspeed.zip b/TeknoParrotUi.Common/out2/media/ftspeed.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ggisuka.zip b/TeknoParrotUi.Common/out2/media/ggisuka.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ggram2.zip b/TeknoParrotUi.Common/out2/media/ggram2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ggx.zip b/TeknoParrotUi.Common/out2/media/ggx.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ggx15.zip b/TeknoParrotUi.Common/out2/media/ggx15.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ggxx.zip b/TeknoParrotUi.Common/out2/media/ggxx.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ggxxac.zip b/TeknoParrotUi.Common/out2/media/ggxxac.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ggxxrl.zip b/TeknoParrotUi.Common/out2/media/ggxxrl.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ggxxrlo.zip b/TeknoParrotUi.Common/out2/media/ggxxrlo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ggxxsla.zip b/TeknoParrotUi.Common/out2/media/ggxxsla.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/gram2000.zip b/TeknoParrotUi.Common/out2/media/gram2000.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/gundmct.zip b/TeknoParrotUi.Common/out2/media/gundmct.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/gundmgd.zip b/TeknoParrotUi.Common/out2/media/gundmgd.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/gundmxgd.zip b/TeknoParrotUi.Common/out2/media/gundmxgd.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/gunsur2.zip b/TeknoParrotUi.Common/out2/media/gunsur2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/gunsur2j.zip b/TeknoParrotUi.Common/out2/media/gunsur2j.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/gwing2.zip b/TeknoParrotUi.Common/out2/media/gwing2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/hmgeo.zip b/TeknoParrotUi.Common/out2/media/hmgeo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/hopper.zip b/TeknoParrotUi.Common/out2/media/hopper.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/hotd2.zip b/TeknoParrotUi.Common/out2/media/hotd2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/hotd2e.zip b/TeknoParrotUi.Common/out2/media/hotd2e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/hotd2o.zip b/TeknoParrotUi.Common/out2/media/hotd2o.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/hotd2p.zip b/TeknoParrotUi.Common/out2/media/hotd2p.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ikaruga.zip b/TeknoParrotUi.Common/out2/media/ikaruga.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/illvelo.zip b/TeknoParrotUi.Common/out2/media/illvelo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/inidv3ca.zip b/TeknoParrotUi.Common/out2/media/inidv3ca.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/inidv3cy.zip b/TeknoParrotUi.Common/out2/media/inidv3cy.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initd.zip b/TeknoParrotUi.Common/out2/media/initd.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdexp.zip b/TeknoParrotUi.Common/out2/media/initdexp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdexpo.zip b/TeknoParrotUi.Common/out2/media/initdexpo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdo.zip b/TeknoParrotUi.Common/out2/media/initdo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdv2e.zip b/TeknoParrotUi.Common/out2/media/initdv2e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdv2j.zip b/TeknoParrotUi.Common/out2/media/initdv2j.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdv2ja.zip b/TeknoParrotUi.Common/out2/media/initdv2ja.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdv2jo.zip b/TeknoParrotUi.Common/out2/media/initdv2jo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdv3e.zip b/TeknoParrotUi.Common/out2/media/initdv3e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdv3j.zip b/TeknoParrotUi.Common/out2/media/initdv3j.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/initdv3jb.zip b/TeknoParrotUi.Common/out2/media/initdv3jb.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/inunoos.zip b/TeknoParrotUi.Common/out2/media/inunoos.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/jambo.zip b/TeknoParrotUi.Common/out2/media/jambo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/jingystm.zip b/TeknoParrotUi.Common/out2/media/jingystm.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/karous.zip b/TeknoParrotUi.Common/out2/media/karous.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/keyboard.zip b/TeknoParrotUi.Common/out2/media/keyboard.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/kick4csh.zip b/TeknoParrotUi.Common/out2/media/kick4csh.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/kingrt66.zip b/TeknoParrotUi.Common/out2/media/kingrt66.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/kingrt66p.zip b/TeknoParrotUi.Common/out2/media/kingrt66p.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/kofnw.zip b/TeknoParrotUi.Common/out2/media/kofnw.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/kofnwj.zip b/TeknoParrotUi.Common/out2/media/kofnwj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/kofxi.zip b/TeknoParrotUi.Common/out2/media/kofxi.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/kov7sprt.zip b/TeknoParrotUi.Common/out2/media/kov7sprt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/kurucham.zip b/TeknoParrotUi.Common/out2/media/kurucham.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/lupinsho.zip b/TeknoParrotUi.Common/out2/media/lupinsho.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/lupinshoo.zip b/TeknoParrotUi.Common/out2/media/lupinshoo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/luptype.zip b/TeknoParrotUi.Common/out2/media/luptype.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mamonoro.zip b/TeknoParrotUi.Common/out2/media/mamonoro.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/manicpnc.zip b/TeknoParrotUi.Common/out2/media/manicpnc.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/marstv.zip b/TeknoParrotUi.Common/out2/media/marstv.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/maxspeed.zip b/TeknoParrotUi.Common/out2/media/maxspeed.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mazan.zip b/TeknoParrotUi.Common/out2/media/mazan.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mazanj.zip b/TeknoParrotUi.Common/out2/media/mazanj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mazanu.zip b/TeknoParrotUi.Common/out2/media/mazanu.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mbaa.zip b/TeknoParrotUi.Common/out2/media/mbaa.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mbaao.zip b/TeknoParrotUi.Common/out2/media/mbaao.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/meltyb.zip b/TeknoParrotUi.Common/out2/media/meltyb.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/meltybld.zip b/TeknoParrotUi.Common/out2/media/meltybld.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/meltyblo.zip b/TeknoParrotUi.Common/out2/media/meltyblo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/meltybo.zip b/TeknoParrotUi.Common/out2/media/meltybo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mj1.zip b/TeknoParrotUi.Common/out2/media/mj1.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mj1a.zip b/TeknoParrotUi.Common/out2/media/mj1a.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mj1b.zip b/TeknoParrotUi.Common/out2/media/mj1b.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mj1c.zip b/TeknoParrotUi.Common/out2/media/mj1c.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mj1d.zip b/TeknoParrotUi.Common/out2/media/mj1d.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mj1e.zip b/TeknoParrotUi.Common/out2/media/mj1e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/moeru.zip b/TeknoParrotUi.Common/out2/media/moeru.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mok.zip b/TeknoParrotUi.Common/out2/media/mok.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/monkeyba.zip b/TeknoParrotUi.Common/out2/media/monkeyba.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mslug6.zip b/TeknoParrotUi.Common/out2/media/mslug6.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushi2eo.zip b/TeknoParrotUi.Common/out2/media/mushi2eo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushi2k3.zip b/TeknoParrotUi.Common/out2/media/mushi2k3.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushi2k4.zip b/TeknoParrotUi.Common/out2/media/mushi2k4.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushi2k5.zip b/TeknoParrotUi.Common/out2/media/mushi2k5.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushi2k61.zip b/TeknoParrotUi.Common/out2/media/mushi2k61.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushi2k62.zip b/TeknoParrotUi.Common/out2/media/mushi2k62.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushik2e.zip b/TeknoParrotUi.Common/out2/media/mushik2e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushik2k.zip b/TeknoParrotUi.Common/out2/media/mushik2k.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushik4e.zip b/TeknoParrotUi.Common/out2/media/mushik4e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushik4t.zip b/TeknoParrotUi.Common/out2/media/mushik4t.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushikc.zip b/TeknoParrotUi.Common/out2/media/mushikc.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushike.zip b/TeknoParrotUi.Common/out2/media/mushike.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushikeo.zip b/TeknoParrotUi.Common/out2/media/mushikeo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushikep.zip b/TeknoParrotUi.Common/out2/media/mushikep.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mushikk.zip b/TeknoParrotUi.Common/out2/media/mushikk.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mvsc2.zip b/TeknoParrotUi.Common/out2/media/mvsc2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/mvsc2u.zip b/TeknoParrotUi.Common/out2/media/mvsc2u.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ndcfboxa.zip b/TeknoParrotUi.Common/out2/media/ndcfboxa.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ngbc.zip b/TeknoParrotUi.Common/out2/media/ngbc.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ngbcj.zip b/TeknoParrotUi.Common/out2/media/ngbcj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ngdup23a.zip b/TeknoParrotUi.Common/out2/media/ngdup23a.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ngdup23c.zip b/TeknoParrotUi.Common/out2/media/ngdup23c.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ngdup23e.zip b/TeknoParrotUi.Common/out2/media/ngdup23e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ninjaslt.zip b/TeknoParrotUi.Common/out2/media/ninjaslt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ninjaslta.zip b/TeknoParrotUi.Common/out2/media/ninjaslta.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ninjasltj.zip b/TeknoParrotUi.Common/out2/media/ninjasltj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ninjasltu.zip b/TeknoParrotUi.Common/out2/media/ninjasltu.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ntvmys.zip b/TeknoParrotUi.Common/out2/media/ntvmys.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/oinori.zip b/TeknoParrotUi.Common/out2/media/oinori.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/otrigger.zip b/TeknoParrotUi.Common/out2/media/otrigger.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/pharrier.zip b/TeknoParrotUi.Common/out2/media/pharrier.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/pjustic.zip b/TeknoParrotUi.Common/out2/media/pjustic.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/pjustica.zip b/TeknoParrotUi.Common/out2/media/pjustica.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/pokasuka.zip b/TeknoParrotUi.Common/out2/media/pokasuka.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/pstone.zip b/TeknoParrotUi.Common/out2/media/pstone.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/pstone2.zip b/TeknoParrotUi.Common/out2/media/pstone2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/pstone2b.zip b/TeknoParrotUi.Common/out2/media/pstone2b.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/psyvar2.zip b/TeknoParrotUi.Common/out2/media/psyvar2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/puyoda.zip b/TeknoParrotUi.Common/out2/media/puyoda.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/puyofev.zip b/TeknoParrotUi.Common/out2/media/puyofev.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/puyofevj.zip b/TeknoParrotUi.Common/out2/media/puyofevj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/puyofevp.zip b/TeknoParrotUi.Common/out2/media/puyofevp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/qmegamis.zip b/TeknoParrotUi.Common/out2/media/qmegamis.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/quizqgd.zip b/TeknoParrotUi.Common/out2/media/quizqgd.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/radirgy.zip b/TeknoParrotUi.Common/out2/media/radirgy.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/radirgyn.zip b/TeknoParrotUi.Common/out2/media/radirgyn.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/radirgyo.zip b/TeknoParrotUi.Common/out2/media/radirgyo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/rangrmsn.zip b/TeknoParrotUi.Common/out2/media/rangrmsn.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/rhytngk.zip b/TeknoParrotUi.Common/out2/media/rhytngk.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ringout.zip b/TeknoParrotUi.Common/out2/media/ringout.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ringouto.zip b/TeknoParrotUi.Common/out2/media/ringouto.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/rumblef.zip b/TeknoParrotUi.Common/out2/media/rumblef.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/rumblef2.zip b/TeknoParrotUi.Common/out2/media/rumblef2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/rumblefp.zip b/TeknoParrotUi.Common/out2/media/rumblefp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/rumblf2p.zip b/TeknoParrotUi.Common/out2/media/rumblf2p.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/salmankt.zip b/TeknoParrotUi.Common/out2/media/salmankt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/samba.zip b/TeknoParrotUi.Common/out2/media/samba.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/samba2k.zip b/TeknoParrotUi.Common/out2/media/samba2k.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sambaa.zip b/TeknoParrotUi.Common/out2/media/sambaa.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sambap.zip b/TeknoParrotUi.Common/out2/media/sambap.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/samsptk.zip b/TeknoParrotUi.Common/out2/media/samsptk.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/senko.zip b/TeknoParrotUi.Common/out2/media/senko.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/senkoo.zip b/TeknoParrotUi.Common/out2/media/senkoo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/senkosp.zip b/TeknoParrotUi.Common/out2/media/senkosp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sfz3ugd.zip b/TeknoParrotUi.Common/out2/media/sfz3ugd.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sgdrvsim.zip b/TeknoParrotUi.Common/out2/media/sgdrvsim.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sgnascar.zip b/TeknoParrotUi.Common/out2/media/sgnascar.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sgnascaro.zip b/TeknoParrotUi.Common/out2/media/sgnascaro.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sgtetris.zip b/TeknoParrotUi.Common/out2/media/sgtetris.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shaktam.zip b/TeknoParrotUi.Common/out2/media/shaktam.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shaktamb.zip b/TeknoParrotUi.Common/out2/media/shaktamb.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shaktmsp.zip b/TeknoParrotUi.Common/out2/media/shaktmsp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shangril.zip b/TeknoParrotUi.Common/out2/media/shangril.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shikgam2.zip b/TeknoParrotUi.Common/out2/media/shikgam2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shootopl.zip b/TeknoParrotUi.Common/out2/media/shootopl.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shootpl.zip b/TeknoParrotUi.Common/out2/media/shootpl.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shootplm.zip b/TeknoParrotUi.Common/out2/media/shootplm.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shootplmp.zip b/TeknoParrotUi.Common/out2/media/shootplmp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shors2k1.zip b/TeknoParrotUi.Common/out2/media/shors2k1.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shors2k2.zip b/TeknoParrotUi.Common/out2/media/shors2k2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shors2k2l.zip b/TeknoParrotUi.Common/out2/media/shors2k2l.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shors2k2m.zip b/TeknoParrotUi.Common/out2/media/shors2k2m.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shors2k2s.zip b/TeknoParrotUi.Common/out2/media/shors2k2s.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorse.zip b/TeknoParrotUi.Common/out2/media/shorse.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorsel.zip b/TeknoParrotUi.Common/out2/media/shorsel.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorsem.zip b/TeknoParrotUi.Common/out2/media/shorsem.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorsep.zip b/TeknoParrotUi.Common/out2/media/shorsep.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorsepb.zip b/TeknoParrotUi.Common/out2/media/shorsepb.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorsepl.zip b/TeknoParrotUi.Common/out2/media/shorsepl.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorsepm.zip b/TeknoParrotUi.Common/out2/media/shorsepm.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorsepr.zip b/TeknoParrotUi.Common/out2/media/shorsepr.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorseprl.zip b/TeknoParrotUi.Common/out2/media/shorseprl.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorseprs.zip b/TeknoParrotUi.Common/out2/media/shorseprs.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorseprvl.zip b/TeknoParrotUi.Common/out2/media/shorseprvl.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorseprvr.zip b/TeknoParrotUi.Common/out2/media/shorseprvr.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/shorseps.zip b/TeknoParrotUi.Common/out2/media/shorseps.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sl2007.zip b/TeknoParrotUi.Common/out2/media/sl2007.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/slasho.zip b/TeknoParrotUi.Common/out2/media/slasho.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/slashout.zip b/TeknoParrotUi.Common/out2/media/slashout.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/smarinef.zip b/TeknoParrotUi.Common/out2/media/smarinef.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/smlg99.zip b/TeknoParrotUi.Common/out2/media/smlg99.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/soulsurf.zip b/TeknoParrotUi.Common/out2/media/soulsurf.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/spawn.zip b/TeknoParrotUi.Common/out2/media/spawn.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/spkrbtl.zip b/TeknoParrotUi.Common/out2/media/spkrbtl.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sprtjam.zip b/TeknoParrotUi.Common/out2/media/sprtjam.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sprtshot.zip b/TeknoParrotUi.Common/out2/media/sprtshot.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ss2005.zip b/TeknoParrotUi.Common/out2/media/ss2005.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/ss2005o.zip b/TeknoParrotUi.Common/out2/media/ss2005o.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sstrkfgt.zip b/TeknoParrotUi.Common/out2/media/sstrkfgt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sstrkfgta.zip b/TeknoParrotUi.Common/out2/media/sstrkfgta.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/starseek.zip b/TeknoParrotUi.Common/out2/media/starseek.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/suchie3.zip b/TeknoParrotUi.Common/out2/media/suchie3.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/sushibar.zip b/TeknoParrotUi.Common/out2/media/sushibar.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/swracer.zip b/TeknoParrotUi.Common/out2/media/swracer.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/takoron.zip b/TeknoParrotUi.Common/out2/media/takoron.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/tduno.zip b/TeknoParrotUi.Common/out2/media/tduno.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/tduno2.zip b/TeknoParrotUi.Common/out2/media/tduno2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/tetkiwam.zip b/TeknoParrotUi.Common/out2/media/tetkiwam.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/tokyobus.zip b/TeknoParrotUi.Common/out2/media/tokyobus.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/totd.zip b/TeknoParrotUi.Common/out2/media/totd.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/totdo.zip b/TeknoParrotUi.Common/out2/media/totdo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/toukon4.zip b/TeknoParrotUi.Common/out2/media/toukon4.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/toyfight.zip b/TeknoParrotUi.Common/out2/media/toyfight.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/trgheart.zip b/TeknoParrotUi.Common/out2/media/trgheart.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/trghearto.zip b/TeknoParrotUi.Common/out2/media/trghearto.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/trizeal.zip b/TeknoParrotUi.Common/out2/media/trizeal.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/undefeat.zip b/TeknoParrotUi.Common/out2/media/undefeat.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/usagiym.zip b/TeknoParrotUi.Common/out2/media/usagiym.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vathlete.zip b/TeknoParrotUi.Common/out2/media/vathlete.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vathletep.zip b/TeknoParrotUi.Common/out2/media/vathletep.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4.zip b/TeknoParrotUi.Common/out2/media/vf4.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4b.zip b/TeknoParrotUi.Common/out2/media/vf4b.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4cart.zip b/TeknoParrotUi.Common/out2/media/vf4cart.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4evo.zip b/TeknoParrotUi.Common/out2/media/vf4evo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4evoa.zip b/TeknoParrotUi.Common/out2/media/vf4evoa.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4evob.zip b/TeknoParrotUi.Common/out2/media/vf4evob.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4evoct.zip b/TeknoParrotUi.Common/out2/media/vf4evoct.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4o.zip b/TeknoParrotUi.Common/out2/media/vf4o.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4tuned.zip b/TeknoParrotUi.Common/out2/media/vf4tuned.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4tuneda.zip b/TeknoParrotUi.Common/out2/media/vf4tuneda.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vf4tunedd.zip b/TeknoParrotUi.Common/out2/media/vf4tunedd.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vfurlong.zip b/TeknoParrotUi.Common/out2/media/vfurlong.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/virnba.zip b/TeknoParrotUi.Common/out2/media/virnba.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/virnbao.zip b/TeknoParrotUi.Common/out2/media/virnbao.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/virnbap.zip b/TeknoParrotUi.Common/out2/media/virnbap.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/virnbapa.zip b/TeknoParrotUi.Common/out2/media/virnbapa.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/von4.zip b/TeknoParrotUi.Common/out2/media/von4.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vonot.zip b/TeknoParrotUi.Common/out2/media/vonot.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vs2_2k.zip b/TeknoParrotUi.Common/out2/media/vs2_2k.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vs2_2ko.zip b/TeknoParrotUi.Common/out2/media/vs2_2ko.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vstrik3.zip b/TeknoParrotUi.Common/out2/media/vstrik3.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vstrik3c.zip b/TeknoParrotUi.Common/out2/media/vstrik3c.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vstrik3co.zip b/TeknoParrotUi.Common/out2/media/vstrik3co.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vtenis2c.zip b/TeknoParrotUi.Common/out2/media/vtenis2c.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vtennis.zip b/TeknoParrotUi.Common/out2/media/vtennis.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vtennis2.zip b/TeknoParrotUi.Common/out2/media/vtennis2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/vtennisg.zip b/TeknoParrotUi.Common/out2/media/vtennisg.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/waidrive.zip b/TeknoParrotUi.Common/out2/media/waidrive.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf116.zip b/TeknoParrotUi.Common/out2/media/wccf116.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf1dup.zip b/TeknoParrotUi.Common/out2/media/wccf1dup.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf212e.zip b/TeknoParrotUi.Common/out2/media/wccf212e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf234j.zip b/TeknoParrotUi.Common/out2/media/wccf234j.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf2chk.zip b/TeknoParrotUi.Common/out2/media/wccf2chk.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf310j.zip b/TeknoParrotUi.Common/out2/media/wccf310j.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf322e.zip b/TeknoParrotUi.Common/out2/media/wccf322e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf331e.zip b/TeknoParrotUi.Common/out2/media/wccf331e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf331j.zip b/TeknoParrotUi.Common/out2/media/wccf331j.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf341j.zip b/TeknoParrotUi.Common/out2/media/wccf341j.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf400j.zip b/TeknoParrotUi.Common/out2/media/wccf400j.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wccf420e.zip b/TeknoParrotUi.Common/out2/media/wccf420e.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wldkicks.zip b/TeknoParrotUi.Common/out2/media/wldkicks.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wldkicksj.zip b/TeknoParrotUi.Common/out2/media/wldkicksj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wldkickspj.zip b/TeknoParrotUi.Common/out2/media/wldkickspj.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wldkickspw.zip b/TeknoParrotUi.Common/out2/media/wldkickspw.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wldkicksu.zip b/TeknoParrotUi.Common/out2/media/wldkicksu.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wldrider.zip b/TeknoParrotUi.Common/out2/media/wldrider.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wrungp.zip b/TeknoParrotUi.Common/out2/media/wrungp.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wrungpo.zip b/TeknoParrotUi.Common/out2/media/wrungpo.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wsbbgd.zip b/TeknoParrotUi.Common/out2/media/wsbbgd.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/wwfroyal.zip b/TeknoParrotUi.Common/out2/media/wwfroyal.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/xtrmhnt2.zip b/TeknoParrotUi.Common/out2/media/xtrmhnt2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/xtrmhunt.zip b/TeknoParrotUi.Common/out2/media/xtrmhunt.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/zerogu2.zip b/TeknoParrotUi.Common/out2/media/zerogu2.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/zombrvn.zip b/TeknoParrotUi.Common/out2/media/zombrvn.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/zombrvne.zip b/TeknoParrotUi.Common/out2/media/zombrvne.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/zombrvno.zip b/TeknoParrotUi.Common/out2/media/zombrvno.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/TeknoParrotUi.Common/out2/media/zunou.zip b/TeknoParrotUi.Common/out2/media/zunou.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/Tests/TeknoNaomiRelease/Program.cs b/Tests/TeknoNaomiRelease/Program.cs
+index 54255ee..a688f06 100644
+--- a/Tests/TeknoNaomiRelease/Program.cs
++++ b/Tests/TeknoNaomiRelease/Program.cs
+@@ -90,7 +90,27 @@ internal static class ReleaseChecks
+         var vr = Arguments(p0);
+         Require(vr.Contains("\"--vr\" \"--vr-screen-distance\" \"1.5\" \"--vr-screen-width\" \"2.4\" \"--vr-filter\" \"linear\"") &&
+             vr.Contains("\"--vr-head-locked\"") && vr.Contains("\"--no-vr-controls\"") && !vr.Contains("--sbs"), "VR options");
+-        foreach (var invalid in new[] { new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
++        var resolution = p0.ConfigValues.Single(f => f.FieldName == "Internal Resolution");
++        Require(resolution.FieldOptions.Count(o => o == "Auto") == 1 && resolution.FieldOptions[0] == "Auto" && resolution.FieldValue == "4",
++            "Auto resolution is offered once without changing the default");
++        var display = TeknoNaomiLaunch.DisplayHeight;
++        try
++        {
++            Set(p0, "Internal Resolution", "Auto");
++            foreach (var pair in new[] { new[] { 2160, 4 }, new[] { 1440, 3 }, new[] { 1080, 2 }, new[] { 1200, 2 }, new[] { 720, 1 },
++                new[] { 300, 1 }, new[] { 4320, 8 }, new[] { 0, 4 } })
++            {
++                TeknoNaomiLaunch.DisplayHeight = () => pair[0];
++                var plan = TeknoNaomiLaunch.Plan(p0, root, p0.GamePath);
++                Require(plan.RenderScale == pair[1] && plan.AutoRenderScale &&
++                    plan.StartInfo.Arguments.Contains("\"--render-scale\" \"" + pair[1] + "\""), "Auto resolution for " + pair[0] + " lines");
++            }
++            TeknoNaomiLaunch.DisplayHeight = () => throw new InvalidOperationException("Display queried for a fixed scale");
++            Set(p0, "Internal Resolution", "3");
++            Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == 3, "Fixed resolution ignores the display");
++        }
++        finally { TeknoNaomiLaunch.DisplayHeight = display; }
++        foreach (var invalid in new[] { new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
+         {
+             var p = p0.Clone();
+             Set(p, invalid[0], invalid[1]);
+-- 
+2.43.0
+

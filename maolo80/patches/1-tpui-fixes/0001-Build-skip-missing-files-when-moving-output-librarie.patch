@@ -1,0 +1,35 @@
+From 7e1b5f475cfb29124f520644b489ab9e856e8ab4 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Mon, 26 Oct 2026 13:31:57 +0000
+Subject: [PATCH 1/2] Build: skip missing files when moving output libraries
+
+When netstandard.dll, Newtonsoft.Json.dll or RawInput.Sharp.dll is not
+in the output folder, the first Move task failed and the CefSharp Move
+never ran. App.config then points at libs/CefSharp for assemblies that
+stayed in the output root, and the UI exits at startup with a
+FileNotFoundException. Each item is now moved only when it exists.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ TeknoParrotUi/TeknoParrotUi.csproj | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/TeknoParrotUi/TeknoParrotUi.csproj b/TeknoParrotUi/TeknoParrotUi.csproj
+index 3004c7d..dae66a4 100644
+--- a/TeknoParrotUi/TeknoParrotUi.csproj
++++ b/TeknoParrotUi/TeknoParrotUi.csproj
+@@ -876,8 +876,8 @@
+       <MoveToCefSharpFolder Include="$(OutputPath)CefSharp*.dll" />
+     </ItemGroup>
+     <Copy SourceFiles="..\packages\CefSharp.Common.136.1.40\lib\net462\CefSharp.Core.dll" DestinationFolder="$(OutputPath)$(CefSharpTargetDir)" SkipUnchangedFiles="true" />
+-    <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)libs" OverwriteReadOnlyFiles="true" />
+-    <Move SourceFiles="@(MoveToCefSharpFolder)" DestinationFolder="$(OutputPath)$(CefSharpTargetDir)" OverwriteReadOnlyFiles="true" />
++    <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)libs" OverwriteReadOnlyFiles="true" Condition="Exists('%(MoveToLibFolder.FullPath)')" />
++    <Move SourceFiles="@(MoveToCefSharpFolder)" DestinationFolder="$(OutputPath)$(CefSharpTargetDir)" OverwriteReadOnlyFiles="true" Condition="Exists('%(MoveToCefSharpFolder.FullPath)')" />
+     <RemoveDir Directories="$(OutputPath)\locales\" />
+   </Target>
+   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+-- 
+2.43.0
+

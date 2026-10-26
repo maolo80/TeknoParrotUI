@@ -1,0 +1,80 @@
+From 392ec4d5816756e9f3c978b3918fb7faa49abf95 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Mon, 26 Oct 2026 14:11:59 +0000
+Subject: [PATCH 2/3] TeknoNaomi: keep saved runner options for games with
+ revisions
+
+Launching a game with a Game Revision selector rebuilds the profile from
+the revision's stock template and copies saved values only into fields
+the template has. The runner options are added by Normalize rather than
+the stock XML, so Free Play, BIOS, side-by-side and VR fell back to their
+defaults at launch. Stock revision templates now get the runner option
+fields before saved values are merged.
+
+The online checks now save these options on the parent profile and
+require them in every resolved launch plan.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ TeknoParrotUi.Common/ArcadeGameRevisions.cs       | 3 +++
+ TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs | 3 ++-
+ Tests/TeknoNaomiOnline/Program.cs                 | 6 ++++++
+ 3 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/TeknoParrotUi.Common/ArcadeGameRevisions.cs b/TeknoParrotUi.Common/ArcadeGameRevisions.cs
+index b94407a..0e0d37d 100644
+--- a/TeknoParrotUi.Common/ArcadeGameRevisions.cs
++++ b/TeknoParrotUi.Common/ArcadeGameRevisions.cs
+@@ -392,6 +392,9 @@ namespace TeknoParrotUi.Common
+             profile.ProfileName = entry.Id;
+             if (!Handles(profile)) throw new InvalidDataException("Revision template uses the wrong emulator: " + entry.Id);
+             DeriveTestMode(profile);
++            // Settings merge only into fields the template has, so add the
++            // runner options before saved values are copied onto it.
++            if (profile.EmulatorType == EmulatorType.TeknoNaomi) TeknoNaomiProfileSettings.AddRunnerOptions(profile);
+             EnsureField(profile, entry.Id);
+             return profile;
+         }
+diff --git a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+index 1854a27..f66d411 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+@@ -29,8 +29,9 @@ namespace TeknoParrotUi.Common
+ 
+         // Runner options that predate their profile fields. Missing fields are added
+         // with defaults, so stock and saved profiles gain them without a revision bump.
+-        private static void AddRunnerOptions(GameProfile profile)
++        internal static void AddRunnerOptions(GameProfile profile)
+         {
++            if (profile.ConfigValues == null) profile.ConfigValues = new List<FieldInformation>();
+             void Add(string category, string name, FieldType type, string value, string hint, params string[] options)
+             {
+                 var field = profile.ConfigValues.FirstOrDefault(f => f.FieldName == name);
+diff --git a/Tests/TeknoNaomiOnline/Program.cs b/Tests/TeknoNaomiOnline/Program.cs
+index 128b927..b216467 100644
+--- a/Tests/TeknoNaomiOnline/Program.cs
++++ b/Tests/TeknoNaomiOnline/Program.cs
+@@ -69,6 +69,10 @@ internal static class Program
+                 Setting(parent, "CHD Root", Path.Combine(media, "chds"));
+                 Setting(parent, "ROM Root", media);
+                 Setting(parent, ArcadeGameRevisions.SettingName, ArcadeGameRevisions.GetOptions(parent).Last().Value);
++                // Runner options are added by Normalize, not by the stock XML.
++                parent.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Free Play", FieldValue = "1" });
++                parent.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "BIOS", FieldValue = "2" });
++                parent.ConfigValues.Add(new FieldInformation { CategoryName = "Video", FieldName = "Side-by-Side 3D", FieldValue = "1" });
+                 var coin = parent.JoystickButtons.First(b => b.InputMapping == InputMapping.Coin1);
+                 coin.BindName = "saved online coin";
+                 saved[parent.ProfileName] = parent;
+@@ -80,6 +84,8 @@ internal static class Program
+                 Require(resolved.JoystickButtons.First(b => b.InputMapping == InputMapping.Coin1).BindName == coin.BindName, "Saved binding lost " + template.ProfileName);
+                 var plan = TeknoNaomiLaunch.Plan(resolved, root, resolved.GamePath);
+                 Require(plan.Set == template.ProfileName.Substring("teknonaomi_".Length), "Wrong native --set " + template.ProfileName);
++                Require(plan.StartInfo.Arguments.Contains("\"--free-play\"") && plan.StartInfo.Arguments.Contains("\"--bios\" \"2\"") &&
++                    plan.StartInfo.Arguments.Contains("\"--sbs\""), "Saved runner options lost " + template.ProfileName);
+                 Require(Path.GetFileName(plan.StartInfo.FileName) == "TeknoNaomi.exe", "Canonical runtime name");
+                 Require(!plan.StartInfo.UseShellExecute && plan.StartInfo.CreateNoWindow, "Hidden direct native launch");
+                 Require(plan.StartInfo.EnvironmentVariables["TP_TPONLINE2"] == online, "Online handoff not inherited");
+-- 
+2.43.0
+

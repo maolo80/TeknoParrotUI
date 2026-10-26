@@ -1,0 +1,192 @@
+From 05595a605abfffc0f9469b82a5a10010d7b22877 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Fri, 23 Oct 2026 16:38:15 +0000
+Subject: [PATCH 1/3] TeknoNaomi: expose cabinet outputs, free play, BIOS,
+ precise FPU and VR
+
+The TeknoNaomi runner already accepts --outputs, --free-play, --bios,
+--sh4-precise-fpu, --sbs and the --vr family, but TPUI offered none of
+them. Normalize now adds the fields to stock and saved profiles alike,
+and the launch plan validates and passes them.
+
+Release checks cover the defaults, each option, VR precedence over
+side-by-side and rejection of invalid BIOS, VR size and filter values.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ TEKNONAOMI_INTEGRATION.md                     |  9 +++++
+ TeknoParrotUi.Common/TeknoNaomiLaunch.cs      | 33 ++++++++++++++++--
+ .../TeknoNaomiProfileSettings.cs              | 31 +++++++++++++++++
+ Tests/TeknoNaomiRelease/Program.cs            | 34 +++++++++++++++++++
+ 4 files changed, 105 insertions(+), 2 deletions(-)
+
+diff --git a/TEKNONAOMI_INTEGRATION.md b/TEKNONAOMI_INTEGRATION.md
+index e5ace77..7916b8e 100644
+--- a/TEKNONAOMI_INTEGRATION.md
++++ b/TEKNONAOMI_INTEGRATION.md
+@@ -11,6 +11,15 @@ migrate, and renamed controls retain assignments by mapping ID. Audio and normal
+ pacing are always enabled; Mute Audio and Host Timing are removed from settings
+ and ignored when present in old saved profiles.
+ 
++Runner options appear in every profile, including saved ones, without a
++revision bump: Cabinet Outputs (`--outputs`, on by default, for MAMEOutput
++lamps, motors and force feedback), Free Play (`--free-play`), BIOS
++(`--bios N`, empty uses the runner default) and Precise SH-4 FPU
++(`--sh4-precise-fpu`). Video adds Side-by-Side 3D (`--sbs`) and Enable VR
++(`--vr`) with screen distance and width (0.25-8 m), head-locked screen, VR
++filter and Touch controls. VR takes precedence over side-by-side. The runner
++has no V-sync or presentation-filter option, so neither is offered.
++
+ Brave Firefighters has independent nozzle X/Y axes for both players. NASCAR
+ has wheel, gas and brake axes. Maraca, sword, rod/reel, trackball-speed, clutch
+ and pedal controls use continuous values; labelled digital alternatives remain
+diff --git a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+index b1dee60..4aaa7e5 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+@@ -42,9 +42,9 @@ namespace TeknoParrotUi.Common
+             uiRoot = Path.GetFullPath(uiRoot);
+             string Setting(string name, string fallback = "") => profile.ConfigValues?.FirstOrDefault(f => f.FieldName == name)?.FieldValue ?? fallback;
+             string Resolve(string path) => Path.GetFullPath(Path.IsPathRooted(path) ? path : Path.Combine(uiRoot, path));
+-            bool Enabled(string name)
++            bool Enabled(string name, bool fallback = false)
+             {
+-                var value = Setting(name, "0");
++                var value = Setting(name, fallback ? "1" : "0");
+                 if (value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase)) return true;
+                 if (value == "0" || value.Equals("false", StringComparison.OrdinalIgnoreCase)) return false;
+                 throw new InvalidOperationException("Invalid " + name + " setting.");
+@@ -93,6 +93,35 @@ namespace TeknoParrotUi.Common
+             if (chdRoot.Length != 0) args.AddRange(new[] { "--chd-root", chdRoot });
+             if (display == "Fullscreen") args.Add("--fullscreen");
+             if (Enabled("Widescreen")) args.Add("--widescreen");
++            if (Enabled("Cabinet Outputs")) args.Add("--outputs");
++            if (Enabled("Free Play")) args.Add("--free-play");
++            if (Enabled("Precise SH-4 FPU")) args.Add("--sh4-precise-fpu");
++            var bios = Setting("BIOS").Trim();
++            if (bios.Length != 0)
++            {
++                if (!int.TryParse(bios, NumberStyles.None, CultureInfo.InvariantCulture, out var biosId) || biosId > 99)
++                    throw new InvalidOperationException("BIOS must be empty or a number from 0 to 99.");
++                args.AddRange(new[] { "--bios", biosId.ToString(CultureInfo.InvariantCulture) });
++            }
++            if (Enabled("Enable VR"))
++            {
++                string Metres(string name, string fallback)
++                {
++                    var text = Setting(name, fallback).Trim().Replace(',', '.');
++                    if (text.Length == 0) text = fallback;
++                    if (!double.TryParse(text, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var metres) ||
++                        metres < 0.25 || metres > 8)
++                        throw new InvalidOperationException(name + " must be from 0.25 to 8 metres.");
++                    return metres.ToString(CultureInfo.InvariantCulture);
++                }
++                var filter = Setting("VR Filter", "linear");
++                if (filter != "linear" && filter != "nearest") throw new InvalidOperationException("Invalid VR Filter.");
++                args.AddRange(new[] { "--vr", "--vr-screen-distance", Metres("VR Screen Distance", "2"),
++                    "--vr-screen-width", Metres("VR Screen Width", "2.4"), "--vr-filter", filter });
++                if (Enabled("VR Head Locked")) args.Add("--vr-head-locked");
++                if (!Enabled("Use VR Controls", true)) args.Add("--no-vr-controls");
++            }
++            else if (Enabled("Side-by-Side 3D")) args.Add("--sbs");
+             return new TeknoNaomiLaunchPlan { Set = entry.Set, RomArchive = archive, ChdRoot = chdRoot,
+                 StateRoot = state, Cabinet = cabinet, BindingsPath = bindingPath, BindingsText = bindings,
+                 StartInfo = new ProcessStartInfo(Path.Combine(work, "TeknoNaomi.exe"), string.Join(" ", args.Select(Quote)))
+diff --git a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+index fa8b575..1854a27 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+@@ -24,6 +24,37 @@ namespace TeknoParrotUi.Common
+                 f.FieldName == "Mute Audio" || f.FieldName == "Host Timing");
+             profile.HasTwoExecutables = HasChd(profile);
+             NormalizeCabinet(profile, saved);
++            AddRunnerOptions(profile);
++        }
++
++        // Runner options that predate their profile fields. Missing fields are added
++        // with defaults, so stock and saved profiles gain them without a revision bump.
++        private static void AddRunnerOptions(GameProfile profile)
++        {
++            void Add(string category, string name, FieldType type, string value, string hint, params string[] options)
++            {
++                var field = profile.ConfigValues.FirstOrDefault(f => f.FieldName == name);
++                if (field == null)
++                    profile.ConfigValues.Add(field = new FieldInformation { CategoryName = category, FieldName = name, FieldValue = value });
++                field.FieldType = type;
++                field.Hint = hint;
++                if (options.Length > 0) field.FieldOptions = options.ToList();
++            }
++            Add("General", "Cabinet Outputs", FieldType.Bool, "1",
++                "Publish lamps, motors and force feedback to MAMEOutput clients.");
++            Add("General", "Free Play", FieldType.Bool, "0", "Set the BIOS coin setting to FREE PLAY.");
++            Add("General", "BIOS", FieldType.Text, "",
++                "Empty selects the default BIOS. A number selects another BIOS, for example a different region.");
++            Add("General", "Precise SH-4 FPU", FieldType.Bool, "0",
++                "Keep exact SH-4 floating-point status and exceptional values. Slower; try it for physics or geometry glitches.");
++            Add("Video", "Side-by-Side 3D", FieldType.Bool, "0", "Render both eyes of each scene and show them side by side.");
++            Add("Video", "Enable VR", FieldType.Bool, "0",
++                "Show the game on a virtual screen in an OpenXR headset. The window mirrors the left eye; hold Menu for settings.");
++            Add("Video", "Use VR Controls", FieldType.Bool, "1", "Play with the Touch controllers while VR is enabled.");
++            Add("Video", "VR Screen Distance", FieldType.Text, "2", "Virtual screen distance in metres, 0.25 to 8.");
++            Add("Video", "VR Screen Width", FieldType.Text, "2.4", "Virtual screen width in metres, 0.25 to 8.");
++            Add("Video", "VR Head Locked", FieldType.Bool, "0", "Keep the virtual screen fixed to the headset.");
++            Add("Video", "VR Filter", FieldType.Dropdown, "linear", "Scaling into the headset image.", "linear", "nearest");
+         }
+ 
+         public static int CabinetCount(GameProfile profile) =>
+diff --git a/Tests/TeknoNaomiRelease/Program.cs b/Tests/TeknoNaomiRelease/Program.cs
+index 27fe2d2..54255ee 100644
+--- a/Tests/TeknoNaomiRelease/Program.cs
++++ b/Tests/TeknoNaomiRelease/Program.cs
+@@ -67,6 +67,39 @@ internal static class ReleaseChecks
+         }
+     }
+ 
++    private static void RunnerOptions(GameProfile stock, string root)
++    {
++        string Arguments(GameProfile p) => TeknoNaomiLaunch.Plan(p, root, p.GamePath).StartInfo.Arguments;
++        void Set(GameProfile p, string name, string value) => p.ConfigValues.Single(f => f.FieldName == name).FieldValue = value;
++        var p0 = stock.Clone();
++        TeknoNaomiProfileSettings.Normalize(p0);
++        var names = new[] { "Cabinet Outputs", "Free Play", "BIOS", "Precise SH-4 FPU", "Side-by-Side 3D", "Enable VR",
++            "Use VR Controls", "VR Screen Distance", "VR Screen Width", "VR Head Locked", "VR Filter" };
++        Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields are added once");
++        TeknoNaomiProfileSettings.Normalize(p0);
++        Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields survive a second normalization");
++        var defaults = Arguments(p0);
++        Require(defaults.Contains("\"--outputs\"") && !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr" }.Any(defaults.Contains),
++            "Runner option defaults");
++        Set(p0, "Free Play", "1"); Set(p0, "Precise SH-4 FPU", "1"); Set(p0, "BIOS", "2"); Set(p0, "Cabinet Outputs", "0");
++        Set(p0, "Side-by-Side 3D", "1");
++        var enabled = Arguments(p0);
++        Require(enabled.Contains("\"--free-play\"") && enabled.Contains("\"--sh4-precise-fpu\"") &&
++            enabled.Contains("\"--bios\" \"2\"") && enabled.Contains("\"--sbs\"") && !enabled.Contains("--outputs"), "Runner options enabled");
++        Set(p0, "Enable VR", "1"); Set(p0, "VR Screen Distance", "1,5"); Set(p0, "Use VR Controls", "0"); Set(p0, "VR Head Locked", "1");
++        var vr = Arguments(p0);
++        Require(vr.Contains("\"--vr\" \"--vr-screen-distance\" \"1.5\" \"--vr-screen-width\" \"2.4\" \"--vr-filter\" \"linear\"") &&
++            vr.Contains("\"--vr-head-locked\"") && vr.Contains("\"--no-vr-controls\"") && !vr.Contains("--sbs"), "VR options");
++        foreach (var invalid in new[] { new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
++        {
++            var p = p0.Clone();
++            Set(p, invalid[0], invalid[1]);
++            var rejected = false;
++            try { Arguments(p); } catch (InvalidOperationException) { rejected = true; }
++            Require(rejected, "Rejects " + invalid[0] + " = " + invalid[1]);
++        }
++    }
++
+     public static void Run(string root, string output)
+     {
+         var common = Path.Combine(Path.GetFullPath(root), "TeknoParrotUi.Common");
+@@ -113,6 +146,7 @@ internal static class ReleaseChecks
+             Require(plan.Cabinet == "tpui-1", "Default cabinet retains existing saves: " + p.ProfileName);
+         }
+         Require(analog == 126 && disks > 0, "Continuous controls and CHD coverage");
++        RunnerOptions(profiles["teknonaomi_f355"], root);
+         foreach (var id in new[] { "teknonaomi_sgnascar", "teknonaomi_sgnascaro" })
+         {
+             var p = profiles[id];
+-- 
+2.43.0
+

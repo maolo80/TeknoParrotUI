@@ -1,0 +1,109 @@
+From 833ec2b2b377543ecdcbc8a499486d921d6a0572 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Mon, 26 Oct 2026 14:18:46 +0000
+Subject: [PATCH 2/2] Controller setup: read the focused binding box from the
+ active window
+
+The XInput, DirectInput and RawInput listeners looked up the focused text
+box in Application.Current.Windows[0]. That is not always the main
+window: the debugger's XAML tooling and first-run windows can come
+first, and then every button press was silently dropped. They now use
+the active window, or the main window when none is active.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ TeknoParrotUi/Helpers/BindingFocus.cs           | 17 +++++++++++++++++
+ .../Helpers/JoystickControlDirectInput.cs       |  2 +-
+ .../Helpers/JoystickControlRawInput.cs          |  4 ++--
+ TeknoParrotUi/Helpers/JoystickControlXInput.cs  |  2 +-
+ TeknoParrotUi/TeknoParrotUi.csproj              |  1 +
+ 5 files changed, 22 insertions(+), 4 deletions(-)
+ create mode 100644 TeknoParrotUi/Helpers/BindingFocus.cs
+
+diff --git a/TeknoParrotUi/Helpers/BindingFocus.cs b/TeknoParrotUi/Helpers/BindingFocus.cs
+new file mode 100644
+index 0000000..3eddd3f
+--- /dev/null
++++ b/TeknoParrotUi/Helpers/BindingFocus.cs
+@@ -0,0 +1,17 @@
++﻿using System.Linq;
++using System.Windows;
++
++namespace TeknoParrotUi.Helpers
++{
++    public static class BindingFocus
++    {
++        /// <summary>
++        /// Window whose focused text box receives a pressed binding. Windows[0] is
++        /// not always the main window: debugger tooling and first-run dialogs can
++        /// come first, and then every press was dropped.
++        /// </summary>
++        public static Window Window =>
++            Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive) ??
++            Application.Current.MainWindow;
++    }
++}
+diff --git a/TeknoParrotUi/Helpers/JoystickControlDirectInput.cs b/TeknoParrotUi/Helpers/JoystickControlDirectInput.cs
+index 56e8891..6a61415 100644
+--- a/TeknoParrotUi/Helpers/JoystickControlDirectInput.cs
++++ b/TeknoParrotUi/Helpers/JoystickControlDirectInput.cs
+@@ -278,7 +278,7 @@ namespace TeknoParrotUi.Helpers
+         /// <returns></returns>
+         private TextBox GetActiveTextBox()
+         {
+-            IInputElement focusedControl = FocusManager.GetFocusedElement(Application.Current.Windows[0]);
++            IInputElement focusedControl = FocusManager.GetFocusedElement(BindingFocus.Window);
+             if (focusedControl == null)
+                 return null;
+             if (focusedControl.GetType() == typeof(TextBox))
+diff --git a/TeknoParrotUi/Helpers/JoystickControlRawInput.cs b/TeknoParrotUi/Helpers/JoystickControlRawInput.cs
+index 961565d..b87583a 100644
+--- a/TeknoParrotUi/Helpers/JoystickControlRawInput.cs
++++ b/TeknoParrotUi/Helpers/JoystickControlRawInput.cs
+@@ -334,7 +334,7 @@ namespace TeknoParrotUi.Helpers
+                         
+                         // Unfocus textbox
+                         Keyboard.ClearFocus();
+-                        FocusManager.SetFocusedElement(Application.Current.Windows[0], null);
++                        FocusManager.SetFocusedElement(BindingFocus.Window, null);
+                         _lastActiveTextBox = null;
+                     }
+                     else
+@@ -350,7 +350,7 @@ namespace TeknoParrotUi.Helpers
+         /// <returns></returns>
+         private TextBox GetActiveTextBox()
+         {
+-            IInputElement focusedControl = FocusManager.GetFocusedElement(Application.Current.Windows[0]);
++            IInputElement focusedControl = FocusManager.GetFocusedElement(BindingFocus.Window);
+ 
+             if (focusedControl == null)
+                 return null;
+diff --git a/TeknoParrotUi/Helpers/JoystickControlXInput.cs b/TeknoParrotUi/Helpers/JoystickControlXInput.cs
+index d05c706..3610535 100644
+--- a/TeknoParrotUi/Helpers/JoystickControlXInput.cs
++++ b/TeknoParrotUi/Helpers/JoystickControlXInput.cs
+@@ -179,7 +179,7 @@ namespace TeknoParrotUi.Helpers
+         /// <returns></returns>
+         private TextBox GetActiveTextBox()
+         {
+-            IInputElement focusedControl = FocusManager.GetFocusedElement(Application.Current.Windows[0]);
++            IInputElement focusedControl = FocusManager.GetFocusedElement(BindingFocus.Window);
+             if (focusedControl == null)
+                 return null;
+             if (focusedControl.GetType() == typeof(TextBox))
+diff --git a/TeknoParrotUi/TeknoParrotUi.csproj b/TeknoParrotUi/TeknoParrotUi.csproj
+index dae66a4..2d275da 100644
+--- a/TeknoParrotUi/TeknoParrotUi.csproj
++++ b/TeknoParrotUi/TeknoParrotUi.csproj
+@@ -516,6 +516,7 @@
+       <DependentUpon>JoystickControl.xaml</DependentUpon>
+     </Compile>
+     <Compile Include="Helpers\JoystickControlDirectInput.cs" />
++    <Compile Include="Helpers\BindingFocus.cs" />
+     <Compile Include="Helpers\JoystickControlXInput.cs" />
+     <Compile Include="UserControls\SettingsControl.xaml.cs">
+       <DependentUpon>SettingsControl.xaml</DependentUpon>
+-- 
+2.43.0
+
