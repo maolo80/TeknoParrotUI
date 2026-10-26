@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace TeknoParrotUi.Common
@@ -17,12 +18,25 @@ namespace TeknoParrotUi.Common
         public string Cabinet { get; internal set; }
         public string BindingsPath { get; internal set; }
         public string BindingsText { get; internal set; }
+        public int RenderScale { get; internal set; }
+        public bool AutoRenderScale { get; internal set; }
         public ProcessStartInfo StartInfo { get; internal set; }
     }
 
     // Plans are device-free. Prepare writes only a newly named launch binding file.
     public static class TeknoNaomiLaunch
     {
+        public const string AutoResolution = "Auto";
+
+        // Height in physical pixels of the primary display; 0 when unknown. Tests replace it.
+        public static Func<int> DisplayHeight { get; set; } = PrimaryDisplayHeight;
+
+        // The runner reduces its raster to the window with nearest sampling, so a
+        // scale above the display only discards rows. Pick the largest scale whose
+        // 480 source lines still fit the display height.
+        public static int AutoRenderScale(int displayHeight) =>
+            displayHeight <= 0 ? 4 : Math.Max(1, Math.Min(8, displayHeight / 480));
+
         public static TeknoNaomiLaunchPlan Plan(GameProfile profile, string uiRoot,
             string gameLocation, bool isTest = false)
         {
@@ -81,8 +95,12 @@ namespace TeknoParrotUi.Common
             var configuredStateRoot = Setting("Save Root");
             var state = Resolve(string.IsNullOrWhiteSpace(configuredStateRoot) ? Path.Combine(work, "state") : configuredStateRoot);
             var cabinet = TeknoNaomiProfileSettings.CabinetStateId(profile);
-            if (!int.TryParse(Setting("Internal Resolution", "4"), NumberStyles.None, CultureInfo.InvariantCulture, out var scale) || scale < 1 || scale > 8)
-                throw new InvalidOperationException("Internal Resolution must be from 1 to 8.");
+            var resolution = Setting("Internal Resolution", "4");
+            var autoScale = resolution == AutoResolution;
+            int scale;
+            if (autoScale) scale = AutoRenderScale(DisplayHeight?.Invoke() ?? 0);
+            else if (!int.TryParse(resolution, NumberStyles.None, CultureInfo.InvariantCulture, out scale) || scale < 1 || scale > 8)
+                throw new InvalidOperationException("Internal Resolution must be Auto or from 1 to 8.");
             var display = Setting("DisplayMode", "Windowed");
             if (display != "Windowed" && display != "Fullscreen") throw new InvalidOperationException("Invalid DisplayMode.");
             var bindings = TeknoNaomiInputBindings.Serialize(profile, entry.Set);
@@ -124,6 +142,7 @@ namespace TeknoParrotUi.Common
             else if (Enabled("Side-by-Side 3D")) args.Add("--sbs");
             return new TeknoNaomiLaunchPlan { Set = entry.Set, RomArchive = archive, ChdRoot = chdRoot,
                 StateRoot = state, Cabinet = cabinet, BindingsPath = bindingPath, BindingsText = bindings,
+                RenderScale = scale, AutoRenderScale = autoScale,
                 StartInfo = new ProcessStartInfo(Path.Combine(work, "TeknoNaomi.exe"), string.Join(" ", args.Select(Quote)))
                 { UseShellExecute = false, CreateNoWindow = true, WorkingDirectory = work, RedirectStandardError = true } };
         }
@@ -138,8 +157,42 @@ namespace TeknoParrotUi.Common
             Directory.CreateDirectory(Path.GetDirectoryName(plan.BindingsPath));
             using (var file = new FileStream(plan.BindingsPath, FileMode.CreateNew, FileAccess.Write, FileShare.Read))
             using (var writer = new StreamWriter(file, new UTF8Encoding(false, true))) writer.Write(plan.BindingsText);
-            log?.Invoke("TeknoNaomi: " + plan.Set + ", cabinet " + plan.Cabinet + ". Saved bindings exported for this launch.");
+            log?.Invoke("TeknoNaomi: " + plan.Set + ", cabinet " + plan.Cabinet + ", render scale " + plan.RenderScale +
+                (plan.AutoRenderScale ? " (Auto)" : "") + ". Saved bindings exported for this launch.");
             return plan.StartInfo;
+        }
+
+        private static int PrimaryDisplayHeight()
+        {
+            try
+            {
+                var mode = new DisplayMode { dmSize = (short)Marshal.SizeOf(typeof(DisplayMode)) };
+                return EnumDisplaySettings(null, EnumCurrentSettings, ref mode) ? mode.dmPelsHeight : 0;
+            }
+            catch (Exception error) when (error is DllNotFoundException || error is EntryPointNotFoundException)
+            {
+                return 0;
+            }
+        }
+
+        private const int EnumCurrentSettings = -1;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern bool EnumDisplaySettings(string deviceName, int modeNumber, ref DisplayMode mode);
+
+        // DEVMODE, as in MonitorSelection. The current mode is in physical pixels,
+        // unaffected by Windows display scaling.
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        private struct DisplayMode
+        {
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string dmDeviceName;
+            public short dmSpecVersion, dmDriverVersion, dmSize, dmDriverExtra;
+            public int dmFields, dmPositionX, dmPositionY, dmDisplayOrientation, dmDisplayFixedOutput;
+            public short dmColor, dmDuplex, dmYResolution, dmTTOption, dmCollate;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string dmFormName;
+            public short dmLogPixels;
+            public int dmBitsPerPel, dmPelsWidth, dmPelsHeight, dmDisplayFlags, dmDisplayFrequency;
+            public int dmICMMethod, dmICMIntent, dmMediaType, dmDitherType, dmReserved1, dmReserved2, dmPanningWidth, dmPanningHeight;
         }
 
         private static bool SamePath(string a, string b) => string.Equals(Path.GetFullPath(a).TrimEnd('\\', '/'), Path.GetFullPath(b).TrimEnd('\\', '/'), StringComparison.OrdinalIgnoreCase);
