@@ -69,6 +69,10 @@ internal static class Program
                 Setting(parent, "CHD Root", Path.Combine(media, "chds"));
                 Setting(parent, "ROM Root", media);
                 Setting(parent, ArcadeGameRevisions.SettingName, ArcadeGameRevisions.GetOptions(parent).Last().Value);
+                // Runner options are added by Normalize, not by the stock XML.
+                parent.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Free Play", FieldValue = "1" });
+                parent.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "BIOS", FieldValue = "2" });
+                parent.ConfigValues.Add(new FieldInformation { CategoryName = "Video", FieldName = "Side-by-Side 3D", FieldValue = "1" });
                 var coin = parent.JoystickButtons.First(b => b.InputMapping == InputMapping.Coin1);
                 coin.BindName = "saved online coin";
                 saved[parent.ProfileName] = parent;
@@ -80,6 +84,8 @@ internal static class Program
                 Require(resolved.JoystickButtons.First(b => b.InputMapping == InputMapping.Coin1).BindName == coin.BindName, "Saved binding lost " + template.ProfileName);
                 var plan = TeknoNaomiLaunch.Plan(resolved, root, resolved.GamePath);
                 Require(plan.Set == template.ProfileName.Substring("teknonaomi_".Length), "Wrong native --set " + template.ProfileName);
+                Require(plan.StartInfo.Arguments.Contains("\"--free-play\"") && plan.StartInfo.Arguments.Contains("\"--bios\" \"2\"") &&
+                    plan.StartInfo.Arguments.Contains("\"--sbs\""), "Saved runner options lost " + template.ProfileName);
                 Require(Path.GetFileName(plan.StartInfo.FileName) == "TeknoNaomi.exe", "Canonical runtime name");
                 Require(!plan.StartInfo.UseShellExecute && plan.StartInfo.CreateNoWindow, "Hidden direct native launch");
                 Require(plan.StartInfo.EnvironmentVariables["TP_TPONLINE2"] == online, "Online handoff not inherited");

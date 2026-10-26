@@ -29,8 +29,9 @@ namespace TeknoParrotUi.Common
 
         // Runner options that predate their profile fields. Missing fields are added
         // with defaults, so stock and saved profiles gain them without a revision bump.
-        private static void AddRunnerOptions(GameProfile profile)
+        internal static void AddRunnerOptions(GameProfile profile)
         {
+            if (profile.ConfigValues == null) profile.ConfigValues = new List<FieldInformation>();
             void Add(string category, string name, FieldType type, string value, string hint, params string[] options)
             {
                 var field = profile.ConfigValues.FirstOrDefault(f => f.FieldName == name);
