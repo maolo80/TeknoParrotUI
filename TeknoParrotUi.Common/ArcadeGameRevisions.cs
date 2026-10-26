@@ -392,6 +392,9 @@ namespace TeknoParrotUi.Common
             profile.ProfileName = entry.Id;
             if (!Handles(profile)) throw new InvalidDataException("Revision template uses the wrong emulator: " + entry.Id);
             DeriveTestMode(profile);
+            // Settings merge only into fields the template has, so add the
+            // runner options before saved values are copied onto it.
+            if (profile.EmulatorType == EmulatorType.TeknoNaomi) TeknoNaomiProfileSettings.AddRunnerOptions(profile);
             EnsureField(profile, entry.Id);
             return profile;
         }
