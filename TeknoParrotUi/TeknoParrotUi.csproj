@@ -516,6 +516,7 @@
       <DependentUpon>JoystickControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\JoystickControlDirectInput.cs" />
+    <Compile Include="Helpers\BindingFocus.cs" />
     <Compile Include="Helpers\JoystickControlXInput.cs" />
     <Compile Include="UserControls\SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>

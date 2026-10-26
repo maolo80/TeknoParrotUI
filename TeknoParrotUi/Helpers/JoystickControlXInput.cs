@@ -179,7 +179,7 @@ namespace TeknoParrotUi.Helpers
         /// <returns></returns>
         private TextBox GetActiveTextBox()
         {
-            IInputElement focusedControl = FocusManager.GetFocusedElement(Application.Current.Windows[0]);
+            IInputElement focusedControl = FocusManager.GetFocusedElement(BindingFocus.Window);
             if (focusedControl == null)
                 return null;
             if (focusedControl.GetType() == typeof(TextBox))
