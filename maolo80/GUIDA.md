@@ -7,7 +7,7 @@ Versione modificata di TeknoParrotUI, basata sul commit ufficiale `b75872a`
 
 **Giochi NAOMI (TeknoNaomi), nelle Game Settings**
 - **Cabinet Outputs:** luci e rinculo delle pistole verso i client MAMEOutput. Attivo di default. Le forze sul volante passano dal force feedback, qui sotto.
-- **Force Feedback** (TeknoNaomi 0.1.0.16 o successivo): un dispositivo per il giocatore 1 e uno per il giocatore 2 (*Controller N (vibrazione)*, *Wheel N* o *Haptic device N*), più l'intensità 0–100 nella pagina Force Feedback. Il numero conta i dispositivi di quel tipo nell'ordine in cui sono collegati: con un solo controller è *Controller 1*.
+- **Force Feedback** (TeknoNaomi 0.1.0.16 o successivo): un dispositivo per il giocatore 1 e uno per il giocatore 2 (*Controller N (vibrazione)*, *Wheel N* o *Haptic device N*), più l'intensità 0–100 nella pagina Force Feedback. Il numero conta i dispositivi di quel tipo nell'ordine in cui sono collegati: con un solo controller è *Controller 1*. Funziona solo nei giochi il cui cabinato aveva force feedback o rinculo: con 18 Wheeler sì (provato), con Crazy Taxi no (il gioco non invia comandi al motore).
 - **Free Play:** imposta il Free Play nel BIOS.
 - **BIOS:** vuoto per il BIOS predefinito, oppure un numero (per esempio per un'altra regione).
 - **Precise SH-4 FPU:** calcolo in virgola mobile esatto; più lento, utile per glitch di fisica o geometria.
