@@ -84,7 +84,8 @@ internal static class Program
                 Require(resolved.JoystickButtons.First(b => b.InputMapping == InputMapping.Coin1).BindName == coin.BindName, "Saved binding lost " + template.ProfileName);
                 var plan = TeknoNaomiLaunch.Plan(resolved, root, resolved.GamePath);
                 Require(plan.Set == template.ProfileName.Substring("teknonaomi_".Length), "Wrong native --set " + template.ProfileName);
-                Require(plan.StartInfo.Arguments.Contains("\"--free-play\"") && plan.StartInfo.Arguments.Contains("\"--bios\" \"2\"") &&
+                var naomiBoard = TeknoNaomiProfileSettings.RegionOptions(template) == null;
+                Require(plan.StartInfo.Arguments.Contains("\"--free-play\"") == naomiBoard && plan.StartInfo.Arguments.Contains("\"--bios\" \"2\"") &&
                     plan.StartInfo.Arguments.Contains("\"--sbs\""), "Saved runner options lost " + template.ProfileName);
                 Require(Path.GetFileName(plan.StartInfo.FileName) == "TeknoNaomi.exe", "Canonical runtime name");
                 Require(!plan.StartInfo.UseShellExecute && plan.StartInfo.CreateNoWindow, "Hidden direct native launch");

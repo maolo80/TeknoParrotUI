@@ -193,6 +193,10 @@ internal static class ReleaseChecks
             var p = profiles[pair[0]].Clone();
             TeknoNaomiProfileSettings.Normalize(p);
             Require(!Arguments(p).Contains("--region"), "Auto region passes nothing: " + pair[0]);
+            Require(!p.ConfigValues.Any(f => f.FieldName == "Free Play"), "Free Play is a Naomi BIOS setting: " + pair[0]);
+            var saved = p.Clone();
+            saved.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Free Play", FieldValue = "1" });
+            Require(!Arguments(saved).Contains("--free-play"), "Saved Free Play is ignored off Naomi boards: " + pair[0]);
             p.ConfigValues.Single(f => f.FieldName == "Region").FieldValue = pair[1];
             Require(Arguments(p).Contains("\"--region\" \"" + pair[2] + "\""), "Region option: " + pair[0]);
         }

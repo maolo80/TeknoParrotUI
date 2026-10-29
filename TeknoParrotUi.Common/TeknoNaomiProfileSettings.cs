@@ -77,7 +77,10 @@ namespace TeknoParrotUi.Common
                 "Replaces the Presentation Filter.", CrtShaders);
             Add("Video", "Use Bezel", FieldType.Bool, "0",
                 "Show TeknoNaomi/bezels/SET.png around the game, else the parent set's PNG, else default.png. Not used with Widescreen.");
-            Add("General", "Free Play", FieldType.Bool, "0", "Set the BIOS coin setting to FREE PLAY.");
+            // --free-play sets the Naomi BIOS coin setting; Atomiswave and Hikaru keep
+            // free play in the game's own service menu.
+            if (RegionOptions(profile) != null) profile.ConfigValues.RemoveAll(f => f.FieldName == "Free Play");
+            else Add("General", "Free Play", FieldType.Bool, "0", "Set the Naomi BIOS coin setting to FREE PLAY.");
             Add("General", "BIOS", FieldType.Text, "",
                 "Empty selects the default BIOS. A number selects another BIOS, for example a different region.");
             Add("General", "Precise SH-4 FPU", FieldType.Bool, "0",
