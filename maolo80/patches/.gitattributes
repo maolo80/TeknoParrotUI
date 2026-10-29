@@ -1,0 +1,2 @@
+# Patches must keep CRLF context lines byte for byte (git am --keep-cr).
+*.patch -text
