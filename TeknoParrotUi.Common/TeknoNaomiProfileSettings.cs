@@ -100,7 +100,8 @@ namespace TeknoParrotUi.Common
                 if (!regions.Contains(region.FieldValue)) region.FieldValue = "Auto";
             }
             Add("Force Feedback", "Force Feedback Device", FieldType.DynamicDropdown, "off",
-                "Wheel for steering forces, or a controller for vibration. Numbers count devices of that kind in connection order.");
+                "Wheel for steering forces, or a controller for vibration. Numbers count devices of that kind in connection order. " +
+                "Only games whose cabinet had force feedback or gun recoil send effects (18 Wheeler does; Crazy Taxi does not).");
             Add("Force Feedback", "Player 2 Force Feedback Device", FieldType.DynamicDropdown, "off",
                 "Independent device for the second player.");
             Add("Force Feedback", "Force Feedback Strength", FieldType.Slider, "100",
