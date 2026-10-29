@@ -21,11 +21,15 @@ namespace TeknoParrotUi.Common
                 profile.GamePath2 = (saved ?? profile).ConfigValues?
                     .FirstOrDefault(f => f.FieldName == "CHD Root")?.FieldValue ?? "";
             profile.ConfigValues?.RemoveAll(f => f.FieldName == "ROM Root" || f.FieldName == "CHD Root" ||
-                f.FieldName == "Mute Audio" || f.FieldName == "Host Timing");
+                f.FieldName == "Mute Audio" || f.FieldName == "Host Timing" || UnsupportedOfficialFields.Contains(f.FieldName));
             profile.HasTwoExecutables = HasChd(profile);
             NormalizeCabinet(profile, saved);
             AddRunnerOptions(profile);
         }
+
+        // Fields of later official profiles (TPUI 1.0.0.2267) whose launch handling
+        // this TPUI does not have; shown, they would do nothing.
+        private static readonly string[] UnsupportedOfficialFields = { "Region", "Outputs", "Use Keyboard/Button For Axis" };
 
         // Runner options that predate their profile fields. Missing fields are added
         // with defaults, so stock and saved profiles gain them without a revision bump.
@@ -46,11 +50,21 @@ namespace TeknoParrotUi.Common
             {
                 if (!resolution.FieldOptions.Contains(TeknoNaomiLaunch.AutoResolution))
                     resolution.FieldOptions.Insert(0, TeknoNaomiLaunch.AutoResolution);
-                resolution.Hint = "Auto picks the largest scale whose 480 lines fit the primary display (2 at 1080p, 3 at 1440p, 4 at 2160p). " +
-                    "Scales above the display are reduced with nearest sampling and look worse, not sharper.";
+                resolution.Hint = "Auto fits the primary display: the largest scale whose 480 lines fit it (4 at 2160p), " +
+                    "doubled with the ssaa Presentation Filter (8 at 2160p), which averages the extra pixels. " +
+                    "With nearest, scales above the display only discard pixels.";
             }
             Add("General", "Cabinet Outputs", FieldType.Bool, "1",
-                "Publish lamps, motors and force feedback to MAMEOutput clients.");
+                "Publish lamps and light gun recoil to MAMEOutput clients. Steering forces are not part of these outputs.");
+            Add("Video", "Presentation Filter", FieldType.Dropdown, "ssaa",
+                "Scaling of the rendered image to the window. ssaa averages every rendered pixel and suits high Internal Resolution; " +
+                "bicubic and lanczos are sharper; linear is the cheapest smooth filter; nearest keeps hard pixels.",
+                PresentationFilters);
+            Add("Video", "CRT Shader", FieldType.Dropdown, "None",
+                "CRT-Lottes scanlines and shadow mask. Lottes keeps the Internal Resolution; Lottes Downsample first resolves to native pixels. " +
+                "Replaces the Presentation Filter.", CrtShaders);
+            Add("Video", "Use Bezel", FieldType.Bool, "0",
+                "Show TeknoNaomi/bezels/SET.png around the game, else the parent set's PNG, else default.png. Not used with Widescreen.");
             Add("General", "Free Play", FieldType.Bool, "0", "Set the BIOS coin setting to FREE PLAY.");
             Add("General", "BIOS", FieldType.Text, "",
                 "Empty selects the default BIOS. A number selects another BIOS, for example a different region.");
@@ -65,6 +79,9 @@ namespace TeknoParrotUi.Common
             Add("Video", "VR Head Locked", FieldType.Bool, "0", "Keep the virtual screen fixed to the headset.");
             Add("Video", "VR Filter", FieldType.Dropdown, "linear", "Scaling into the headset image.", "linear", "nearest");
         }
+
+        internal static readonly string[] PresentationFilters = { "nearest", "linear", "bicubic", "lanczos", "ssaa" };
+        internal static readonly string[] CrtShaders = { "None", "Lottes", "Lottes Downsample" };
 
         public static int CabinetCount(GameProfile profile) =>
             TeknoNaomiCatalog.ForProfile(profile?.ProfileName)?.Cabinets ?? 1;

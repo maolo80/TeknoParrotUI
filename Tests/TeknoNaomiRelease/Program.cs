@@ -74,13 +74,22 @@ internal static class ReleaseChecks
         var p0 = stock.Clone();
         TeknoNaomiProfileSettings.Normalize(p0);
         var names = new[] { "Cabinet Outputs", "Free Play", "BIOS", "Precise SH-4 FPU", "Side-by-Side 3D", "Enable VR",
-            "Use VR Controls", "VR Screen Distance", "VR Screen Width", "VR Head Locked", "VR Filter" };
+            "Use VR Controls", "VR Screen Distance", "VR Screen Width", "VR Head Locked", "VR Filter",
+            "Presentation Filter", "CRT Shader", "Use Bezel" };
         Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields are added once");
         TeknoNaomiProfileSettings.Normalize(p0);
         Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields survive a second normalization");
         var defaults = Arguments(p0);
-        Require(defaults.Contains("\"--outputs\"") && !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr" }.Any(defaults.Contains),
+        Require(defaults.Contains("\"--outputs\"") && defaults.Contains("\"--presentation-filter\" \"ssaa\"") &&
+            !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr", "--crt", "--bezels" }.Any(defaults.Contains),
             "Runner option defaults");
+        Set(p0, "Presentation Filter", "lanczos"); Set(p0, "CRT Shader", "Lottes Downsample"); Set(p0, "Use Bezel", "1");
+        var presentation = Arguments(p0);
+        Require(presentation.Contains("\"--presentation-filter\" \"lanczos\"") && presentation.Contains("\"--crt\" \"lottes-downsample\"") &&
+            presentation.Contains("\"--bezels\""), "Presentation options");
+        Set(p0, "CRT Shader", "Lottes");
+        Require(Arguments(p0).Contains("\"--crt\" \"lottes\""), "CRT Lottes");
+        Set(p0, "Presentation Filter", "ssaa"); Set(p0, "CRT Shader", "None"); Set(p0, "Use Bezel", "0");
         Set(p0, "Free Play", "1"); Set(p0, "Precise SH-4 FPU", "1"); Set(p0, "BIOS", "2"); Set(p0, "Cabinet Outputs", "0");
         Set(p0, "Side-by-Side 3D", "1");
         var enabled = Arguments(p0);
@@ -97,6 +106,16 @@ internal static class ReleaseChecks
         try
         {
             Set(p0, "Internal Resolution", "Auto");
+            foreach (var pair in new[] { new[] { 2160, 8 }, new[] { 1440, 6 }, new[] { 1080, 4 }, new[] { 720, 2 }, new[] { 4320, 8 }, new[] { 0, 4 } })
+            {
+                TeknoNaomiLaunch.DisplayHeight = () => pair[0];
+                Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == pair[1], "Supersampled Auto resolution for " + pair[0] + " lines");
+            }
+            TeknoNaomiLaunch.DisplayHeight = () => 2160;
+            Set(p0, "CRT Shader", "Lottes");
+            Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == 4, "CRT shader does not supersample Auto");
+            Set(p0, "CRT Shader", "None");
+            Set(p0, "Presentation Filter", "nearest");
             foreach (var pair in new[] { new[] { 2160, 4 }, new[] { 1440, 3 }, new[] { 1080, 2 }, new[] { 1200, 2 }, new[] { 720, 1 },
                 new[] { 300, 1 }, new[] { 4320, 8 }, new[] { 0, 4 } })
             {
@@ -110,13 +129,33 @@ internal static class ReleaseChecks
             Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == 3, "Fixed resolution ignores the display");
         }
         finally { TeknoNaomiLaunch.DisplayHeight = display; }
-        foreach (var invalid in new[] { new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
+        foreach (var invalid in new[] { new[] { "Presentation Filter", "SSAA" }, new[] { "CRT Shader", "lottes" }, new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
         {
             var p = p0.Clone();
             Set(p, invalid[0], invalid[1]);
             var rejected = false;
             try { Arguments(p); } catch (InvalidOperationException) { rejected = true; }
             Require(rejected, "Rejects " + invalid[0] + " = " + invalid[1]);
+        }
+    }
+
+    // Official profiles after TPUI 1.0.0.2267 drop TeknoNaomiControl and add fields
+    // this TPUI cannot launch with. Bindings must export as from the stock profiles.
+    private static void OfficialProfiles(IEnumerable<GameProfile> stock)
+    {
+        foreach (var original in stock)
+        {
+            var set = original.ProfileName.Substring("teknonaomi_".Length);
+            var official = original.Clone();
+            foreach (var button in official.JoystickButtons) button.TeknoNaomiControl = null;
+            Require(TeknoNaomiInputBindings.Serialize(official, set) == TeknoNaomiInputBindings.Serialize(original, set),
+                "Official-style profile exports the stock bindings: " + original.ProfileName);
+            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Region", FieldValue = "Japan" });
+            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Outputs", FieldValue = "Network Outputs" });
+            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Use Keyboard/Button For Axis", FieldValue = "1" });
+            TeknoNaomiProfileSettings.Normalize(official);
+            Require(!official.ConfigValues.Any(f => f.FieldName == "Region" || f.FieldName == "Outputs" || f.FieldName == "Use Keyboard/Button For Axis"),
+                "Unsupported official fields are not shown: " + original.ProfileName);
         }
     }
 
@@ -167,6 +206,7 @@ internal static class ReleaseChecks
         }
         Require(analog == 126 && disks > 0, "Continuous controls and CHD coverage");
         RunnerOptions(profiles["teknonaomi_f355"], root);
+        OfficialProfiles(profiles.Values);
         foreach (var id in new[] { "teknonaomi_sgnascar", "teknonaomi_sgnascaro" })
         {
             var p = profiles[id];

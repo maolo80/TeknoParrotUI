@@ -31,11 +31,11 @@ namespace TeknoParrotUi.Common
         // Height in physical pixels of the primary display; 0 when unknown. Tests replace it.
         public static Func<int> DisplayHeight { get; set; } = PrimaryDisplayHeight;
 
-        // The runner reduces its raster to the window with nearest sampling, so a
-        // scale above the display only discards rows. Pick the largest scale whose
-        // 480 source lines still fit the display height.
-        public static int AutoRenderScale(int displayHeight) =>
-            displayHeight <= 0 ? 4 : Math.Max(1, Math.Min(8, displayHeight / 480));
+        // With nearest presentation a scale above the display only discards rows, so
+        // pick the largest scale whose 480 source lines fit the display height. ssaa
+        // averages every rendered pixel, so it gets twice that (2x2 supersampling).
+        public static int AutoRenderScale(int displayHeight, bool supersampled = false) =>
+            displayHeight <= 0 ? 4 : Math.Max(1, Math.Min(8, displayHeight / 480 * (supersampled ? 2 : 1)));
 
         public static TeknoNaomiLaunchPlan Plan(GameProfile profile, string uiRoot,
             string gameLocation, bool isTest = false)
@@ -95,10 +95,14 @@ namespace TeknoParrotUi.Common
             var configuredStateRoot = Setting("Save Root");
             var state = Resolve(string.IsNullOrWhiteSpace(configuredStateRoot) ? Path.Combine(work, "state") : configuredStateRoot);
             var cabinet = TeknoNaomiProfileSettings.CabinetStateId(profile);
+            var presentationFilter = Setting("Presentation Filter", "ssaa");
+            if (!TeknoNaomiProfileSettings.PresentationFilters.Contains(presentationFilter)) throw new InvalidOperationException("Invalid Presentation Filter.");
+            var crt = Setting("CRT Shader", "None");
+            if (!TeknoNaomiProfileSettings.CrtShaders.Contains(crt)) throw new InvalidOperationException("Invalid CRT Shader.");
             var resolution = Setting("Internal Resolution", "4");
             var autoScale = resolution == AutoResolution;
             int scale;
-            if (autoScale) scale = AutoRenderScale(DisplayHeight?.Invoke() ?? 0);
+            if (autoScale) scale = AutoRenderScale(DisplayHeight?.Invoke() ?? 0, crt == "None" && presentationFilter == "ssaa");
             else if (!int.TryParse(resolution, NumberStyles.None, CultureInfo.InvariantCulture, out scale) || scale < 1 || scale > 8)
                 throw new InvalidOperationException("Internal Resolution must be Auto or from 1 to 8.");
             var display = Setting("DisplayMode", "Windowed");
@@ -111,6 +115,9 @@ namespace TeknoParrotUi.Common
             if (chdRoot.Length != 0) args.AddRange(new[] { "--chd-root", chdRoot });
             if (display == "Fullscreen") args.Add("--fullscreen");
             if (Enabled("Widescreen")) args.Add("--widescreen");
+            args.AddRange(new[] { "--presentation-filter", presentationFilter });
+            if (crt != "None") args.AddRange(new[] { "--crt", crt == "Lottes" ? "lottes" : "lottes-downsample" });
+            if (Enabled("Use Bezel")) args.Add("--bezels");
             if (Enabled("Cabinet Outputs")) args.Add("--outputs");
             if (Enabled("Free Play")) args.Add("--free-play");
             if (Enabled("Precise SH-4 FPU")) args.Add("--sh4-precise-fpu");
