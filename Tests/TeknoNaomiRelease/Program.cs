@@ -75,13 +75,14 @@ internal static class ReleaseChecks
         TeknoNaomiProfileSettings.Normalize(p0);
         var names = new[] { "Cabinet Outputs", "Free Play", "BIOS", "Precise SH-4 FPU", "Side-by-Side 3D", "Enable VR",
             "Use VR Controls", "VR Screen Distance", "VR Screen Width", "VR Head Locked", "VR Filter",
-            "Presentation Filter", "CRT Shader", "Use Bezel" };
+            "Presentation Filter", "CRT Shader", "Use Bezel",
+            "Force Feedback Device", "Player 2 Force Feedback Device", "Force Feedback Strength" };
         Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields are added once");
         TeknoNaomiProfileSettings.Normalize(p0);
         Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields survive a second normalization");
         var defaults = Arguments(p0);
         Require(defaults.Contains("\"--outputs\"") && defaults.Contains("\"--presentation-filter\" \"ssaa\"") &&
-            !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr", "--crt", "--bezels" }.Any(defaults.Contains),
+            !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr", "--crt", "--bezels", "--ffb" }.Any(defaults.Contains),
             "Runner option defaults");
         Set(p0, "Presentation Filter", "lanczos"); Set(p0, "CRT Shader", "Lottes Downsample"); Set(p0, "Use Bezel", "1");
         var presentation = Arguments(p0);
@@ -90,6 +91,24 @@ internal static class ReleaseChecks
         Set(p0, "CRT Shader", "Lottes");
         Require(Arguments(p0).Contains("\"--crt\" \"lottes\""), "CRT Lottes");
         Set(p0, "Presentation Filter", "ssaa"); Set(p0, "CRT Shader", "None"); Set(p0, "Use Bezel", "0");
+        var device = p0.ConfigValues.Single(f => f.FieldName == "Force Feedback Device");
+        var strength = p0.ConfigValues.Single(f => f.FieldName == "Force Feedback Strength");
+        Require(device.FieldType == FieldType.DynamicDropdown && device.DynamicOptions.Any(o => o.Value == "gamepad:0") &&
+            device.DynamicOptions.Any(o => o.Value == "wheel:0") && strength.FieldType == FieldType.Slider && strength.FieldMax == 100 &&
+            strength.SettingsPage == "ForceFeedback", "Force feedback fields");
+        Set(p0, "Force Feedback Device", "gamepad:0"); Set(p0, "Force Feedback Strength", "70");
+        var ffb = Arguments(p0);
+        Require(ffb.Contains("\"--ffb-device\" \"gamepad:0\"") && ffb.Contains("\"--ffb-gain\" \"70\"") && !ffb.Contains("--ffb-device2"),
+            "Force feedback device and strength");
+        Set(p0, "Force Feedback Device", "off"); Set(p0, "Player 2 Force Feedback Device", "wheel:1");
+        ffb = Arguments(p0);
+        Require(ffb.Contains("\"--ffb-device2\" \"wheel:1\"") && !ffb.Contains("\"--ffb-device\"") && ffb.Contains("\"--ffb-gain\" \"70\""),
+            "Second player force feedback device");
+        Set(p0, "Player 2 Force Feedback Device", "off");
+        Set(p0, "Force Feedback Device", "haptic:12");
+        TeknoNaomiProfileSettings.Normalize(p0);
+        Require(device.DynamicOptions.Any(o => o.Value == "haptic:12"), "Saved device outside the list stays selectable");
+        Set(p0, "Force Feedback Device", "off");
         Set(p0, "Free Play", "1"); Set(p0, "Precise SH-4 FPU", "1"); Set(p0, "BIOS", "2"); Set(p0, "Cabinet Outputs", "0");
         Set(p0, "Side-by-Side 3D", "1");
         var enabled = Arguments(p0);
@@ -129,7 +148,8 @@ internal static class ReleaseChecks
             Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == 3, "Fixed resolution ignores the display");
         }
         finally { TeknoNaomiLaunch.DisplayHeight = display; }
-        foreach (var invalid in new[] { new[] { "Presentation Filter", "SSAA" }, new[] { "CRT Shader", "lottes" }, new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
+        foreach (var invalid in new[] { new[] { "Force Feedback Device", "wheel" }, new[] { "Force Feedback Device", "joystick:0" },
+            new[] { "Force Feedback Device", "gamepad:0;--mute" }, new[] { "Presentation Filter", "SSAA" }, new[] { "CRT Shader", "lottes" }, new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
         {
             var p = p0.Clone();
             Set(p, invalid[0], invalid[1]);
