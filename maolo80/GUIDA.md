@@ -6,17 +6,22 @@ Versione modificata di TeknoParrotUI, basata sul commit ufficiale `b75872a`
 ## Cosa aggiunge
 
 **Giochi NAOMI (TeknoNaomi), nelle Game Settings**
-- **Cabinet Outputs:** luci, motori e force feedback verso i client MAMEOutput. Attivo di default.
+- **Cabinet Outputs:** luci e rinculo delle pistole verso i client MAMEOutput. Attivo di default. Dalla 0.1.0.16 le forze sul volante passano dalle opzioni `--ffb-*`, che qui non sono ancora gestite.
 - **Free Play:** imposta il Free Play nel BIOS.
 - **BIOS:** vuoto per il BIOS predefinito, oppure un numero (per esempio per un'altra regione).
 - **Precise SH-4 FPU:** calcolo in virgola mobile esatto; più lento, utile per glitch di fisica o geometria.
 - **Side-by-Side 3D** e **Enable VR:** visore OpenXR, con distanza e larghezza dello schermo, schermo fisso al visore, filtro e controller Touch.
-- **Internal Resolution → Auto:** sceglie la scala più alta che entra nel monitor (2 a 1080p, 3 a 1440p, 4 a 2160p).
+- **Internal Resolution → Auto:** sceglie la scala più alta che entra nel monitor (2 a 1080p, 3 a 1440p, 4 a 2160p). Con il filtro ssaa la raddoppia (8 a 2160p).
+- **Presentation Filter** (nearest, linear, bicubic, lanczos, **ssaa**), **CRT Shader** (None, Lottes, Lottes Downsample) e **Use Bezel**: servono TeknoNaomi 0.1.0.16 o successivo, e hanno gli stessi nomi dei profili ufficiali.
 
 **Correzioni generali**
 - Il programma non si chiude più all'avvio dopo una ricompilazione (spostamento delle librerie CefSharp).
 - Il Controller Setup accetta i tasti anche con il debugger o al primo avvio (finestra attiva al posto di `Windows[0]`).
 - I giochi con selettore "Game Revision" non perdono più le impostazioni TeknoNaomi all'avvio.
+
+**Compatibilità con TPUI ufficiale 1.0.0.2267**
+- I profili ufficiali nuovi non contengono più `TeknoNaomiControl`. La tabella dei comandi dei 349 profili è inserita nel codice, quindi i giochi con comandi analogici partono anche con i profili ufficiali.
+- Le voci ufficiali Region, Outputs e Use Keyboard/Button For Axis non hanno effetto in questa versione, quindi vengono nascoste.
 
 ## Branch
 
@@ -43,22 +48,25 @@ La compilazione Debug apre la finestra "Debug JVS": per giocare usa Release.
 
 1. Installa TeknoParrot ufficiale in una cartella pulita, avvialo e accetta tutti gli aggiornamenti. Poi chiudilo.
 2. Fai una copia di sicurezza della cartella.
-3. Copia **tutto** il contenuto di `bin\x86\Release\` nella cartella di TeknoParrot, sostituendo i file. Non copiare solo l'exe e la dll.
+3. Copia la nostra interfaccia nella cartella vera di TeknoParrot, tenendo i profili e l'emulatore ufficiali. Controlla prima il percorso: robocopy crea la cartella di destinazione se non esiste.
+
+       $d = 'C:\Users\zodia\Desktop\TeknoParrotInstaller_2.0.0.11 (1)'
+       Test-Path "$d\TeknoNaomi\TeknoNaomi.exe"   # deve dire True
+       robocopy "C:\Users\zodia\source\repos\TeknoParrotUI\bin\x86\Release" "$d" /E /XD GameProfiles Metadata TeknoNaomi
 4. Controlla che non ci siano librerie doppie (deve uscire solo "Controllo finito"):
 
-       $d = 'C:\TeknoParrot'
        Get-ChildItem "$d\libs" -Filter *.dll | Where-Object { Test-Path "$d\$($_.Name)" } | ForEach-Object { "DOPPIA: $($_.Name)" }
        "Controllo finito"
 
-5. In futuro **rifiuta gli aggiornamenti di TeknoParrotUI**: rimetterebbero la versione ufficiale. Gli aggiornamenti degli emulatori, TeknoNaomi compreso, vanno bene.
+5. La nostra interfaccia risulta versione 1.0.0.0, quindi TeknoParrot ripropone l'aggiornamento a ogni avvio. In futuro **rifiuta gli aggiornamenti di TeknoParrotUI**: rimetterebbero la versione ufficiale. Gli aggiornamenti degli emulatori, TeknoNaomi compreso, vanno bene.
 6. Per tornare alla versione ufficiale, rimetti Internal Resolution su un numero: la versione ufficiale non conosce "Auto".
 
 ## Fluidità di TeknoNaomi (RTX 5070 Ti, monitor 4K)
 
-TeknoNaomi 0.1.0.10 non ha opzioni per V-sync né per il filtro di presentazione: `--vsync`, `--filter` e `--present-filter` sono sconosciute.
+TeknoNaomi 0.1.0.16 ha `--presentation-filter`, ma non ancora il V-sync: `--vsync` è sconosciuta.
 
 - **Pannello NVIDIA → Impostazioni programma → `TeknoNaomi.exe`:** Sincronizzazione verticale *Attivata*, Risparmio energia *Prestazioni massime*, Latenza bassa *Attivata*, Velocità frame massima *60*.
-- **Internal Resolution 4 (o Auto) in Fullscreen.** L'emulatore riduce l'immagine con il filtro *nearest*, quindi scale più alte del monitor peggiorano l'immagine: 8× su 2160p si vede peggio di 4×.
+- **Presentation Filter ssaa con Internal Resolution Auto (8 a 2160p), in Fullscreen.** Con *nearest* le scale più alte del monitor peggiorano l'immagine: 8× su 2160p si vede peggio di 4×. Con *ssaa* invece la migliorano.
 - **Ryzen 9 5950X:** se il framerate è irregolare, tieni TeknoNaomi su un solo CCD mentre il gioco gira:
 
       (Get-Process TeknoNaomi).ProcessorAffinity = 0xFFFF
