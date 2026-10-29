@@ -144,7 +144,7 @@ namespace TeknoParrotUi.Common
                 args.AddRange(new[] { "--ffb-gain", gain.ToString(CultureInfo.InvariantCulture) });
             }
             if (Enabled("Cabinet Outputs")) args.Add("--outputs");
-            if (Enabled("Free Play")) args.Add("--free-play");
+            if (TeknoNaomiProfileSettings.RegionOptions(profile) == null && Enabled("Free Play")) args.Add("--free-play");
             if (Enabled("Precise SH-4 FPU")) args.Add("--sh4-precise-fpu");
             var bios = Setting("BIOS").Trim();
             if (bios.Length != 0)
