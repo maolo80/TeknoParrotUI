@@ -118,6 +118,24 @@ namespace TeknoParrotUi.Common
             args.AddRange(new[] { "--presentation-filter", presentationFilter });
             if (crt != "None") args.AddRange(new[] { "--crt", crt == "Lottes" ? "lottes" : "lottes-downsample" });
             if (Enabled("Use Bezel")) args.Add("--bezels");
+            string FfbDevice(string name)
+            {
+                var token = Setting(name, "off").Trim();
+                if (token.Length == 0 || token == "off") return null;
+                if (!TeknoNaomiProfileSettings.FfbDeviceToken.IsMatch(token))
+                    throw new InvalidOperationException("Invalid " + name + ".");
+                return token;
+            }
+            var ffb = FfbDevice("Force Feedback Device");
+            var ffb2 = FfbDevice("Player 2 Force Feedback Device");
+            if (ffb != null || ffb2 != null)
+            {
+                if (!int.TryParse(Setting("Force Feedback Strength", "100"), NumberStyles.None, CultureInfo.InvariantCulture, out var gain) || gain > 100)
+                    throw new InvalidOperationException("Force Feedback Strength must be from 0 to 100.");
+                if (ffb != null) args.AddRange(new[] { "--ffb-device", ffb });
+                if (ffb2 != null) args.AddRange(new[] { "--ffb-device2", ffb2 });
+                args.AddRange(new[] { "--ffb-gain", gain.ToString(CultureInfo.InvariantCulture) });
+            }
             if (Enabled("Cabinet Outputs")) args.Add("--outputs");
             if (Enabled("Free Play")) args.Add("--free-play");
             if (Enabled("Precise SH-4 FPU")) args.Add("--sh4-precise-fpu");

@@ -78,6 +78,35 @@ namespace TeknoParrotUi.Common
             Add("Video", "VR Screen Width", FieldType.Text, "2.4", "Virtual screen width in metres, 0.25 to 8.");
             Add("Video", "VR Head Locked", FieldType.Bool, "0", "Keep the virtual screen fixed to the headset.");
             Add("Video", "VR Filter", FieldType.Dropdown, "linear", "Scaling into the headset image.", "linear", "nearest");
+            Add("Force Feedback", "Force Feedback Device", FieldType.DynamicDropdown, "off",
+                "Wheel for steering forces, or a controller for vibration. Numbers count devices of that kind in connection order.");
+            Add("Force Feedback", "Player 2 Force Feedback Device", FieldType.DynamicDropdown, "off",
+                "Independent device for the second player.");
+            Add("Force Feedback", "Force Feedback Strength", FieldType.Slider, "100",
+                "Overall effect strength. 100% keeps the normal full strength.");
+            var strength = profile.ConfigValues.First(f => f.FieldName == "Force Feedback Strength");
+            strength.FieldMin = 0; strength.FieldMax = 100; strength.SettingsPage = "ForceFeedback";
+            foreach (var device in profile.ConfigValues.Where(f => f.FieldName == "Force Feedback Device" || f.FieldName == "Player 2 Force Feedback Device"))
+                device.DynamicOptions = FfbDevices(device.FieldValue);
+        }
+
+        // The runner opens SDL3 devices by kind and index; it has no device list to probe.
+        internal static readonly System.Text.RegularExpressions.Regex FfbDeviceToken =
+            new System.Text.RegularExpressions.Regex("^(wheel|haptic|gamepad):[0-9]{1,2}$");
+
+        private static List<DynamicDropdownOption> FfbDevices(string saved)
+        {
+            var options = new List<DynamicDropdownOption> { new DynamicDropdownOption { DisplayName = "Force feedback off", Value = "off" } };
+            foreach (var kind in new[] { new[] { "gamepad", "Controller {0} (vibration)" }, new[] { "wheel", "Wheel {0}" }, new[] { "haptic", "Haptic device {0}" } })
+                for (int index = 0; index < 4; ++index)
+                    options.Add(new DynamicDropdownOption
+                    {
+                        DisplayName = string.Format(CultureInfo.InvariantCulture, kind[1], index + 1),
+                        Value = kind[0] + ":" + index.ToString(CultureInfo.InvariantCulture)
+                    });
+            if (!string.IsNullOrWhiteSpace(saved) && options.All(o => o.Value != saved))
+                options.Add(new DynamicDropdownOption { DisplayName = "Previously selected device - " + saved, Value = saved });
+            return options;
         }
 
         internal static readonly string[] PresentationFilters = { "nearest", "linear", "bicubic", "lanczos", "ssaa" };
