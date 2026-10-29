@@ -170,13 +170,38 @@ internal static class ReleaseChecks
             foreach (var button in official.JoystickButtons) button.TeknoNaomiControl = null;
             Require(TeknoNaomiInputBindings.Serialize(official, set) == TeknoNaomiInputBindings.Serialize(original, set),
                 "Official-style profile exports the stock bindings: " + original.ProfileName);
-            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Region", FieldValue = "Japan" });
+            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Region", FieldValue = "Korea" });
             official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Outputs", FieldValue = "Network Outputs" });
             official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Use Keyboard/Button For Axis", FieldValue = "1" });
             TeknoNaomiProfileSettings.Normalize(official);
-            Require(!official.ConfigValues.Any(f => f.FieldName == "Region" || f.FieldName == "Outputs" || f.FieldName == "Use Keyboard/Button For Axis"),
+            Require(!official.ConfigValues.Any(f => f.FieldName == "Outputs" || f.FieldName == "Use Keyboard/Button For Axis"),
                 "Unsupported official fields are not shown: " + original.ProfileName);
+            var regions = TeknoNaomiProfileSettings.RegionOptions(official);
+            var region = official.ConfigValues.SingleOrDefault(f => f.FieldName == "Region");
+            Require(regions == null ? region == null : region != null && region.FieldOptions.SequenceEqual(regions) &&
+                region.FieldValue == (regions.Contains("Korea") ? "Korea" : "Auto"),
+                "Region only for Atomiswave and Hikaru, with their own countries: " + original.ProfileName);
         }
+    }
+
+    private static void Regions(Dictionary<string, GameProfile> profiles, string root)
+    {
+        string Arguments(GameProfile p) => TeknoNaomiLaunch.Plan(p, root, p.GamePath).StartInfo.Arguments;
+        Require(profiles.Values.Count(p => TeknoNaomiProfileSettings.RegionOptions(p) != null) == 42, "34 Atomiswave and 8 Hikaru sets");
+        foreach (var pair in new[] { new[] { "teknonaomi_mslug6", "Other", "other" }, new[] { "teknonaomi_braveff", "Korea", "korea" } })
+        {
+            var p = profiles[pair[0]].Clone();
+            TeknoNaomiProfileSettings.Normalize(p);
+            Require(!Arguments(p).Contains("--region"), "Auto region passes nothing: " + pair[0]);
+            p.ConfigValues.Single(f => f.FieldName == "Region").FieldValue = pair[1];
+            Require(Arguments(p).Contains("\"--region\" \"" + pair[2] + "\""), "Region option: " + pair[0]);
+        }
+        var aw = profiles["teknonaomi_mslug6"].Clone();
+        TeknoNaomiProfileSettings.Normalize(aw);
+        aw.ConfigValues.Single(f => f.FieldName == "Region").FieldValue = "Korea";
+        var rejected = false;
+        try { Arguments(aw); } catch (InvalidOperationException) { rejected = true; }
+        Require(rejected || !Arguments(aw).Contains("--region"), "Atomiswave has no Korea region");
     }
 
     public static void Run(string root, string output)
@@ -227,6 +252,7 @@ internal static class ReleaseChecks
         Require(analog == 126 && disks > 0, "Continuous controls and CHD coverage");
         RunnerOptions(profiles["teknonaomi_f355"], root);
         OfficialProfiles(profiles.Values);
+        Regions(profiles, root);
         foreach (var id in new[] { "teknonaomi_sgnascar", "teknonaomi_sgnascaro" })
         {
             var p = profiles[id];

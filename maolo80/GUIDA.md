@@ -22,7 +22,8 @@ Versione modificata di TeknoParrotUI, basata sul commit ufficiale `b75872a`
 
 **Compatibilità con TPUI ufficiale 1.0.0.2267**
 - I profili ufficiali nuovi non contengono più `TeknoNaomiControl`. La tabella dei comandi dei 349 profili è inserita nel codice, quindi i giochi con comandi analogici partono anche con i profili ufficiali.
-- Le voci ufficiali Region, Outputs e Use Keyboard/Button For Axis non hanno effetto in questa versione, quindi vengono nascoste.
+- Le voci ufficiali Outputs e Use Keyboard/Button For Axis non hanno effetto in questa versione, quindi vengono nascoste.
+- **Region** compare solo per i 34 giochi Atomiswave (Auto, Japan, USA, Export, Other) e gli 8 Hikaru (Auto, Japan, USA, Export, Australia, Korea) e passa `--region`. Sui giochi NAOMI l'emulatore rifiuta `--region`: per la regione si usa il campo BIOS (numero), con `--bios`.
 
 ## Branch
 
