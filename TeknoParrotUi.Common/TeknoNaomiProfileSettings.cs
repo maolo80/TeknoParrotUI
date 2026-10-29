@@ -28,8 +28,20 @@ namespace TeknoParrotUi.Common
         }
 
         // Fields of later official profiles (TPUI 1.0.0.2267) whose launch handling
-        // this TPUI does not have; shown, they would do nothing.
-        private static readonly string[] UnsupportedOfficialFields = { "Region", "Outputs", "Use Keyboard/Button For Axis" };
+        // this TPUI does not have; shown, they would do nothing. Region is kept for
+        // Atomiswave and Hikaru (AddRunnerOptions); Naomi regions use BIOS instead.
+        private static readonly string[] UnsupportedOfficialFields = { "Outputs", "Use Keyboard/Button For Axis" };
+
+        // --region is accepted only by these boards; on Naomi boards the runner
+        // rejects it and selects regional firmware with --bios.
+        public static string[] RegionOptions(GameProfile profile)
+        {
+            var media = TeknoNaomiCatalog.ForProfile(profile?.ProfileName)?.MediaDirectories;
+            if (media == null) return null;
+            if (media.Contains("awbios")) return new[] { "Auto", "Japan", "USA", "Export", "Other" };
+            if (media.Contains("hikaru")) return new[] { "Auto", "Japan", "USA", "Export", "Australia", "Korea" };
+            return null;
+        }
 
         // Runner options that predate their profile fields. Missing fields are added
         // with defaults, so stock and saved profiles gain them without a revision bump.
@@ -78,6 +90,15 @@ namespace TeknoParrotUi.Common
             Add("Video", "VR Screen Width", FieldType.Text, "2.4", "Virtual screen width in metres, 0.25 to 8.");
             Add("Video", "VR Head Locked", FieldType.Bool, "0", "Keep the virtual screen fixed to the headset.");
             Add("Video", "VR Filter", FieldType.Dropdown, "linear", "Scaling into the headset image.", "linear", "nearest");
+            var regions = RegionOptions(profile);
+            if (regions == null) profile.ConfigValues.RemoveAll(f => f.FieldName == "Region");
+            else
+            {
+                Add("General", "Region", FieldType.Dropdown, "Auto",
+                    "Cabinet country. Auto keeps the cartridge default; the cartridge must support the region chosen.", regions);
+                var region = profile.ConfigValues.First(f => f.FieldName == "Region");
+                if (!regions.Contains(region.FieldValue)) region.FieldValue = "Auto";
+            }
             Add("Force Feedback", "Force Feedback Device", FieldType.DynamicDropdown, "off",
                 "Wheel for steering forces, or a controller for vibration. Numbers count devices of that kind in connection order.");
             Add("Force Feedback", "Player 2 Force Feedback Device", FieldType.DynamicDropdown, "off",

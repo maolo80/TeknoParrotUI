@@ -118,6 +118,13 @@ namespace TeknoParrotUi.Common
             args.AddRange(new[] { "--presentation-filter", presentationFilter });
             if (crt != "None") args.AddRange(new[] { "--crt", crt == "Lottes" ? "lottes" : "lottes-downsample" });
             if (Enabled("Use Bezel")) args.Add("--bezels");
+            var region = Setting("Region", "Auto");
+            var regions = TeknoNaomiProfileSettings.RegionOptions(profile);
+            if (regions != null && region != "Auto")
+            {
+                if (!regions.Contains(region)) throw new InvalidOperationException("Invalid Region.");
+                args.AddRange(new[] { "--region", region.ToLowerInvariant() });
+            }
             string FfbDevice(string name)
             {
                 var token = Setting(name, "off").Trim();
