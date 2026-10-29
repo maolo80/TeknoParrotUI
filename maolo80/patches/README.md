@@ -1,24 +1,32 @@
 # TeknoParrotUI patches (maolo80)
 
-Two independent sets of changes for TeknoParrotUI, made against upstream commit
-`b75872a` ("Freedom for TeknoMVS", 22 Oct 2026). They were meant as two pull
+Three sets of changes for TeknoParrotUI, made against upstream commit
+`b75872a` ("Freedom for TeknoMVS", 22 Oct 2026). They were meant as pull
 requests, but github.com/teknogods/TeknoParrotUI is no longer public.
 
 - `1-tpui-fixes/` (2 patches): general fixes. They touch only the TeknoParrotUi project.
 - `2-teknonaomi-options/` (3 patches): TeknoNaomi settings. They touch TeknoParrotUi.Common and the TeknoNaomi tests.
+- `3-teknonaomi-0.1.0.16/` (5 patches, on top of set 2): TeknoNaomi 0.1.0.16 and TPUI 1.0.0.2267 profile support.
+  - Bindings: the built-in control routes keep analog bindings working with profiles that no longer carry `TeknoNaomiControl`.
+  - New settings: Presentation Filter, CRT Shader and Use Bezel, under the official names; force feedback device for both players and strength (`--ffb-*`); Region for Atomiswave and Hikaru (`--region`).
+  - Free Play: offered only on Naomi boards.
+  - Testing: force feedback was tested with 18 Wheeler. Region was tested with Metal Slug 6, where the runner reports `cabinet_region=atomiswave area=N` for each region, but the cartridge stays Japanese.
 
-Each set applies on its own; both together apply in either order. The same
+Sets 1 and 2 apply on their own and in either order; set 3 needs set 2. The same
 commits are also on GitHub:
-https://github.com/maolo80/TeknoParrotUI/tree/pr/tpui-fixes and
-https://github.com/maolo80/TeknoParrotUI/tree/pr/teknonaomi-options
+https://github.com/maolo80/TeknoParrotUI/tree/pr/tpui-fixes,
+https://github.com/maolo80/TeknoParrotUI/tree/pr/teknonaomi-options and
+https://github.com/maolo80/TeknoParrotUI/tree/pr/teknonaomi-0.1.0.16 (sets 2 and 3)
 
 ## Applying
 
 From a TeknoParrotUI checkout at (or near) `b75872a`:
 
-    git am 1-tpui-fixes/*.patch
-    git am 2-teknonaomi-options/*.patch
+    git am --keep-cr 1-tpui-fixes/*.patch
+    git am --keep-cr 2-teknonaomi-options/*.patch
+    git am --keep-cr 3-teknonaomi-0.1.0.16/*.patch
 
+`--keep-cr` is needed because `TeknoParrotUi.Common.csproj` uses CRLF line endings.
 `git am` keeps the authors and commit messages. To review without committing,
 use `git apply --stat` or `git apply --check` on the files first.
 
@@ -81,4 +89,5 @@ The runner has no V-sync or presentation-filter option, so neither is offered he
 2. A presentation filter option (`linear` / `bicubic` / area downsample). With `presentation_filter=nearest`, high render scales alias and shimmer: at 8x on 2160p the GPU needs only about 3.5 ms per scene (`--vulkan-profile`), but the image looks worse than at 4x.
 3. Precompiled or cached Vulkan PVR materials. Runtime `Vulkan compiling PVR material` events cause hitches: the longest PVR worker job was 36 ms, and `pvr_wait_next_render` showed 81 waits of about 10 ms in 160 s.
 
-Test system: Windows 11, RTX 5070 Ti, Ryzen 9 5950X, 3840x2160, TeknoNaomi 0.1.0.10. The full `--vulkan-profile` log is available on request.
+Test system: Windows 11, RTX 5070 Ti, Ryzen 9 5950X, 3840x2160, TeknoNaomi 0.1.0.10.
+TeknoNaomi 0.1.0.16 added `--presentation-filter` (items 2 and 3 above are now partly covered); `--vsync` is still missing. The full `--vulkan-profile` log is available on request.

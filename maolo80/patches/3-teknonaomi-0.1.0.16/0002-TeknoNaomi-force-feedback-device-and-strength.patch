@@ -1,0 +1,152 @@
+From c646b58609ca14fc092e0515cc2273742eec17c7 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Thu, 29 Oct 2026 13:52:12 +0000
+Subject: [PATCH 2/5] TeknoNaomi: force feedback device and strength
+
+TeknoNaomi 0.1.0.16 moved steering forces out of --outputs into
+--ffb-device, --ffb-device2 and --ffb-gain, taking SDL3 tokens
+(wheel:N, haptic:N, gamepad:N). Profiles now offer Force Feedback Device
+and Player 2 Force Feedback Device, as dropdowns of those tokens, and
+Force Feedback Strength (0-100) on the Force Feedback page. The runner
+has no device listing to probe, so the options name each kind by index
+and keep a saved token that is not in the list.
+
+Tokens are validated before launch. Release checks cover the fields,
+both devices, the strength and invalid tokens (5126 checks).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ TeknoParrotUi.Common/TeknoNaomiLaunch.cs      | 18 ++++++++++++
+ .../TeknoNaomiProfileSettings.cs              | 29 +++++++++++++++++++
+ Tests/TeknoNaomiRelease/Program.cs            | 26 +++++++++++++++--
+ 3 files changed, 70 insertions(+), 3 deletions(-)
+
+diff --git a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+index a8e0971..24ab9fe 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+@@ -118,6 +118,24 @@ namespace TeknoParrotUi.Common
+             args.AddRange(new[] { "--presentation-filter", presentationFilter });
+             if (crt != "None") args.AddRange(new[] { "--crt", crt == "Lottes" ? "lottes" : "lottes-downsample" });
+             if (Enabled("Use Bezel")) args.Add("--bezels");
++            string FfbDevice(string name)
++            {
++                var token = Setting(name, "off").Trim();
++                if (token.Length == 0 || token == "off") return null;
++                if (!TeknoNaomiProfileSettings.FfbDeviceToken.IsMatch(token))
++                    throw new InvalidOperationException("Invalid " + name + ".");
++                return token;
++            }
++            var ffb = FfbDevice("Force Feedback Device");
++            var ffb2 = FfbDevice("Player 2 Force Feedback Device");
++            if (ffb != null || ffb2 != null)
++            {
++                if (!int.TryParse(Setting("Force Feedback Strength", "100"), NumberStyles.None, CultureInfo.InvariantCulture, out var gain) || gain > 100)
++                    throw new InvalidOperationException("Force Feedback Strength must be from 0 to 100.");
++                if (ffb != null) args.AddRange(new[] { "--ffb-device", ffb });
++                if (ffb2 != null) args.AddRange(new[] { "--ffb-device2", ffb2 });
++                args.AddRange(new[] { "--ffb-gain", gain.ToString(CultureInfo.InvariantCulture) });
++            }
+             if (Enabled("Cabinet Outputs")) args.Add("--outputs");
+             if (Enabled("Free Play")) args.Add("--free-play");
+             if (Enabled("Precise SH-4 FPU")) args.Add("--sh4-precise-fpu");
+diff --git a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+index a87e3e2..16c0cde 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+@@ -78,6 +78,35 @@ namespace TeknoParrotUi.Common
+             Add("Video", "VR Screen Width", FieldType.Text, "2.4", "Virtual screen width in metres, 0.25 to 8.");
+             Add("Video", "VR Head Locked", FieldType.Bool, "0", "Keep the virtual screen fixed to the headset.");
+             Add("Video", "VR Filter", FieldType.Dropdown, "linear", "Scaling into the headset image.", "linear", "nearest");
++            Add("Force Feedback", "Force Feedback Device", FieldType.DynamicDropdown, "off",
++                "Wheel for steering forces, or a controller for vibration. Numbers count devices of that kind in connection order.");
++            Add("Force Feedback", "Player 2 Force Feedback Device", FieldType.DynamicDropdown, "off",
++                "Independent device for the second player.");
++            Add("Force Feedback", "Force Feedback Strength", FieldType.Slider, "100",
++                "Overall effect strength. 100% keeps the normal full strength.");
++            var strength = profile.ConfigValues.First(f => f.FieldName == "Force Feedback Strength");
++            strength.FieldMin = 0; strength.FieldMax = 100; strength.SettingsPage = "ForceFeedback";
++            foreach (var device in profile.ConfigValues.Where(f => f.FieldName == "Force Feedback Device" || f.FieldName == "Player 2 Force Feedback Device"))
++                device.DynamicOptions = FfbDevices(device.FieldValue);
++        }
++
++        // The runner opens SDL3 devices by kind and index; it has no device list to probe.
++        internal static readonly System.Text.RegularExpressions.Regex FfbDeviceToken =
++            new System.Text.RegularExpressions.Regex("^(wheel|haptic|gamepad):[0-9]{1,2}$");
++
++        private static List<DynamicDropdownOption> FfbDevices(string saved)
++        {
++            var options = new List<DynamicDropdownOption> { new DynamicDropdownOption { DisplayName = "Force feedback off", Value = "off" } };
++            foreach (var kind in new[] { new[] { "gamepad", "Controller {0} (vibration)" }, new[] { "wheel", "Wheel {0}" }, new[] { "haptic", "Haptic device {0}" } })
++                for (int index = 0; index < 4; ++index)
++                    options.Add(new DynamicDropdownOption
++                    {
++                        DisplayName = string.Format(CultureInfo.InvariantCulture, kind[1], index + 1),
++                        Value = kind[0] + ":" + index.ToString(CultureInfo.InvariantCulture)
++                    });
++            if (!string.IsNullOrWhiteSpace(saved) && options.All(o => o.Value != saved))
++                options.Add(new DynamicDropdownOption { DisplayName = "Previously selected device - " + saved, Value = saved });
++            return options;
+         }
+ 
+         internal static readonly string[] PresentationFilters = { "nearest", "linear", "bicubic", "lanczos", "ssaa" };
+diff --git a/Tests/TeknoNaomiRelease/Program.cs b/Tests/TeknoNaomiRelease/Program.cs
+index ed8a20d..42e31be 100644
+--- a/Tests/TeknoNaomiRelease/Program.cs
++++ b/Tests/TeknoNaomiRelease/Program.cs
+@@ -75,13 +75,14 @@ internal static class ReleaseChecks
+         TeknoNaomiProfileSettings.Normalize(p0);
+         var names = new[] { "Cabinet Outputs", "Free Play", "BIOS", "Precise SH-4 FPU", "Side-by-Side 3D", "Enable VR",
+             "Use VR Controls", "VR Screen Distance", "VR Screen Width", "VR Head Locked", "VR Filter",
+-            "Presentation Filter", "CRT Shader", "Use Bezel" };
++            "Presentation Filter", "CRT Shader", "Use Bezel",
++            "Force Feedback Device", "Player 2 Force Feedback Device", "Force Feedback Strength" };
+         Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields are added once");
+         TeknoNaomiProfileSettings.Normalize(p0);
+         Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields survive a second normalization");
+         var defaults = Arguments(p0);
+         Require(defaults.Contains("\"--outputs\"") && defaults.Contains("\"--presentation-filter\" \"ssaa\"") &&
+-            !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr", "--crt", "--bezels" }.Any(defaults.Contains),
++            !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr", "--crt", "--bezels", "--ffb" }.Any(defaults.Contains),
+             "Runner option defaults");
+         Set(p0, "Presentation Filter", "lanczos"); Set(p0, "CRT Shader", "Lottes Downsample"); Set(p0, "Use Bezel", "1");
+         var presentation = Arguments(p0);
+@@ -90,6 +91,24 @@ internal static class ReleaseChecks
+         Set(p0, "CRT Shader", "Lottes");
+         Require(Arguments(p0).Contains("\"--crt\" \"lottes\""), "CRT Lottes");
+         Set(p0, "Presentation Filter", "ssaa"); Set(p0, "CRT Shader", "None"); Set(p0, "Use Bezel", "0");
++        var device = p0.ConfigValues.Single(f => f.FieldName == "Force Feedback Device");
++        var strength = p0.ConfigValues.Single(f => f.FieldName == "Force Feedback Strength");
++        Require(device.FieldType == FieldType.DynamicDropdown && device.DynamicOptions.Any(o => o.Value == "gamepad:0") &&
++            device.DynamicOptions.Any(o => o.Value == "wheel:0") && strength.FieldType == FieldType.Slider && strength.FieldMax == 100 &&
++            strength.SettingsPage == "ForceFeedback", "Force feedback fields");
++        Set(p0, "Force Feedback Device", "gamepad:0"); Set(p0, "Force Feedback Strength", "70");
++        var ffb = Arguments(p0);
++        Require(ffb.Contains("\"--ffb-device\" \"gamepad:0\"") && ffb.Contains("\"--ffb-gain\" \"70\"") && !ffb.Contains("--ffb-device2"),
++            "Force feedback device and strength");
++        Set(p0, "Force Feedback Device", "off"); Set(p0, "Player 2 Force Feedback Device", "wheel:1");
++        ffb = Arguments(p0);
++        Require(ffb.Contains("\"--ffb-device2\" \"wheel:1\"") && !ffb.Contains("\"--ffb-device\"") && ffb.Contains("\"--ffb-gain\" \"70\""),
++            "Second player force feedback device");
++        Set(p0, "Player 2 Force Feedback Device", "off");
++        Set(p0, "Force Feedback Device", "haptic:12");
++        TeknoNaomiProfileSettings.Normalize(p0);
++        Require(device.DynamicOptions.Any(o => o.Value == "haptic:12"), "Saved device outside the list stays selectable");
++        Set(p0, "Force Feedback Device", "off");
+         Set(p0, "Free Play", "1"); Set(p0, "Precise SH-4 FPU", "1"); Set(p0, "BIOS", "2"); Set(p0, "Cabinet Outputs", "0");
+         Set(p0, "Side-by-Side 3D", "1");
+         var enabled = Arguments(p0);
+@@ -129,7 +148,8 @@ internal static class ReleaseChecks
+             Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == 3, "Fixed resolution ignores the display");
+         }
+         finally { TeknoNaomiLaunch.DisplayHeight = display; }
+-        foreach (var invalid in new[] { new[] { "Presentation Filter", "SSAA" }, new[] { "CRT Shader", "lottes" }, new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
++        foreach (var invalid in new[] { new[] { "Force Feedback Device", "wheel" }, new[] { "Force Feedback Device", "joystick:0" },
++            new[] { "Force Feedback Device", "gamepad:0;--mute" }, new[] { "Presentation Filter", "SSAA" }, new[] { "CRT Shader", "lottes" }, new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
+         {
+             var p = p0.Clone();
+             Set(p, invalid[0], invalid[1]);
+-- 
+2.43.0
+

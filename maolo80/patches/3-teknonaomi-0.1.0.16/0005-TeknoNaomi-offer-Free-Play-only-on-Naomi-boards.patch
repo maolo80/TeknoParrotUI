@@ -1,0 +1,81 @@
+From 25769d451ef9d6130c1f20facbe5c89f5dd27bf5 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Thu, 29 Oct 2026 14:31:04 +0000
+Subject: [PATCH 5/5] TeknoNaomi: offer Free Play only on Naomi boards
+
+The runner's --free-play sets "the BIOS's FREE PLAY coin setting" of
+Naomi cabinets. On Metal Slug 6 (Atomiswave) it had no effect, so the
+field is removed from Atomiswave and Hikaru profiles, and a saved value
+there is ignored at launch. Those games keep free play in their own
+service menu.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ TeknoParrotUi.Common/TeknoNaomiLaunch.cs          | 2 +-
+ TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs | 5 ++++-
+ Tests/TeknoNaomiOnline/Program.cs                 | 3 ++-
+ Tests/TeknoNaomiRelease/Program.cs                | 4 ++++
+ 4 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+index df22506..c0ea8f5 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+@@ -144,7 +144,7 @@ namespace TeknoParrotUi.Common
+                 args.AddRange(new[] { "--ffb-gain", gain.ToString(CultureInfo.InvariantCulture) });
+             }
+             if (Enabled("Cabinet Outputs")) args.Add("--outputs");
+-            if (Enabled("Free Play")) args.Add("--free-play");
++            if (TeknoNaomiProfileSettings.RegionOptions(profile) == null && Enabled("Free Play")) args.Add("--free-play");
+             if (Enabled("Precise SH-4 FPU")) args.Add("--sh4-precise-fpu");
+             var bios = Setting("BIOS").Trim();
+             if (bios.Length != 0)
+diff --git a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+index ec98549..b861074 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+@@ -77,7 +77,10 @@ namespace TeknoParrotUi.Common
+                 "Replaces the Presentation Filter.", CrtShaders);
+             Add("Video", "Use Bezel", FieldType.Bool, "0",
+                 "Show TeknoNaomi/bezels/SET.png around the game, else the parent set's PNG, else default.png. Not used with Widescreen.");
+-            Add("General", "Free Play", FieldType.Bool, "0", "Set the BIOS coin setting to FREE PLAY.");
++            // --free-play sets the Naomi BIOS coin setting; Atomiswave and Hikaru keep
++            // free play in the game's own service menu.
++            if (RegionOptions(profile) != null) profile.ConfigValues.RemoveAll(f => f.FieldName == "Free Play");
++            else Add("General", "Free Play", FieldType.Bool, "0", "Set the Naomi BIOS coin setting to FREE PLAY.");
+             Add("General", "BIOS", FieldType.Text, "",
+                 "Empty selects the default BIOS. A number selects another BIOS, for example a different region.");
+             Add("General", "Precise SH-4 FPU", FieldType.Bool, "0",
+diff --git a/Tests/TeknoNaomiOnline/Program.cs b/Tests/TeknoNaomiOnline/Program.cs
+index b216467..31584ab 100644
+--- a/Tests/TeknoNaomiOnline/Program.cs
++++ b/Tests/TeknoNaomiOnline/Program.cs
+@@ -84,7 +84,8 @@ internal static class Program
+                 Require(resolved.JoystickButtons.First(b => b.InputMapping == InputMapping.Coin1).BindName == coin.BindName, "Saved binding lost " + template.ProfileName);
+                 var plan = TeknoNaomiLaunch.Plan(resolved, root, resolved.GamePath);
+                 Require(plan.Set == template.ProfileName.Substring("teknonaomi_".Length), "Wrong native --set " + template.ProfileName);
+-                Require(plan.StartInfo.Arguments.Contains("\"--free-play\"") && plan.StartInfo.Arguments.Contains("\"--bios\" \"2\"") &&
++                var naomiBoard = TeknoNaomiProfileSettings.RegionOptions(template) == null;
++                Require(plan.StartInfo.Arguments.Contains("\"--free-play\"") == naomiBoard && plan.StartInfo.Arguments.Contains("\"--bios\" \"2\"") &&
+                     plan.StartInfo.Arguments.Contains("\"--sbs\""), "Saved runner options lost " + template.ProfileName);
+                 Require(Path.GetFileName(plan.StartInfo.FileName) == "TeknoNaomi.exe", "Canonical runtime name");
+                 Require(!plan.StartInfo.UseShellExecute && plan.StartInfo.CreateNoWindow, "Hidden direct native launch");
+diff --git a/Tests/TeknoNaomiRelease/Program.cs b/Tests/TeknoNaomiRelease/Program.cs
+index d85788c..269ceb5 100644
+--- a/Tests/TeknoNaomiRelease/Program.cs
++++ b/Tests/TeknoNaomiRelease/Program.cs
+@@ -193,6 +193,10 @@ internal static class ReleaseChecks
+             var p = profiles[pair[0]].Clone();
+             TeknoNaomiProfileSettings.Normalize(p);
+             Require(!Arguments(p).Contains("--region"), "Auto region passes nothing: " + pair[0]);
++            Require(!p.ConfigValues.Any(f => f.FieldName == "Free Play"), "Free Play is a Naomi BIOS setting: " + pair[0]);
++            var saved = p.Clone();
++            saved.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Free Play", FieldValue = "1" });
++            Require(!Arguments(saved).Contains("--free-play"), "Saved Free Play is ignored off Naomi boards: " + pair[0]);
+             p.ConfigValues.Single(f => f.FieldName == "Region").FieldValue = pair[1];
+             Require(Arguments(p).Contains("\"--region\" \"" + pair[2] + "\""), "Region option: " + pair[0]);
+         }
+-- 
+2.43.0
+

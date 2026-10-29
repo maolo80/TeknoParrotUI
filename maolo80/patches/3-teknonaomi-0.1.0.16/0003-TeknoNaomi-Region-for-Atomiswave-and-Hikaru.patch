@@ -1,0 +1,140 @@
+From 2740b09f9c19b4d0832641a1ea434dd8cbf0e123 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Thu, 29 Oct 2026 14:05:36 +0000
+Subject: [PATCH 3/5] TeknoNaomi: Region for Atomiswave and Hikaru
+
+TeknoNaomi 0.1.0.16 takes --region only for Atomiswave and Hikaru
+cabinets ("use --bios for Naomi regional firmware" otherwise, checked on
+crzytaxi). The official Region field is now kept for the 34 Atomiswave
+sets (Auto, Japan, USA, Export, Other) and the 8 Hikaru sets (adding
+Australia and Korea), with each board's own options, and removed from
+Naomi profiles. Auto passes nothing; an unsupported saved value falls
+back to Auto.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ TeknoParrotUi.Common/TeknoNaomiLaunch.cs      |  7 +++++
+ .../TeknoNaomiProfileSettings.cs              | 25 ++++++++++++++--
+ Tests/TeknoNaomiRelease/Program.cs            | 30 +++++++++++++++++--
+ 3 files changed, 58 insertions(+), 4 deletions(-)
+
+diff --git a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+index 24ab9fe..df22506 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+@@ -118,6 +118,13 @@ namespace TeknoParrotUi.Common
+             args.AddRange(new[] { "--presentation-filter", presentationFilter });
+             if (crt != "None") args.AddRange(new[] { "--crt", crt == "Lottes" ? "lottes" : "lottes-downsample" });
+             if (Enabled("Use Bezel")) args.Add("--bezels");
++            var region = Setting("Region", "Auto");
++            var regions = TeknoNaomiProfileSettings.RegionOptions(profile);
++            if (regions != null && region != "Auto")
++            {
++                if (!regions.Contains(region)) throw new InvalidOperationException("Invalid Region.");
++                args.AddRange(new[] { "--region", region.ToLowerInvariant() });
++            }
+             string FfbDevice(string name)
+             {
+                 var token = Setting(name, "off").Trim();
+diff --git a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+index 16c0cde..d9f18c6 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+@@ -28,8 +28,20 @@ namespace TeknoParrotUi.Common
+         }
+ 
+         // Fields of later official profiles (TPUI 1.0.0.2267) whose launch handling
+-        // this TPUI does not have; shown, they would do nothing.
+-        private static readonly string[] UnsupportedOfficialFields = { "Region", "Outputs", "Use Keyboard/Button For Axis" };
++        // this TPUI does not have; shown, they would do nothing. Region is kept for
++        // Atomiswave and Hikaru (AddRunnerOptions); Naomi regions use BIOS instead.
++        private static readonly string[] UnsupportedOfficialFields = { "Outputs", "Use Keyboard/Button For Axis" };
++
++        // --region is accepted only by these boards; on Naomi boards the runner
++        // rejects it and selects regional firmware with --bios.
++        public static string[] RegionOptions(GameProfile profile)
++        {
++            var media = TeknoNaomiCatalog.ForProfile(profile?.ProfileName)?.MediaDirectories;
++            if (media == null) return null;
++            if (media.Contains("awbios")) return new[] { "Auto", "Japan", "USA", "Export", "Other" };
++            if (media.Contains("hikaru")) return new[] { "Auto", "Japan", "USA", "Export", "Australia", "Korea" };
++            return null;
++        }
+ 
+         // Runner options that predate their profile fields. Missing fields are added
+         // with defaults, so stock and saved profiles gain them without a revision bump.
+@@ -78,6 +90,15 @@ namespace TeknoParrotUi.Common
+             Add("Video", "VR Screen Width", FieldType.Text, "2.4", "Virtual screen width in metres, 0.25 to 8.");
+             Add("Video", "VR Head Locked", FieldType.Bool, "0", "Keep the virtual screen fixed to the headset.");
+             Add("Video", "VR Filter", FieldType.Dropdown, "linear", "Scaling into the headset image.", "linear", "nearest");
++            var regions = RegionOptions(profile);
++            if (regions == null) profile.ConfigValues.RemoveAll(f => f.FieldName == "Region");
++            else
++            {
++                Add("General", "Region", FieldType.Dropdown, "Auto",
++                    "Cabinet country. Auto keeps the cartridge default; the cartridge must support the region chosen.", regions);
++                var region = profile.ConfigValues.First(f => f.FieldName == "Region");
++                if (!regions.Contains(region.FieldValue)) region.FieldValue = "Auto";
++            }
+             Add("Force Feedback", "Force Feedback Device", FieldType.DynamicDropdown, "off",
+                 "Wheel for steering forces, or a controller for vibration. Numbers count devices of that kind in connection order.");
+             Add("Force Feedback", "Player 2 Force Feedback Device", FieldType.DynamicDropdown, "off",
+diff --git a/Tests/TeknoNaomiRelease/Program.cs b/Tests/TeknoNaomiRelease/Program.cs
+index 42e31be..d85788c 100644
+--- a/Tests/TeknoNaomiRelease/Program.cs
++++ b/Tests/TeknoNaomiRelease/Program.cs
+@@ -170,15 +170,40 @@ internal static class ReleaseChecks
+             foreach (var button in official.JoystickButtons) button.TeknoNaomiControl = null;
+             Require(TeknoNaomiInputBindings.Serialize(official, set) == TeknoNaomiInputBindings.Serialize(original, set),
+                 "Official-style profile exports the stock bindings: " + original.ProfileName);
+-            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Region", FieldValue = "Japan" });
++            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Region", FieldValue = "Korea" });
+             official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Outputs", FieldValue = "Network Outputs" });
+             official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Use Keyboard/Button For Axis", FieldValue = "1" });
+             TeknoNaomiProfileSettings.Normalize(official);
+-            Require(!official.ConfigValues.Any(f => f.FieldName == "Region" || f.FieldName == "Outputs" || f.FieldName == "Use Keyboard/Button For Axis"),
++            Require(!official.ConfigValues.Any(f => f.FieldName == "Outputs" || f.FieldName == "Use Keyboard/Button For Axis"),
+                 "Unsupported official fields are not shown: " + original.ProfileName);
++            var regions = TeknoNaomiProfileSettings.RegionOptions(official);
++            var region = official.ConfigValues.SingleOrDefault(f => f.FieldName == "Region");
++            Require(regions == null ? region == null : region != null && region.FieldOptions.SequenceEqual(regions) &&
++                region.FieldValue == (regions.Contains("Korea") ? "Korea" : "Auto"),
++                "Region only for Atomiswave and Hikaru, with their own countries: " + original.ProfileName);
+         }
+     }
+ 
++    private static void Regions(Dictionary<string, GameProfile> profiles, string root)
++    {
++        string Arguments(GameProfile p) => TeknoNaomiLaunch.Plan(p, root, p.GamePath).StartInfo.Arguments;
++        Require(profiles.Values.Count(p => TeknoNaomiProfileSettings.RegionOptions(p) != null) == 42, "34 Atomiswave and 8 Hikaru sets");
++        foreach (var pair in new[] { new[] { "teknonaomi_mslug6", "Other", "other" }, new[] { "teknonaomi_braveff", "Korea", "korea" } })
++        {
++            var p = profiles[pair[0]].Clone();
++            TeknoNaomiProfileSettings.Normalize(p);
++            Require(!Arguments(p).Contains("--region"), "Auto region passes nothing: " + pair[0]);
++            p.ConfigValues.Single(f => f.FieldName == "Region").FieldValue = pair[1];
++            Require(Arguments(p).Contains("\"--region\" \"" + pair[2] + "\""), "Region option: " + pair[0]);
++        }
++        var aw = profiles["teknonaomi_mslug6"].Clone();
++        TeknoNaomiProfileSettings.Normalize(aw);
++        aw.ConfigValues.Single(f => f.FieldName == "Region").FieldValue = "Korea";
++        var rejected = false;
++        try { Arguments(aw); } catch (InvalidOperationException) { rejected = true; }
++        Require(rejected || !Arguments(aw).Contains("--region"), "Atomiswave has no Korea region");
++    }
++
+     public static void Run(string root, string output)
+     {
+         var common = Path.Combine(Path.GetFullPath(root), "TeknoParrotUi.Common");
+@@ -227,6 +252,7 @@ internal static class ReleaseChecks
+         Require(analog == 126 && disks > 0, "Continuous controls and CHD coverage");
+         RunnerOptions(profiles["teknonaomi_f355"], root);
+         OfficialProfiles(profiles.Values);
++        Regions(profiles, root);
+         foreach (var id in new[] { "teknonaomi_sgnascar", "teknonaomi_sgnascaro" })
+         {
+             var p = profiles[id];
+-- 
+2.43.0
+

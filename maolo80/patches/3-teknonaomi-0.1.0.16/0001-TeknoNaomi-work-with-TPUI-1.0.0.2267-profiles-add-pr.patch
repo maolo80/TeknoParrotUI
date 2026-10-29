@@ -1,0 +1,460 @@
+From b2e9d5d59a522e353934768d0f9ad0cc002efb29 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Thu, 29 Oct 2026 13:40:00 +0000
+Subject: [PATCH 1/5] TeknoNaomi: work with TPUI 1.0.0.2267 profiles; add
+ presentation options
+
+Official profiles from TPUI 1.0.0.2267 (TeknoNaomi 0.1.0.16) drop
+TeknoNaomiControl, so the saved-binding export found no destination for
+any analog control and every analog Naomi game failed to launch. The
+routes of the 349 stock profiles are now built in
+(TeknoNaomiControlCatalog) and used when a profile has none.
+
+TeknoNaomi 0.1.0.16 adds --presentation-filter, --crt and --bezels. They
+are offered under the official field names and values: Presentation
+Filter (default ssaa), CRT Shader (None, Lottes, Lottes Downsample) and
+Use Bezel. With ssaa and no CRT shader, Auto resolution doubles the
+display-fit scale (8 at 2160p), since ssaa averages the extra pixels.
+
+The official Region, Outputs and Use Keyboard/Button For Axis fields have
+no launch handling here, so Normalize removes them instead of showing
+settings that do nothing. Cabinet Outputs no longer claims force
+feedback: the runner's --outputs now carries lamps and recoil only.
+
+Release checks (5119) export the bindings of all 349 profiles with
+TeknoNaomiControl removed and require the stock result.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ .../TeknoNaomiControlCatalog.cs               | 172 ++++++++++++++++++
+ .../TeknoNaomiInputBindings.cs                |   9 +-
+ TeknoParrotUi.Common/TeknoNaomiLaunch.cs      |  19 +-
+ .../TeknoNaomiProfileSettings.cs              |  25 ++-
+ .../TeknoParrotUi.Common.csproj               |   1 +
+ Tests/TeknoNaomiRelease/Program.cs            |  46 ++++-
+ 6 files changed, 255 insertions(+), 17 deletions(-)
+ create mode 100644 TeknoParrotUi.Common/TeknoNaomiControlCatalog.cs
+
+diff --git a/TeknoParrotUi.Common/TeknoNaomiControlCatalog.cs b/TeknoParrotUi.Common/TeknoNaomiControlCatalog.cs
+new file mode 100644
+index 0000000..d17993b
+--- /dev/null
++++ b/TeknoParrotUi.Common/TeknoNaomiControlCatalog.cs
+@@ -0,0 +1,172 @@
++﻿using System;
++using System.Collections.Generic;
++
++namespace TeknoParrotUi.Common
++{
++    // TeknoNaomiControl routes from the stock profiles, by profile and input mapping.
++    // Later official profiles no longer carry TeknoNaomiControl; the saved-binding
++    // export falls back to these routes so analog controls keep their destinations.
++    // Generated from GameProfiles/teknonaomi_*.xml.
++    internal static class TeknoNaomiControlCatalog
++    {
++        private static readonly Dictionary<string, string> Routes = new Dictionary<string, string>(StringComparer.Ordinal)
++        {
++            { "teknonaomi_18wheelr", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_18wheelro", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_18wheelrt", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_18wheels", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_18wheelu", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_airtrix", "Analog0=p1.axis0;Analog2=p1.axis1" },
++            { "teknonaomi_airtrixo", "Analog0=p1.axis0;Analog2=p1.axis1" },
++            { "teknonaomi_alienfnt", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+" },
++            { "teknonaomi_alienfnta", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_alpilot", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog8=p1.axis4;Analog10=p1.axis5;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis4+;TPSystem4=p1.axis5+" },
++            { "teknonaomi_alpilotj", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog8=p1.axis4;Analog10=p1.axis5;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis4+;TPSystem4=p1.axis5+" },
++            { "teknonaomi_basschal", "Analog0=p1.axis0;Analog2=p1.axis1;TPSystem1=p1.axis0-;TPSystem2=p1.axis0+;TPSystem3=p1.axis1-;TPSystem4=p1.axis1+" },
++            { "teknonaomi_basschalo", "Analog0=p1.axis0;Analog2=p1.axis1;TPSystem1=p1.axis0-;TPSystem2=p1.axis0+;TPSystem3=p1.axis1-;TPSystem4=p1.axis1+" },
++            { "teknonaomi_braveff", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1" },
++            { "teknonaomi_claychal", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+" },
++            { "teknonaomi_clubk2k3", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubk2kp", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubk2kpa", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubkcyc", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubkcyco", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubkprz", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubkpzb", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubkpzbp", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubkrt", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubkrta", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubkrtc", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_clubkrto", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_confmiss", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_crackndj", "Analog0=p1.axis0;Analog4=p1.axis2;Analog6=p1.axis3;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+" },
++            { "teknonaomi_crakndj2", "Analog0=p1.axis0;Analog4=p1.axis2;Analog6=p1.axis3;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+" },
++            { "teknonaomi_crzytaxi", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_deathcox", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_deathcoxj", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_deathcoxo", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_dybb99", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;Analog10=p1.axis5;Analog22=p2.axis5;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;TPSystem1=p1.axis5+;TPSystem2=p2.axis5+" },
++            { "teknonaomi_dybbnao", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;Analog10=p1.axis5;Analog22=p2.axis5;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;TPSystem1=p1.axis5+;TPSystem2=p2.axis5+" },
++            { "teknonaomi_dygolf", "Analog0=p1.axis0;Analog2=p1.axis1;TPSystem1=p1.axis0-;TPSystem2=p1.axis0+;TPSystem3=p1.axis1+;TPSystem4=p1.axis1-" },
++            { "teknonaomi_dygolfp", "Analog0=p1.axis0;Analog2=p1.axis1;TPSystem1=p1.axis0-;TPSystem2=p1.axis0+;TPSystem3=p1.axis1+;TPSystem4=p1.axis1-" },
++            { "teknonaomi_f355", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;Analog20=p2.axis4;TPSystem1=p2.axis4+;ExtensionOne11=p2.button1;ExtensionOne12=p2.button2;ExtensionOne13=p2.button3;ExtensionOne14=p2.button4;ExtensionOne15=p2.button5;ExtensionOne16=p2.button6" },
++            { "teknonaomi_f355p", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;Analog20=p2.axis4;TPSystem1=p2.axis4+;ExtensionOne11=p2.button1;ExtensionOne12=p2.button2;ExtensionOne13=p2.button3;ExtensionOne14=p2.button4;ExtensionOne15=p2.button5;ExtensionOne16=p2.button6" },
++            { "teknonaomi_f355twin", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;Analog20=p2.axis4;TPSystem1=p2.axis4+;ExtensionOne11=p2.button1;ExtensionOne12=p2.button2;ExtensionOne13=p2.button3;ExtensionOne14=p2.button4;ExtensionOne15=p2.button5;ExtensionOne16=p2.button6" },
++            { "teknonaomi_f355twinp", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;Analog20=p2.axis4;TPSystem1=p2.axis4+;ExtensionOne11=p2.button1;ExtensionOne12=p2.button2;ExtensionOne13=p2.button3;ExtensionOne14=p2.button4;ExtensionOne15=p2.button5;ExtensionOne16=p2.button6" },
++            { "teknonaomi_f355twn2", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;Analog20=p2.axis4;TPSystem1=p2.axis4+;ExtensionOne11=p2.button1;ExtensionOne12=p2.button2;ExtensionOne13=p2.button3;ExtensionOne14=p2.button4;ExtensionOne15=p2.button5;ExtensionOne16=p2.button6" },
++            { "teknonaomi_ftspeed", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_gunsur2", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+" },
++            { "teknonaomi_gunsur2j", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+" },
++            { "teknonaomi_hotd2", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_hotd2e", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_hotd2o", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_hotd2p", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_inidv3ca", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_inidv3cy", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initd", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdexp", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdexpo", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdo", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdv2e", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdv2j", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdv2ja", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdv2jo", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdv3e", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdv3j", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_initdv3jb", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_inunoos", "Analog0=p1.axis0;Analog10=p1.axis5;P1ButtonUp=p1.axis5+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_jambo", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_keyboard", "TPSystem1=p1.keyboard;TPSystem2=p2.keyboard" },
++            { "teknonaomi_kingrt66", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_kingrt66p", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_lupinsho", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_lupinshoo", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_luptype", "TPSystem1=p1.keyboard;TPSystem2=p2.keyboard" },
++            { "teknonaomi_manicpnc", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+" },
++            { "teknonaomi_maxspeed", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_mazan", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+;TPSystem5=p1.up;TPSystem6=p1.down" },
++            { "teknonaomi_mazanj", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+;TPSystem5=p1.up;TPSystem6=p1.down" },
++            { "teknonaomi_mazanu", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+;TPSystem5=p1.up;TPSystem6=p1.down" },
++            { "teknonaomi_mok", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_monkeyba", "Analog0=p1.axis0;Analog2=p1.axis1" },
++            { "teknonaomi_ninjaslt", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;TPSystem1=p1.up;TPSystem2=p1.down" },
++            { "teknonaomi_ninjaslta", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;TPSystem1=p1.up;TPSystem2=p1.down" },
++            { "teknonaomi_ninjasltj", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;TPSystem1=p1.up;TPSystem2=p1.down" },
++            { "teknonaomi_ninjasltu", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;TPSystem1=p1.up;TPSystem2=p1.down" },
++            { "teknonaomi_ntvmys", "Analog0=p1.axis0;Analog2=p1.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_otrigger", "Analog0=p1.axis0;Analog2=p1.axis1;TPSystem1=p1.axis0-;TPSystem2=p1.axis0+;TPSystem3=p1.axis1-;TPSystem4=p1.axis1+" },
++            { "teknonaomi_pharrier", "Analog0=p1.axis0;Analog2=p1.axis1" },
++            { "teknonaomi_pokasuka", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+" },
++            { "teknonaomi_rangrmsn", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_salmankt", "Analog0=p1.axis0;Analog2=p1.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_samba", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;Analog12=p2.axis0;Analog14=p2.axis1;Analog16=p2.axis2;Analog18=p2.axis3;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+;TPSystem5=p2.axis2-;TPSystem6=p2.axis2+;TPSystem7=p2.axis3-;TPSystem8=p2.axis3+" },
++            { "teknonaomi_samba2k", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;Analog12=p2.axis0;Analog14=p2.axis1;Analog16=p2.axis2;Analog18=p2.axis3;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+;TPSystem5=p2.axis2-;TPSystem6=p2.axis2+;TPSystem7=p2.axis3-;TPSystem8=p2.axis3+" },
++            { "teknonaomi_sambaa", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;Analog12=p2.axis0;Analog14=p2.axis1;Analog16=p2.axis2;Analog18=p2.axis3;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+;TPSystem5=p2.axis2-;TPSystem6=p2.axis2+;TPSystem7=p2.axis3-;TPSystem8=p2.axis3+" },
++            { "teknonaomi_sambap", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;Analog12=p2.axis0;Analog14=p2.axis1;Analog16=p2.axis2;Analog18=p2.axis3;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+;TPSystem5=p2.axis2-;TPSystem6=p2.axis2+;TPSystem7=p2.axis3-;TPSystem8=p2.axis3+" },
++            { "teknonaomi_sgdrvsim", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_sgnascar", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_sgnascaro", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4" },
++            { "teknonaomi_shaktam", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_shaktamb", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_shaktmsp", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_shangril", "ExtensionOne1=mahjong.a;ExtensionOne2=mahjong.b;ExtensionOne3=mahjong.c;ExtensionOne4=mahjong.d;ExtensionOne11=mahjong.e;ExtensionOne12=mahjong.f;ExtensionOne13=mahjong.g;ExtensionOne14=mahjong.h;ExtensionOne15=mahjong.i;ExtensionOne16=mahjong.j;ExtensionOne17=mahjong.k;ExtensionOne18=mahjong.l;ExtensionOne21=mahjong.m;ExtensionOne22=mahjong.n;ExtensionOne23=mahjong.kan;ExtensionOne24=mahjong.pon;ExtensionOne25=mahjong.chi;ExtensionOne26=mahjong.reach;ExtensionOne27=mahjong.ron;ExtensionOne28=mahjong.bet;ExtensionTwo1=mahjong.lastchance;ExtensionTwo2=mahjong.flipflop" },
++            { "teknonaomi_shootopl", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;Analog14=p2.axis1;P1ButtonUp=p1.button2;P1ButtonDown=p1.button3;P1ButtonLeft=p1.axis3-;P1ButtonRight=p1.axis3+;TPSystem1=p1.axis0-;TPSystem2=p1.axis0+;TPSystem3=p1.axis1-;TPSystem4=p1.axis1+;ExtensionOne1=p1.axis2-;ExtensionOne2=p1.axis2+;ExtensionOne3=p2.axis1-;ExtensionOne4=p2.axis1+" },
++            { "teknonaomi_shootpl", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;Analog14=p2.axis1;P1ButtonUp=p1.button2;P1ButtonDown=p1.button3;P1ButtonLeft=p1.axis3-;P1ButtonRight=p1.axis3+;TPSystem1=p1.axis0-;TPSystem2=p1.axis0+;TPSystem3=p1.axis1-;TPSystem4=p1.axis1+;ExtensionOne1=p1.axis2-;ExtensionOne2=p1.axis2+;ExtensionOne3=p2.axis1-;ExtensionOne4=p2.axis1+" },
++            { "teknonaomi_shootplm", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;Analog14=p2.axis1;P1ButtonUp=p1.button2;P1ButtonDown=p1.button3;P1ButtonLeft=p1.axis3-;P1ButtonRight=p1.axis3+;TPSystem1=p1.axis0-;TPSystem2=p1.axis0+;TPSystem3=p1.axis1-;TPSystem4=p1.axis1+;ExtensionOne1=p1.axis2-;ExtensionOne2=p1.axis2+;ExtensionOne3=p2.axis1-;ExtensionOne4=p2.axis1+" },
++            { "teknonaomi_shootplmp", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;Analog14=p2.axis1;P1ButtonUp=p1.button2;P1ButtonDown=p1.button3;P1ButtonLeft=p1.axis3-;P1ButtonRight=p1.axis3+;TPSystem1=p1.axis0-;TPSystem2=p1.axis0+;TPSystem3=p1.axis1-;TPSystem4=p1.axis1+;ExtensionOne1=p1.axis2-;ExtensionOne2=p1.axis2+;ExtensionOne3=p2.axis1-;ExtensionOne4=p2.axis1+" },
++            { "teknonaomi_smarinef", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;Analog12=p2.axis0;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis3-;TPSystem4=p1.axis3+;ExtensionOne1=p2.axis0-;ExtensionOne2=p2.axis0+" },
++            { "teknonaomi_smlg99", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;Analog10=p1.axis5;Analog22=p2.axis5;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;TPSystem1=p1.axis5+;TPSystem2=p2.axis5+" },
++            { "teknonaomi_soulsurf", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;P1ButtonUp=p1.axis2-;P1ButtonDown=p1.axis2+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis1-;TPSystem2=p1.axis1+" },
++            { "teknonaomi_sprtshot", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+" },
++            { "teknonaomi_sstrkfgt", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog10=p1.axis5;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis5-;TPSystem4=p1.axis5+" },
++            { "teknonaomi_sstrkfgta", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog10=p1.axis5;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;TPSystem1=p1.axis2-;TPSystem2=p1.axis2+;TPSystem3=p1.axis5-;TPSystem4=p1.axis5+" },
++            { "teknonaomi_suchie3", "ExtensionOne1=mahjong.a;ExtensionOne2=mahjong.b;ExtensionOne3=mahjong.c;ExtensionOne4=mahjong.d;ExtensionOne11=mahjong.e;ExtensionOne12=mahjong.f;ExtensionOne13=mahjong.g;ExtensionOne14=mahjong.h;ExtensionOne15=mahjong.i;ExtensionOne16=mahjong.j;ExtensionOne17=mahjong.k;ExtensionOne18=mahjong.l;ExtensionOne21=mahjong.m;ExtensionOne22=mahjong.n;ExtensionOne23=mahjong.kan;ExtensionOne24=mahjong.pon;ExtensionOne25=mahjong.chi;ExtensionOne26=mahjong.reach;ExtensionOne27=mahjong.ron;ExtensionOne28=mahjong.bet;ExtensionTwo1=mahjong.lastchance;ExtensionTwo2=mahjong.flipflop" },
++            { "teknonaomi_swracer", "Analog2=p1.axis4;Analog6=p1.axis5" },
++            { "teknonaomi_tduno", "Analog0=p1.axis0;Analog2=p1.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_tduno2", "Analog0=p1.axis0;Analog2=p1.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_tokyobus", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.button7;TPSystem2=p1.button8" },
++            { "teknonaomi_totd", "TPSystem1=p1.keyboard;TPSystem2=p2.keyboard" },
++            { "teknonaomi_totdo", "TPSystem1=p1.keyboard;TPSystem2=p2.keyboard" },
++            { "teknonaomi_usagiym", "ExtensionOne1=mahjong.a;ExtensionOne2=mahjong.b;ExtensionOne3=mahjong.c;ExtensionOne4=mahjong.d;ExtensionOne11=mahjong.e;ExtensionOne12=mahjong.f;ExtensionOne13=mahjong.g;ExtensionOne14=mahjong.h;ExtensionOne15=mahjong.i;ExtensionOne16=mahjong.j;ExtensionOne17=mahjong.k;ExtensionOne18=mahjong.l;ExtensionOne21=mahjong.m;ExtensionOne22=mahjong.n;ExtensionOne23=mahjong.kan;ExtensionOne24=mahjong.pon;ExtensionOne25=mahjong.chi;ExtensionOne26=mahjong.reach;ExtensionOne27=mahjong.ron;ExtensionOne28=mahjong.bet;ExtensionTwo1=mahjong.lastchance;ExtensionTwo2=mahjong.flipflop" },
++            { "teknonaomi_vonot", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p1.axis2;Analog6=p1.axis3;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1Button3=p1.button5;P2ButtonUp=p1.axis3-;P2ButtonDown=p1.axis3+;P2ButtonLeft=p1.axis2-;P2ButtonRight=p1.axis2+;P2Button1=p1.button3;P2Button2=p1.button4" },
++            { "teknonaomi_wldkicks", "P1ButtonStart=p1.start;P2ButtonStart=p2.start;JvsTwoP1ButtonStart=p3.start;JvsTwoP2ButtonStart=p4.start;Analog0=p1.axis0;Analog2=p1.axis1;Analog10=p1.axis5;Analog12=p2.axis0;Analog14=p2.axis1;Analog22=p2.axis5;JvsTwoAnalog0=p3.axis0;JvsTwoAnalog2=p3.axis1;JvsTwoAnalog10=p3.axis5;JvsTwoAnalog12=p4.axis0;JvsTwoAnalog14=p4.axis1;JvsTwoAnalog20=p4.axis5;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1Button1=p1.button1;P1Button2=p1.axis5+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2Button1=p2.button1;P2Button2=p2.axis5+;JvsTwoP1Button1=p3.button1;JvsTwoP1Button2=p3.axis5+;JvsTwoP1ButtonLeft=p3.axis0-;JvsTwoP1ButtonRight=p3.axis0+;JvsTwoP1ButtonUp=p3.axis1-;JvsTwoP1ButtonDown=p3.axis1+;JvsTwoP2Button1=p4.button1;JvsTwoP2Button2=p4.axis5+;JvsTwoP2ButtonLeft=p4.axis0-;JvsTwoP2ButtonRight=p4.axis0+;JvsTwoP2ButtonUp=p4.axis1-;JvsTwoP2ButtonDown=p4.axis1+;TPSystem1=p1.button3;TPSystem2=p1.button4;TPSystem3=p1.button5" },
++            { "teknonaomi_wldkicksj", "P1ButtonStart=p1.start;P2ButtonStart=p2.start;JvsTwoP1ButtonStart=p3.start;JvsTwoP2ButtonStart=p4.start;Analog0=p1.axis0;Analog2=p1.axis1;Analog10=p1.axis5;Analog12=p2.axis0;Analog14=p2.axis1;Analog22=p2.axis5;JvsTwoAnalog0=p3.axis0;JvsTwoAnalog2=p3.axis1;JvsTwoAnalog10=p3.axis5;JvsTwoAnalog12=p4.axis0;JvsTwoAnalog14=p4.axis1;JvsTwoAnalog20=p4.axis5;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1Button1=p1.button1;P1Button2=p1.axis5+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2Button1=p2.button1;P2Button2=p2.axis5+;JvsTwoP1Button1=p3.button1;JvsTwoP1Button2=p3.axis5+;JvsTwoP1ButtonLeft=p3.axis0-;JvsTwoP1ButtonRight=p3.axis0+;JvsTwoP1ButtonUp=p3.axis1-;JvsTwoP1ButtonDown=p3.axis1+;JvsTwoP2Button1=p4.button1;JvsTwoP2Button2=p4.axis5+;JvsTwoP2ButtonLeft=p4.axis0-;JvsTwoP2ButtonRight=p4.axis0+;JvsTwoP2ButtonUp=p4.axis1-;JvsTwoP2ButtonDown=p4.axis1+;TPSystem1=p1.button3;TPSystem2=p1.button4;TPSystem3=p1.button5" },
++            { "teknonaomi_wldkickspj", "P1ButtonStart=p1.start;Service2=p3.service;P2ButtonStart=p2.start;JvsTwoP1ButtonStart=p3.start;JvsTwoP2ButtonStart=p4.start;Analog0=p1.axis0;Analog2=p1.axis1;Analog10=p1.axis5;Analog12=p2.axis0;Analog14=p2.axis1;Analog22=p2.axis5;JvsTwoAnalog0=p3.axis0;JvsTwoAnalog2=p3.axis1;JvsTwoAnalog10=p3.axis5;JvsTwoAnalog12=p4.axis0;JvsTwoAnalog14=p4.axis1;JvsTwoAnalog20=p4.axis5;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1Button1=p1.button1;P1Button2=p1.axis5+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2Button1=p2.button1;P2Button2=p2.axis5+;JvsTwoP1Button1=p3.button1;JvsTwoP1Button2=p3.axis5+;JvsTwoP1ButtonLeft=p3.axis0-;JvsTwoP1ButtonRight=p3.axis0+;JvsTwoP1ButtonUp=p3.axis1-;JvsTwoP1ButtonDown=p3.axis1+;JvsTwoP2Button1=p4.button1;JvsTwoP2Button2=p4.axis5+;JvsTwoP2ButtonLeft=p4.axis0-;JvsTwoP2ButtonRight=p4.axis0+;JvsTwoP2ButtonUp=p4.axis1-;JvsTwoP2ButtonDown=p4.axis1+" },
++            { "teknonaomi_wldkickspw", "P1ButtonStart=p1.start;Service2=p3.service;P2ButtonStart=p2.start;JvsTwoP1ButtonStart=p3.start;JvsTwoP2ButtonStart=p4.start;Analog0=p1.axis0;Analog2=p1.axis1;Analog10=p1.axis5;Analog12=p2.axis0;Analog14=p2.axis1;Analog22=p2.axis5;JvsTwoAnalog0=p3.axis0;JvsTwoAnalog2=p3.axis1;JvsTwoAnalog10=p3.axis5;JvsTwoAnalog12=p4.axis0;JvsTwoAnalog14=p4.axis1;JvsTwoAnalog20=p4.axis5;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1Button1=p1.button1;P1Button2=p1.axis5+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2Button1=p2.button1;P2Button2=p2.axis5+;JvsTwoP1Button1=p3.button1;JvsTwoP1Button2=p3.axis5+;JvsTwoP1ButtonLeft=p3.axis0-;JvsTwoP1ButtonRight=p3.axis0+;JvsTwoP1ButtonUp=p3.axis1-;JvsTwoP1ButtonDown=p3.axis1+;JvsTwoP2Button1=p4.button1;JvsTwoP2Button2=p4.axis5+;JvsTwoP2ButtonLeft=p4.axis0-;JvsTwoP2ButtonRight=p4.axis0+;JvsTwoP2ButtonUp=p4.axis1-;JvsTwoP2ButtonDown=p4.axis1+" },
++            { "teknonaomi_wldkicksu", "P1ButtonStart=p1.start;P2ButtonStart=p2.start;JvsTwoP1ButtonStart=p3.start;JvsTwoP2ButtonStart=p4.start;Analog0=p1.axis0;Analog2=p1.axis1;Analog10=p1.axis5;Analog12=p2.axis0;Analog14=p2.axis1;Analog22=p2.axis5;JvsTwoAnalog0=p3.axis0;JvsTwoAnalog2=p3.axis1;JvsTwoAnalog10=p3.axis5;JvsTwoAnalog12=p4.axis0;JvsTwoAnalog14=p4.axis1;JvsTwoAnalog20=p4.axis5;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1Button1=p1.button1;P1Button2=p1.axis5+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2Button1=p2.button1;P2Button2=p2.axis5+;JvsTwoP1Button1=p3.button1;JvsTwoP1Button2=p3.axis5+;JvsTwoP1ButtonLeft=p3.axis0-;JvsTwoP1ButtonRight=p3.axis0+;JvsTwoP1ButtonUp=p3.axis1-;JvsTwoP1ButtonDown=p3.axis1+;JvsTwoP2Button1=p4.button1;JvsTwoP2Button2=p4.axis5+;JvsTwoP2ButtonLeft=p4.axis0-;JvsTwoP2ButtonRight=p4.axis0+;JvsTwoP2ButtonUp=p4.axis1-;JvsTwoP2ButtonDown=p4.axis1+;TPSystem1=p1.button3;TPSystem2=p1.button4;TPSystem3=p1.button5" },
++            { "teknonaomi_wldrider", "Analog0=p1.axis0;Analog10=p1.axis5;Analog8=p1.axis4;Analog20=p2.axis4;P1ButtonUp=p1.axis5+;P1ButtonDown=p1.axis4+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+" },
++            { "teknonaomi_wrungp", "Analog0=p1.axis0;Analog2=p1.axis1;Analog10=p1.axis5;Analog4=p1.axis2;P1ButtonUp=p1.axis5+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis1-;TPSystem2=p1.axis1+;TPSystem3=p1.axis2-;TPSystem4=p1.axis2+" },
++            { "teknonaomi_wrungpo", "Analog0=p1.axis0;Analog2=p1.axis1;Analog10=p1.axis5;Analog4=p1.axis2;P1ButtonUp=p1.axis5+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;TPSystem1=p1.axis1-;TPSystem2=p1.axis1+;TPSystem3=p1.axis2-;TPSystem4=p1.axis2+" },
++            { "teknonaomi_wsbbgd", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;Analog10=p1.axis5;Analog22=p2.axis5;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;TPSystem1=p1.axis5+;TPSystem2=p2.axis5+" },
++            { "teknonaomi_xtrmhnt2", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+" },
++            { "teknonaomi_xtrmhunt", "Analog0=p1.axis0;Analog2=p1.axis1;Analog4=p2.axis0;Analog6=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+" },
++            { "teknonaomi_zombrvn", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_zombrvne", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_zombrvno", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+" },
++            { "teknonaomi_zunou", "Analog0=p1.axis0;Analog2=p1.axis1;Analog12=p2.axis0;Analog14=p2.axis1;P1ButtonUp=p1.axis1-;P1ButtonDown=p1.axis1+;P1ButtonLeft=p1.axis0-;P1ButtonRight=p1.axis0+;P2ButtonUp=p2.axis1-;P2ButtonDown=p2.axis1+;P2ButtonLeft=p2.axis0-;P2ButtonRight=p2.axis0+" },
++        };
++
++        private static readonly Dictionary<string, Dictionary<InputMapping, string>> Parsed =
++            new Dictionary<string, Dictionary<InputMapping, string>>(StringComparer.Ordinal);
++
++        internal static string Find(string profileName, InputMapping mapping)
++        {
++            if (profileName == null || !Routes.TryGetValue(profileName, out var text)) return null;
++            Dictionary<InputMapping, string> routes;
++            lock (Parsed)
++            {
++                if (!Parsed.TryGetValue(profileName, out routes))
++                {
++                    routes = new Dictionary<InputMapping, string>();
++                    foreach (var pair in text.Split(';'))
++                    {
++                        var parts = pair.Split('=');
++                        routes[(InputMapping)Enum.Parse(typeof(InputMapping), parts[0])] = parts[1];
++                    }
++                    Parsed[profileName] = routes;
++                }
++            }
++            return routes.TryGetValue(mapping, out var control) ? control : null;
++        }
++    }
++}
+diff --git a/TeknoParrotUi.Common/TeknoNaomiInputBindings.cs b/TeknoParrotUi.Common/TeknoNaomiInputBindings.cs
+index 2e606dc..79f3f5d 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiInputBindings.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiInputBindings.cs
+@@ -47,7 +47,8 @@ namespace TeknoParrotUi.Common
+                 bool buttonXi = xi && !button.HideWithXInput;
+                 bool buttonRi = ri && !button.HideWithRawInput;
+                 if (!buttonDi && !buttonXi && !buttonRi) continue;
+-                if (button.TeknoNaomiControl == "p1.keyboard" || button.TeknoNaomiControl == "p2.keyboard")
++                var control = button.TeknoNaomiControl ?? TeknoNaomiControlCatalog.Find(profile.ProfileName, button.InputMapping);
++                if (control == "p1.keyboard" || control == "p2.keyboard")
+                 {
+                     extended = true;
+                     var raw = button.RawInputButton;
+@@ -56,9 +57,9 @@ namespace TeknoParrotUi.Common
+                         if (raw.DeviceType != RawDeviceType.Keyboard)
+                             throw new InvalidOperationException("Bind any key on the keyboard to use for " + button.ButtonName + ".");
+                         ValidateRawPath(raw);
+-                        Add(lines, button.TeknoNaomiControl, "raw_keyboard", raw.DevicePath, "keyboard", 0, 0);
++                        Add(lines, control, "raw_keyboard", raw.DevicePath, "keyboard", 0, 0);
+                     }
+-                    else Add(lines, button.TeknoNaomiControl, "none", "", "none", 0, 0);
++                    else Add(lines, control, "none", "", "none", 0, 0);
+                     continue;
+                 }
+                 if (button.InputMapping == InputMapping.P1LightGun || button.InputMapping == InputMapping.P2LightGun)
+@@ -83,7 +84,7 @@ namespace TeknoParrotUi.Common
+                 }
+                 string destination;
+                 if (verifiedDestinations == null || !verifiedDestinations.TryGetValue(button.InputMapping, out destination))
+-                    destination = button.TeknoNaomiControl ?? StandardDestination(button.InputMapping);
++                    destination = control ?? StandardDestination(button.InputMapping);
+                 if (!ValidDestination(destination))
+                     throw new NotSupportedException("No verified TeknoNaomi digital destination for " + button.InputMapping + ".");
+                 bool continuous = AxisDestination(destination);
+diff --git a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+index c55d18a..a8e0971 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiLaunch.cs
+@@ -31,11 +31,11 @@ namespace TeknoParrotUi.Common
+         // Height in physical pixels of the primary display; 0 when unknown. Tests replace it.
+         public static Func<int> DisplayHeight { get; set; } = PrimaryDisplayHeight;
+ 
+-        // The runner reduces its raster to the window with nearest sampling, so a
+-        // scale above the display only discards rows. Pick the largest scale whose
+-        // 480 source lines still fit the display height.
+-        public static int AutoRenderScale(int displayHeight) =>
+-            displayHeight <= 0 ? 4 : Math.Max(1, Math.Min(8, displayHeight / 480));
++        // With nearest presentation a scale above the display only discards rows, so
++        // pick the largest scale whose 480 source lines fit the display height. ssaa
++        // averages every rendered pixel, so it gets twice that (2x2 supersampling).
++        public static int AutoRenderScale(int displayHeight, bool supersampled = false) =>
++            displayHeight <= 0 ? 4 : Math.Max(1, Math.Min(8, displayHeight / 480 * (supersampled ? 2 : 1)));
+ 
+         public static TeknoNaomiLaunchPlan Plan(GameProfile profile, string uiRoot,
+             string gameLocation, bool isTest = false)
+@@ -95,10 +95,14 @@ namespace TeknoParrotUi.Common
+             var configuredStateRoot = Setting("Save Root");
+             var state = Resolve(string.IsNullOrWhiteSpace(configuredStateRoot) ? Path.Combine(work, "state") : configuredStateRoot);
+             var cabinet = TeknoNaomiProfileSettings.CabinetStateId(profile);
++            var presentationFilter = Setting("Presentation Filter", "ssaa");
++            if (!TeknoNaomiProfileSettings.PresentationFilters.Contains(presentationFilter)) throw new InvalidOperationException("Invalid Presentation Filter.");
++            var crt = Setting("CRT Shader", "None");
++            if (!TeknoNaomiProfileSettings.CrtShaders.Contains(crt)) throw new InvalidOperationException("Invalid CRT Shader.");
+             var resolution = Setting("Internal Resolution", "4");
+             var autoScale = resolution == AutoResolution;
+             int scale;
+-            if (autoScale) scale = AutoRenderScale(DisplayHeight?.Invoke() ?? 0);
++            if (autoScale) scale = AutoRenderScale(DisplayHeight?.Invoke() ?? 0, crt == "None" && presentationFilter == "ssaa");
+             else if (!int.TryParse(resolution, NumberStyles.None, CultureInfo.InvariantCulture, out scale) || scale < 1 || scale > 8)
+                 throw new InvalidOperationException("Internal Resolution must be Auto or from 1 to 8.");
+             var display = Setting("DisplayMode", "Windowed");
+@@ -111,6 +115,9 @@ namespace TeknoParrotUi.Common
+             if (chdRoot.Length != 0) args.AddRange(new[] { "--chd-root", chdRoot });
+             if (display == "Fullscreen") args.Add("--fullscreen");
+             if (Enabled("Widescreen")) args.Add("--widescreen");
++            args.AddRange(new[] { "--presentation-filter", presentationFilter });
++            if (crt != "None") args.AddRange(new[] { "--crt", crt == "Lottes" ? "lottes" : "lottes-downsample" });
++            if (Enabled("Use Bezel")) args.Add("--bezels");
+             if (Enabled("Cabinet Outputs")) args.Add("--outputs");
+             if (Enabled("Free Play")) args.Add("--free-play");
+             if (Enabled("Precise SH-4 FPU")) args.Add("--sh4-precise-fpu");
+diff --git a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+index 3cd5542..a87e3e2 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+@@ -21,12 +21,16 @@ namespace TeknoParrotUi.Common
+                 profile.GamePath2 = (saved ?? profile).ConfigValues?
+                     .FirstOrDefault(f => f.FieldName == "CHD Root")?.FieldValue ?? "";
+             profile.ConfigValues?.RemoveAll(f => f.FieldName == "ROM Root" || f.FieldName == "CHD Root" ||
+-                f.FieldName == "Mute Audio" || f.FieldName == "Host Timing");
++                f.FieldName == "Mute Audio" || f.FieldName == "Host Timing" || UnsupportedOfficialFields.Contains(f.FieldName));
+             profile.HasTwoExecutables = HasChd(profile);
+             NormalizeCabinet(profile, saved);
+             AddRunnerOptions(profile);
+         }
+ 
++        // Fields of later official profiles (TPUI 1.0.0.2267) whose launch handling
++        // this TPUI does not have; shown, they would do nothing.
++        private static readonly string[] UnsupportedOfficialFields = { "Region", "Outputs", "Use Keyboard/Button For Axis" };
++
+         // Runner options that predate their profile fields. Missing fields are added
+         // with defaults, so stock and saved profiles gain them without a revision bump.
+         internal static void AddRunnerOptions(GameProfile profile)
+@@ -46,11 +50,21 @@ namespace TeknoParrotUi.Common
+             {
+                 if (!resolution.FieldOptions.Contains(TeknoNaomiLaunch.AutoResolution))
+                     resolution.FieldOptions.Insert(0, TeknoNaomiLaunch.AutoResolution);
+-                resolution.Hint = "Auto picks the largest scale whose 480 lines fit the primary display (2 at 1080p, 3 at 1440p, 4 at 2160p). " +
+-                    "Scales above the display are reduced with nearest sampling and look worse, not sharper.";
++                resolution.Hint = "Auto fits the primary display: the largest scale whose 480 lines fit it (4 at 2160p), " +
++                    "doubled with the ssaa Presentation Filter (8 at 2160p), which averages the extra pixels. " +
++                    "With nearest, scales above the display only discard pixels.";
+             }
+             Add("General", "Cabinet Outputs", FieldType.Bool, "1",
+-                "Publish lamps, motors and force feedback to MAMEOutput clients.");
++                "Publish lamps and light gun recoil to MAMEOutput clients. Steering forces are not part of these outputs.");
++            Add("Video", "Presentation Filter", FieldType.Dropdown, "ssaa",
++                "Scaling of the rendered image to the window. ssaa averages every rendered pixel and suits high Internal Resolution; " +
++                "bicubic and lanczos are sharper; linear is the cheapest smooth filter; nearest keeps hard pixels.",
++                PresentationFilters);
++            Add("Video", "CRT Shader", FieldType.Dropdown, "None",
++                "CRT-Lottes scanlines and shadow mask. Lottes keeps the Internal Resolution; Lottes Downsample first resolves to native pixels. " +
++                "Replaces the Presentation Filter.", CrtShaders);
++            Add("Video", "Use Bezel", FieldType.Bool, "0",
++                "Show TeknoNaomi/bezels/SET.png around the game, else the parent set's PNG, else default.png. Not used with Widescreen.");
+             Add("General", "Free Play", FieldType.Bool, "0", "Set the BIOS coin setting to FREE PLAY.");
+             Add("General", "BIOS", FieldType.Text, "",
+                 "Empty selects the default BIOS. A number selects another BIOS, for example a different region.");
+@@ -66,6 +80,9 @@ namespace TeknoParrotUi.Common
+             Add("Video", "VR Filter", FieldType.Dropdown, "linear", "Scaling into the headset image.", "linear", "nearest");
+         }
+ 
++        internal static readonly string[] PresentationFilters = { "nearest", "linear", "bicubic", "lanczos", "ssaa" };
++        internal static readonly string[] CrtShaders = { "None", "Lottes", "Lottes Downsample" };
++
+         public static int CabinetCount(GameProfile profile) =>
+             TeknoNaomiCatalog.ForProfile(profile?.ProfileName)?.Cabinets ?? 1;
+ 
+diff --git a/TeknoParrotUi.Common/TeknoParrotUi.Common.csproj b/TeknoParrotUi.Common/TeknoParrotUi.Common.csproj
+index e6a4452..b610bef 100644
+--- a/TeknoParrotUi.Common/TeknoParrotUi.Common.csproj
++++ b/TeknoParrotUi.Common/TeknoParrotUi.Common.csproj
+@@ -288,6 +288,7 @@
+     <Compile Include="JoystickMapping.cs" />
+     <Compile Include="TeknoNaomiInputBindings.cs" />
+     <Compile Include="TeknoNaomiCatalog.cs" />
++    <Compile Include="TeknoNaomiControlCatalog.cs" />
+     <Compile Include="TeknoNaomiLaunch.cs" />
+     <Compile Include="TeknoNaomiProfileSettings.cs" />
+     <Compile Include="Jvs\ChatButtonBlock.cs" />
+diff --git a/Tests/TeknoNaomiRelease/Program.cs b/Tests/TeknoNaomiRelease/Program.cs
+index a688f06..ed8a20d 100644
+--- a/Tests/TeknoNaomiRelease/Program.cs
++++ b/Tests/TeknoNaomiRelease/Program.cs
+@@ -74,13 +74,22 @@ internal static class ReleaseChecks
+         var p0 = stock.Clone();
+         TeknoNaomiProfileSettings.Normalize(p0);
+         var names = new[] { "Cabinet Outputs", "Free Play", "BIOS", "Precise SH-4 FPU", "Side-by-Side 3D", "Enable VR",
+-            "Use VR Controls", "VR Screen Distance", "VR Screen Width", "VR Head Locked", "VR Filter" };
++            "Use VR Controls", "VR Screen Distance", "VR Screen Width", "VR Head Locked", "VR Filter",
++            "Presentation Filter", "CRT Shader", "Use Bezel" };
+         Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields are added once");
+         TeknoNaomiProfileSettings.Normalize(p0);
+         Require(names.All(n => p0.ConfigValues.Count(f => f.FieldName == n) == 1), "Runner option fields survive a second normalization");
+         var defaults = Arguments(p0);
+-        Require(defaults.Contains("\"--outputs\"") && !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr" }.Any(defaults.Contains),
++        Require(defaults.Contains("\"--outputs\"") && defaults.Contains("\"--presentation-filter\" \"ssaa\"") &&
++            !new[] { "--free-play", "--bios", "--sh4-precise-fpu", "--sbs", "--vr", "--crt", "--bezels" }.Any(defaults.Contains),
+             "Runner option defaults");
++        Set(p0, "Presentation Filter", "lanczos"); Set(p0, "CRT Shader", "Lottes Downsample"); Set(p0, "Use Bezel", "1");
++        var presentation = Arguments(p0);
++        Require(presentation.Contains("\"--presentation-filter\" \"lanczos\"") && presentation.Contains("\"--crt\" \"lottes-downsample\"") &&
++            presentation.Contains("\"--bezels\""), "Presentation options");
++        Set(p0, "CRT Shader", "Lottes");
++        Require(Arguments(p0).Contains("\"--crt\" \"lottes\""), "CRT Lottes");
++        Set(p0, "Presentation Filter", "ssaa"); Set(p0, "CRT Shader", "None"); Set(p0, "Use Bezel", "0");
+         Set(p0, "Free Play", "1"); Set(p0, "Precise SH-4 FPU", "1"); Set(p0, "BIOS", "2"); Set(p0, "Cabinet Outputs", "0");
+         Set(p0, "Side-by-Side 3D", "1");
+         var enabled = Arguments(p0);
+@@ -97,6 +106,16 @@ internal static class ReleaseChecks
+         try
+         {
+             Set(p0, "Internal Resolution", "Auto");
++            foreach (var pair in new[] { new[] { 2160, 8 }, new[] { 1440, 6 }, new[] { 1080, 4 }, new[] { 720, 2 }, new[] { 4320, 8 }, new[] { 0, 4 } })
++            {
++                TeknoNaomiLaunch.DisplayHeight = () => pair[0];
++                Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == pair[1], "Supersampled Auto resolution for " + pair[0] + " lines");
++            }
++            TeknoNaomiLaunch.DisplayHeight = () => 2160;
++            Set(p0, "CRT Shader", "Lottes");
++            Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == 4, "CRT shader does not supersample Auto");
++            Set(p0, "CRT Shader", "None");
++            Set(p0, "Presentation Filter", "nearest");
+             foreach (var pair in new[] { new[] { 2160, 4 }, new[] { 1440, 3 }, new[] { 1080, 2 }, new[] { 1200, 2 }, new[] { 720, 1 },
+                 new[] { 300, 1 }, new[] { 4320, 8 }, new[] { 0, 4 } })
+             {
+@@ -110,7 +129,7 @@ internal static class ReleaseChecks
+             Require(TeknoNaomiLaunch.Plan(p0, root, p0.GamePath).RenderScale == 3, "Fixed resolution ignores the display");
+         }
+         finally { TeknoNaomiLaunch.DisplayHeight = display; }
+-        foreach (var invalid in new[] { new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
++        foreach (var invalid in new[] { new[] { "Presentation Filter", "SSAA" }, new[] { "CRT Shader", "lottes" }, new[] { "Internal Resolution", "auto" }, new[] { "Internal Resolution", "9" }, new[] { "BIOS", "-1" }, new[] { "BIOS", "x" }, new[] { "VR Screen Width", "9" }, new[] { "VR Filter", "cubic" } })
+         {
+             var p = p0.Clone();
+             Set(p, invalid[0], invalid[1]);
+@@ -120,6 +139,26 @@ internal static class ReleaseChecks
+         }
+     }
+ 
++    // Official profiles after TPUI 1.0.0.2267 drop TeknoNaomiControl and add fields
++    // this TPUI cannot launch with. Bindings must export as from the stock profiles.
++    private static void OfficialProfiles(IEnumerable<GameProfile> stock)
++    {
++        foreach (var original in stock)
++        {
++            var set = original.ProfileName.Substring("teknonaomi_".Length);
++            var official = original.Clone();
++            foreach (var button in official.JoystickButtons) button.TeknoNaomiControl = null;
++            Require(TeknoNaomiInputBindings.Serialize(official, set) == TeknoNaomiInputBindings.Serialize(original, set),
++                "Official-style profile exports the stock bindings: " + original.ProfileName);
++            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Region", FieldValue = "Japan" });
++            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Outputs", FieldValue = "Network Outputs" });
++            official.ConfigValues.Add(new FieldInformation { CategoryName = "General", FieldName = "Use Keyboard/Button For Axis", FieldValue = "1" });
++            TeknoNaomiProfileSettings.Normalize(official);
++            Require(!official.ConfigValues.Any(f => f.FieldName == "Region" || f.FieldName == "Outputs" || f.FieldName == "Use Keyboard/Button For Axis"),
++                "Unsupported official fields are not shown: " + original.ProfileName);
++        }
++    }
++
+     public static void Run(string root, string output)
+     {
+         var common = Path.Combine(Path.GetFullPath(root), "TeknoParrotUi.Common");
+@@ -167,6 +206,7 @@ internal static class ReleaseChecks
+         }
+         Require(analog == 126 && disks > 0, "Continuous controls and CHD coverage");
+         RunnerOptions(profiles["teknonaomi_f355"], root);
++        OfficialProfiles(profiles.Values);
+         foreach (var id in new[] { "teknonaomi_sgnascar", "teknonaomi_sgnascaro" })
+         {
+             var p = profiles[id];
+-- 
+2.43.0
+

@@ -1,0 +1,33 @@
+From a522dad7276beb8fcfce1ede371bb6dc40c6c1b8 Mon Sep 17 00:00:00 2001
+From: maolo80 <maolo80@gmail.com>
+Date: Thu, 29 Oct 2026 14:19:33 +0000
+Subject: [PATCH 4/5] TeknoNaomi: say which games use force feedback
+
+Force feedback was tested with 18 Wheeler, where it works. Crazy Taxi
+sends no motor commands (jvs_motor=commands:0), so selecting a device
+there does nothing. The device hint now says that only games whose
+cabinet had force feedback or recoil send effects.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Xkm42Nb8k8qCUfB5RCiVU3
+---
+ TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+index d9f18c6..ec98549 100644
+--- a/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
++++ b/TeknoParrotUi.Common/TeknoNaomiProfileSettings.cs
+@@ -100,7 +100,8 @@ namespace TeknoParrotUi.Common
+                 if (!regions.Contains(region.FieldValue)) region.FieldValue = "Auto";
+             }
+             Add("Force Feedback", "Force Feedback Device", FieldType.DynamicDropdown, "off",
+-                "Wheel for steering forces, or a controller for vibration. Numbers count devices of that kind in connection order.");
++                "Wheel for steering forces, or a controller for vibration. Numbers count devices of that kind in connection order. " +
++                "Only games whose cabinet had force feedback or gun recoil send effects (18 Wheeler does; Crazy Taxi does not).");
+             Add("Force Feedback", "Player 2 Force Feedback Device", FieldType.DynamicDropdown, "off",
+                 "Independent device for the second player.");
+             Add("Force Feedback", "Force Feedback Strength", FieldType.Slider, "100",
+-- 
+2.43.0
+
