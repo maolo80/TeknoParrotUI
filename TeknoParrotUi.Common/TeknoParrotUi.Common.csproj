@@ -288,6 +288,7 @@
     <Compile Include="JoystickMapping.cs" />
     <Compile Include="TeknoNaomiInputBindings.cs" />
     <Compile Include="TeknoNaomiCatalog.cs" />
+    <Compile Include="TeknoNaomiControlCatalog.cs" />
     <Compile Include="TeknoNaomiLaunch.cs" />
     <Compile Include="TeknoNaomiProfileSettings.cs" />
     <Compile Include="Jvs\ChatButtonBlock.cs" />

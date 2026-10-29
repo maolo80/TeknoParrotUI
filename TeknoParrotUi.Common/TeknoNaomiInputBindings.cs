@@ -47,7 +47,8 @@ namespace TeknoParrotUi.Common
                 bool buttonXi = xi && !button.HideWithXInput;
                 bool buttonRi = ri && !button.HideWithRawInput;
                 if (!buttonDi && !buttonXi && !buttonRi) continue;
-                if (button.TeknoNaomiControl == "p1.keyboard" || button.TeknoNaomiControl == "p2.keyboard")
+                var control = button.TeknoNaomiControl ?? TeknoNaomiControlCatalog.Find(profile.ProfileName, button.InputMapping);
+                if (control == "p1.keyboard" || control == "p2.keyboard")
                 {
                     extended = true;
                     var raw = button.RawInputButton;
@@ -56,9 +57,9 @@ namespace TeknoParrotUi.Common
                         if (raw.DeviceType != RawDeviceType.Keyboard)
                             throw new InvalidOperationException("Bind any key on the keyboard to use for " + button.ButtonName + ".");
                         ValidateRawPath(raw);
-                        Add(lines, button.TeknoNaomiControl, "raw_keyboard", raw.DevicePath, "keyboard", 0, 0);
+                        Add(lines, control, "raw_keyboard", raw.DevicePath, "keyboard", 0, 0);
                     }
-                    else Add(lines, button.TeknoNaomiControl, "none", "", "none", 0, 0);
+                    else Add(lines, control, "none", "", "none", 0, 0);
                     continue;
                 }
                 if (button.InputMapping == InputMapping.P1LightGun || button.InputMapping == InputMapping.P2LightGun)
@@ -83,7 +84,7 @@ namespace TeknoParrotUi.Common
                 }
                 string destination;
                 if (verifiedDestinations == null || !verifiedDestinations.TryGetValue(button.InputMapping, out destination))
-                    destination = button.TeknoNaomiControl ?? StandardDestination(button.InputMapping);
+                    destination = control ?? StandardDestination(button.InputMapping);
                 if (!ValidDestination(destination))
                     throw new NotSupportedException("No verified TeknoNaomi digital destination for " + button.InputMapping + ".");
                 bool continuous = AxisDestination(destination);
